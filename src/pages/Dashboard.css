@@ -1,87 +1,109 @@
-.page-wrapper {
+.law-page-wrapper {
   padding: 20px;
 }
 
-.dashboard-title {
+.law-dashboard-title {
   font-weight: 600;
-  color: #333;
+  color: #1A3C8B;
 }
 
-.page-header h2 {
+.law-page-header h2 {
   font-weight: 600;
   margin-bottom: 20px;
 }
-.content-card {
-  background: #fff;
+
+.law-content-card {
+  background: #FFF7E0;
   border-radius: 10px;
   padding: 25px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
-.stat-box {
+
+.law-stat-box {
   border-radius: 12px;
   padding: 25px 20px;
   color: #fff;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
 }
 
-.stat-box p {
+.law-stat-box p {
   font-size: 14px;
   margin-bottom: 5px;
   opacity: 0.85;
 }
 
-.stat-box h3 {
+.law-stat-box h3 {
   font-size: 28px;
   font-weight: 700;
   margin: 10px 0;
 }
-.stat-box.green {
-  background: linear-gradient(135deg, #000000, #34d399);
+
+.law-stat-box.blue {
+  background: linear-gradient(135deg, #1A3C8B, #3b82f6);
 }
 
-.stat-box.yellow {
-  background: linear-gradient(135deg, #000000, #fcd34d);
+.law-stat-box.yellow {
+  background: linear-gradient(135deg, #C9A227, #FACC15);
 }
 
-.stat-box.blue {
-  background: linear-gradient(135deg, #000000, #22d3ee);
+.law-stat-box.green {
+  background: linear-gradient(135deg, #6C1E1E, #B91C1C);
 }
 
-.stat-box.purple {
-  background: linear-gradient(135deg, #000000, #c084fc);
+.law-stat-box.purple {
+  background: linear-gradient(135deg, #9333EA, #C084FC);
 }
 
-
-.stat-box:hover {
+.law-stat-box:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-.chart-box {
-  background: #f9fafb;
+.law-chart-box {
+  background: #FFF7E0;
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
 }
 
-.chart-box h5 {
+.law-chart-box h5 {
   font-weight: 600;
   margin-bottom: 15px;
+  color: #1A3C8B;
 }
 
-.chart-box canvas {
-  max-height: 260px;
+.law-chart-placeholder {
+  height: 260px;
+  background: #C9A227;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6C1E1E;
+  font-weight: 500;
 }
 
-.row.g-4 {
-  margin-left: -12px;
-  margin-right: -12px;
+.law-row.g-4 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 0;
 }
 
-.row.g-4 > .col-md-3 {
-  padding-left: 12px;
-  padding-right: 12px;
-  margin-bottom: 20px;
+.law-col-md-3 {
+  flex: 0 0 23%;
+  max-width: 23%;
+}
+
+.law-col-md-6 {
+  flex: 0 0 48%;
+  max-width: 48%;
+}
+
+.law-col-md-4 {
+  flex: 0 0 31%;
+  max-width: 31%;
 }

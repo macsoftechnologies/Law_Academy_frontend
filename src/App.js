@@ -2,60 +2,71 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+/* Public Pages */
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Yoga from "./pages/Yoga";
-import User from "./pages/User";
-import Client from "./pages/Client";
-import Trainer from "./pages/Trainer";
-import Orders from "./pages/Orders";
-import SplashScreen from "./pages/SplashScreen";
-import HealthPreference from "./pages/HealthPreference";
-import ProfessionDetails from "./pages/ProfessionDetails";
-import Notifications from "./pages/Notifications";
-import AppTutorial from "./pages/AppTutorial";
-import CallbackRequest from "./pages/CallbackRequest";
-import TermsConditions from "./pages/TermsConditions";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import FeatureBanners from "./pages/FeatureBanners";
-import Languages from "./pages/Languages";
-import Transactions from "./pages/Transactions";
 import AdminForgotPassword from "./pages/AdminForgotPassword";
 import Home from "./pages/Home";
-import AdminOtp from "./pages/AdminOtp";
-import TrainerProfile from "./pages/TrainerProfile";
+
+/* Protected Pages */
+import Dashboard from "./pages/Dashboard";
+import Admins from "./pages/Admins";
+import Students from "./pages/Students";
+import Categories from "./pages/Categories";
+import SubCategories from "./pages/SubCategories";
+import Laws from "./pages/Laws";
+import Subjects from "./pages/Subjects";
+import Lectures from "./pages/Lectures";
+import GuestLectures from "./pages/GuestLectures";
+import CouresCombo from "./pages/CouresCombo";
+import NpmCombos from "./pages/NpmCombos";
+import Notes from "./pages/Notes";
+import PYQPaper from "./pages/PYQPaper";
+import SWMocksTests from "./pages/SWMocksTests";
+import GrandTests from "./pages/GrandTests";
+import Quizzes from "./pages/Quizzes";
+import MainsQA from "./pages/MainsQA";
+import MainsEssayTrans from "./pages/MainsEssayTrans";
+import TestSeries from "./pages/TestSeries";
+import Banners from "./pages/Banners";
+import Results from "./pages/Results";
+import StudentRequests from "./pages/StudentRequests";
+import Plans from "./pages/Plans";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* ✅ Public route */}
+        {/* ✅ Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<Login />} />
-        <Route path="/admin-otp" element={<AdminOtp />} />
         <Route path="/admin-forgot-password" element={<AdminForgotPassword />}/>
 
-        {/* ✅ Protected routes */}
-          <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/yoga" element={<Yoga />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/client" element={<Client />} />
-          <Route path="/trainer" element={<Trainer />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/splash-screen" element={<SplashScreen />} />
-          <Route path="/health-preference" element={<HealthPreference />} />
-          <Route path="/profession-details" element={<ProfessionDetails />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/app-tutorial" element={<AppTutorial />} />
-          <Route path="/callback-request" element={<CallbackRequest />} />
-          <Route path="/terms-conditions" element={<TermsConditions />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/feature-banners" element={<FeatureBanners />} />
-          <Route path="/languages" element={<Languages />} />
-          <Route path="/transactions" element={<Transactions />} />
-          <Route path="/trainer/:id" element={<TrainerProfile />} />
+        {/* ✅ Protected Routes */}
+        <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="admins" element={<Admins />} />
+          <Route path="students" element={<Students />} />
+          <Route path="studentrequests" element={<StudentRequests/>} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="subcategories" element={<SubCategories />} />
+          <Route path="laws" element={<Laws />} />
+          <Route path="subjects" element={<Subjects />} />
+          <Route path="plans" element={<Plans />}/>
+          <Route path="lectures" element={<Lectures />} />
+          <Route path="gestlectures" element={<GuestLectures />} />
+          <Route path="courescombo" element={<CouresCombo />} />
+          <Route path="npmcombo" element={<NpmCombos />} />
+          <Route path="notes" element={<Notes />} />
+          <Route path="pyqpaper" element={<PYQPaper />} />
+          <Route path="swmockstests" element={<SWMocksTests />} />
+          <Route path="grandtests" element={<GrandTests />} />
+          <Route path="quizzes" element={<Quizzes />} />
+          <Route path="mainsqa" element={<MainsQA />} />
+          <Route path="manisessaytrans" element={<MainsEssayTrans />} />
+          <Route path="testseries" element={<TestSeries />} />
+          <Route path="banners" element={<Banners />} />
+          <Route path="results" element={<Results />} />
         </Route>
       </Routes>
     </BrowserRouter>

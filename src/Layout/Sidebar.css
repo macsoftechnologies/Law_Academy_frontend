@@ -11,7 +11,7 @@
       rgba(0, 0, 0, 0.35),
       rgba(0, 0, 0, 0.35)
     ),
-    url("../assets/sidebar-04.png");
+    url("../assets/law-login-01.png");
 
   background-size: cover;
   background-position: center;
@@ -42,10 +42,7 @@
   padding: 10px;
   
 }
-
-
-
-.yoga-brand {
+.law-brand {
   width: 230px;
   height: 50px;
 
@@ -121,9 +118,9 @@
 }
 
 .menu-item a:hover {
-  /* background: rgba(255, 255, 255, 0.12); */
-  background: rgb(34 200 216);
+  background: linear-gradient(90deg, #1A3C8B, #C9A227);
   color: #fff;
+  border-radius: 10px; 
 }
 
 /* Active Menu */
@@ -165,6 +162,9 @@
   display: none !important;
 }
 
+.toggle-space{
+  margin-right: 25px !important;
+}
 
 .dropdown-toggle {
   margin-left: 11px;
@@ -216,7 +216,7 @@
 /* Firefox */
 .sidebar {
   scrollbar-width: thin;
-  scrollbar-color: #22c8d8 #f0f0f0;
+  scrollbar-color: #8f1e1e #f0f0f0;
   height: 100vh;
   overflow-y: auto;
 }
@@ -234,12 +234,30 @@
 }
 
 .menu-item a.active {
-  /* background: rgb(34 200 216); */
-  background: linear-gradient(90deg, #ff8f00, #4caf50);
+  background: linear-gradient(90deg, #1A3C8B, #8f1e1e);
   border-radius: 10px;
+  color: #fff;
 }
 
 .menu-item a.active .menu-icon {
   color: #fff;
 } 
 
+.menu-item.dropdown .dropdown-toggle {
+  background: rgba(255, 255, 255, 0.12);
+  margin: 6px 0px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.menu-item.dropdown .dropdown-toggle:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.menu-item.dropdown .dropdown-toggle .arrow-icon.rotate {
+  transform: rotate(180deg);
+}

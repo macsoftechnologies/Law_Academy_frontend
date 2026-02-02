@@ -4,6 +4,18 @@ import "./Table.css";
 const Table = ({ columns, data, currentPage, totalPages, onPageChange }) => {
   return (
     <div className="table-container">
+
+      {/* Show how many records */}
+      <div className="table-info" style={{ marginBottom: "8px" }}>
+        Showing{" "}
+        <span style={{ color: "rgb(237, 22, 22)", fontWeight: "bold" }}>
+          {data.length}
+        </span>{" "}
+        record{data.length !== 1 ? "s" : ""}
+      </div>
+
+
+      {/* Table */}
       <table className="custom-table">
         <thead>
           <tr>
@@ -65,6 +77,3 @@ const Table = ({ columns, data, currentPage, totalPages, onPageChange }) => {
 };
 
 export default Table;
-
-
-

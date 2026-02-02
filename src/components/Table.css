@@ -1,26 +1,17 @@
-/* ================================
-   TABLE CONTAINER STYLES
-================================ */
-
 .table-container {
   width: 100%;
   overflow-x: auto;
-  background: #ffffff;
+  background: #fff;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
-              rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   padding: 20px;
 }
 
-/* ================================
-   TABLE STRUCTURE
-================================ */
-
 .custom-table {
   border-collapse: collapse;
-  width: 100%;         /* take available width */
-  table-layout: auto;   /* allow table to adjust to content */
-  min-width: 0;         /* remove forced minimum width */
+  width: 100%;    
+  table-layout: auto; 
+  min-width: 0;       
 }
 
 .custom-table th,
@@ -32,10 +23,6 @@
   text-overflow: ellipsis;
 }
 
-/* ================================
-   TABLE HEADER
-================================ */
-
 .custom-table thead {
   background-color: #f1f3f6;
   border-bottom: 2px solid #e0e0e0;
@@ -43,13 +30,9 @@
   font-size: 14px;
 }
 
-/* ================================
-   TABLE BODY & ROW EFFECTS
-================================ */
-
 .custom-table tbody tr {
-  background-color: #ffffff;
-  transition: background 0.2s ease-in-out;
+  background-color: #fff;
+  transition: background 0.2s;
 }
 
 .custom-table tbody tr:nth-child(even) {
@@ -57,23 +40,8 @@
 }
 
 .custom-table tbody tr:hover {
-  background-color: #dee2e6;
-  cursor: pointer;
+  background-color: #e6f7ff;
 }
-
-/* ================================
-   ACTION BUTTON CONTAINER
-================================ */
-
-.actions {
-  display: flex;
-  gap: 6px;
-  /* justify-content: center; */
-}
-
-/* ================================
-   ICON ACTION BUTTONS
-================================ */
 
 .actions button {
   margin-right: 5px;
@@ -84,76 +52,20 @@
   font-size: 12px;
 }
 
-/* Icon base */
-.icon-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: #f1f3f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+.actions button.view {
+  background-color: #007bff;
+  color: white;
 }
 
-/* ================================
-   VIEW ACTION (GREEN)
-================================ */
-
-.actions button.view,
-.icon-btn.view {
-  background-color: #16a951;
-  color: #ffffff;
+.actions button.edit {
+  background-color: #ffc107;
+  color: white;
 }
 
-.icon-btn.view:hover {
-  background-color: #128f44;
-  transform: scale(1.1);
+.actions button.delete {
+  background-color: #dc3545;
+  color: white;
 }
-
-/* ================================
-   EDIT ACTION (YELLOW)
-================================ */
-
-.actions button.edit,
-.icon-btn.edit {
-  background-color: #ff7a00;
-  color: #ffffff;
-}
-
-.icon-btn.edit:hover {
-  background-color: #ff7a00;
-  transform: scale(1.1);
-}
-
-/* ================================
-   DELETE ACTION (PURPLE)
-================================ */
-
-.actions button.delete,
-.icon-btn.delete {
-  background-color: #8b2291;
-  color: #ffffff;
-}
-
-.icon-btn.delete:hover {
-  background-color: #721c77;
-  transform: scale(1.1);
-}
-
-/* ================================
-   OPTIONAL ACCENT HOVER
-================================ */
-
-.icon-btn:hover {
-  box-shadow: 0 4px 10px rgba(45, 201, 216, 0.4);
-}
-
-/* ================================
-   PROGRESS BAR
-================================ */
 
 .progress-bar {
   height: 6px;
@@ -165,26 +77,22 @@
 
 .progress {
   height: 100%;
-  background-color: #2dc9d8;
+  background-color: #007bff;
   width: 0%;
 }
 
-/* ================================
-   CHANGE INDICATORS
-================================ */
-
 .change-positive {
-  color: #16a951;
+  color: #28a745;
   font-weight: 600;
 }
 
 .change-negative {
-  color: #8b2291;
+  color: #dc3545;
   font-weight: 600;
 }
-/* ================================
-   PAGINATION
-================================ */
+
+
+/*...pagination... */
 
 .pagination {
   margin: 30px 0px;
@@ -193,8 +101,7 @@
   gap: 8px;
 }
 
-.page-btn,
-.page-number {
+.page-btn, .page-number {
   padding: 8px 16px;
   font-size: 14px;
   background: #f3f3f3;
@@ -204,10 +111,11 @@
 }
 
 .page-btn:disabled {
+  /* opacity: 0.4; */
   cursor: not-allowed;
 }
 
 .page-number.active {
-  background: #ec8519; /* ORIGINAL COLOR RESTORED */
+  background: #8f1e1e;
   color: white;
 }

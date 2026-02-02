@@ -3,6 +3,7 @@
   border-radius: 8px;
   padding: 10px;
   border: 2px solid #fe9e2a;
+  /* cursor: pointer; */
 }
 
 .custom-form .form-label {
@@ -16,7 +17,7 @@
 
 
 .pending {
-  background-color: #f44336; /* red */
+  background-color: #f44336;
   color: #fff;
   border: none;
   padding: 5px 10px;
@@ -25,7 +26,7 @@
 }
 
 .approved {
-  background-color: #4caf50; /* green */
+  background-color: #4caf50;
   color: #fff;
   border: none;
   padding: 5px 10px;
@@ -35,4 +36,49 @@
 
 .actions button {
   margin-right: 5px;
+}
+
+.multi-select-input {
+  border: 2px solid #fe9e2a;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 40px;
+  background-color: #fff;
+}
+
+.multi-select-options {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background: #fff;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 10;
+  width: 63%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin-top: 4px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.option-item:hover {
+  background-color: #f1f1f1;
+}
+
+.option-item input {
+  margin-right: 8px;
+}
+
+.arrow {
+  margin-left: 10px;
+  font-size: 12px;
 }

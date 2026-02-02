@@ -26,113 +26,109 @@ ChartJS.register(
   Legend
 );
 
-export default function Dashboard() {
+export default function LawDashboard() {
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 
-  const earningsData = {
+  const revenueData = {
     labels: months,
     datasets: [
       {
-        label: "Monthly Earnings (₹)",
-        data: [25000, 32000, 28000, 40000, 36000, 45000],
-        backgroundColor: "#16a951",
+        label: "Monthly Revenue (₹)",
+        data: [50000, 65000, 58000, 70000, 68000, 75000],
+        backgroundColor: "#1d4ed8",
         borderRadius: 6,
       },
     ],
   };
 
-  const bookingsData = {
+  const casesData = {
     labels: months,
     datasets: [
       {
-        label: "Yoga Bookings",
-        data: [120, 180, 150, 220, 200, 260],
-        borderColor: "#2dc9d8",
-        backgroundColor: "rgba(45,201,216,0.15)",
+        label: "New Cases",
+        data: [20, 35, 30, 40, 38, 50],
+        borderColor: "#f59e0b",
+        backgroundColor: "rgba(245, 158, 11, 0.15)",
         fill: true,
         tension: 0.4,
       },
     ],
   };
 
-  const  yogaTypeData = {
-  labels: ["Power Yoga", "Hatha Yoga", "Vinyasa", "Ashtanga"],
-  datasets: [
-    {
-      data: [40, 25, 20, 15],
-      backgroundColor: [
-        "#16a951",
-        "#feb131",
-        "#2dc9d8",
-        "#8b2291",
-      ],
-    },
-  ],
+  const lawTypeData = {
+    labels: ["Criminal", "Civil", "Corporate", "Family"],
+    datasets: [
+      {
+        data: [30, 25, 20, 25],
+        backgroundColor: ["#1d4ed8", "#16a34a", "#f59e0b", "#9333ea"],
+      },
+    ],
   };
 
-
   return (
-    <div className="page-wrapper">
-      <div className="page-header">
-        <h3 className="dashboard-title mb-4">Yoga Dashboard</h3>
+    <div className="law-page-wrapper">
+      <div className="law-page-header">
+        <h3 className="law-dashboard-title mb-4">Law Dashboard</h3>
       </div>
-      <div className="content-card">
-        <div className="row g-4 mb-4">
-          <div className="col-md-3">
-            <div className="stat-box green">
-              <p>Total Earnings</p>
-              <h3>₹2,06,000</h3>
+
+      <div className="law-content-card">
+        <div className="law-row g-4 mb-4">
+          <div className="law-col-md-3">
+            <div className="law-stat-box blue">
+              <p>Total Revenue</p>
+              <h3>₹4,23,000</h3>
               <p>This Month</p>
             </div>
           </div>
 
-          <div className="col-md-3">
-            <div className="stat-box yellow">
-              <p>Total Bookings</p>
-              <h3>130</h3>
+          <div className="law-col-md-3">
+            <div className="law-stat-box yellow">
+              <p>Total Cases</p>
+              <h3>213</h3>
               <p>This Month</p>
             </div>
           </div>
 
-          <div className="col-md-3">
-            <div className="stat-box blue">
-              <p>Active Users</p>
-              <h3>20</h3>
-              <p>Current</p>
+          <div className="law-col-md-3">
+            <div className="law-stat-box green">
+              <p>Active Lawyers</p>
+              <h3>25</h3>
+              <p>Currently</p>
             </div>
           </div>
 
-          <div className="col-md-3">
-            <div className="stat-box purple">
-              <p>Yoga Classes</p>
-              <h3>18</h3>
-               <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div className="row g-4">
-          <div className="col-md-6">
-            <div className="chart-box">
-              <h5>Monthly Earnings</h5>
-              <Bar data={earningsData} />
-            </div>
-          </div>
-
-          <div className="col-md-6">
-            <div className="chart-box">
-              <h5>Monthly Bookings</h5>
-              <Line data={bookingsData} />
+          <div className="law-col-md-3">
+            <div className="law-stat-box purple">
+              <p>Available Courses</p>
+              <h3>12</h3>
+              <p>Legal Learning</p>
             </div>
           </div>
         </div>
 
-        <div className="row g-4">
-          <div className="col-md-4">
-              <div className="chart-box text-center">
-                <h5>Yoga Type Distribution</h5>
-                <Doughnut data={yogaTypeData} />
-              </div>
+        <div className="law-row g-4">
+          <div className="law-col-md-6">
+            <div className="law-chart-box">
+              <h5>Monthly Revenue</h5>
+              <Bar data={revenueData} />
             </div>
+          </div>
+
+          <div className="law-col-md-6">
+            <div className="law-chart-box">
+              <h5>New Cases</h5>
+              <Line data={casesData} />
+            </div>
+          </div>
+        </div>
+
+        <div className="law-row g-4">
+          <div className="law-col-md-4">
+            <div className="law-chart-box text-center">
+              <h5>Case Type Distribution</h5>
+              <Doughnut data={lawTypeData} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
