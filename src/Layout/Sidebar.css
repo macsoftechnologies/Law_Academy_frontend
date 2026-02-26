@@ -1,25 +1,36 @@
 /* Sidebar Container */
 .sidebar {
-  width: 260px;
+  width: 280px;
+  min-width: 280px;
+  flex-shrink: 0;
   min-height: 100vh;
   padding: 20px 15px;
   color: white;
-
-  /* CLEAR IMAGE WITH SOFT OVERLAY */
   background-image:
     linear-gradient(
       rgba(0, 0, 0, 0.35),
       rgba(0, 0, 0, 0.35)
     ),
-    url("../assets/law-login-01.png");
-
+    url("../assets/admin-back-02.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   font-family: 'Roboto', sans-serif;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, min-width 0.3s ease;
   overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar.open {
+  width: 280px;
+  min-width: 280px;
+}
+
+.sidebar.closed {
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .menu-item a {
@@ -43,7 +54,7 @@
   
 }
 .law-brand {
-  width: 230px;
+  /* width: 230px; */
   height: 50px;
 
   /* Exact orange → green gradient */

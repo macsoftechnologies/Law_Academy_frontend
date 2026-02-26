@@ -139,7 +139,12 @@ const Laws = () => {
         <h2>LAWS</h2>
         <div className="d-flex gap-2 align-items-center">
           <label>Records per page:</label>
-          <select
+          <select 
+            style={{
+              border: "2px solid #872026",
+              padding: "2px",
+              cursor: "pointer",
+            }}
             value={pageLimit}
             onChange={(e) => {
               const limit = parseInt(e.target.value, 10);

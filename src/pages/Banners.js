@@ -157,6 +157,11 @@ const Banners = () => {
         <div className="d-flex gap-2 align-items-center">
           <label>Records per page:</label>
           <select
+            style={{
+              border: "2px solid #872026",
+              padding: "2px",
+              cursor: "pointer",
+            }}
             value={pageLimit}
             onChange={(e) => {
               const limit = parseInt(e.target.value, 10);

@@ -134,6 +134,7 @@ const SubjectForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Category</label>
           <select
+            style={{cursor:"pointer"}}
             className="form-control"
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
@@ -151,6 +152,7 @@ const SubjectForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Sub Category</label>
           <select
+            style={{cursor:"pointer"}}
             className="form-control"
             value={subcategoryId}
             onChange={(e) => setSubcategoryId(e.target.value)}
@@ -168,6 +170,7 @@ const SubjectForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Law</label>
           <select
+            style={{cursor:"pointer"}}
             className="form-control"
             value={lawId}
             onChange={(e) => setLawId(e.target.value)}

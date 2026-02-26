@@ -26,6 +26,11 @@ export const adminForgotPassword = async (Forgotload) => {
   return response.data;
 };
 
+export const superadminForgotPassword = async (Forgotload) => {
+  const response = await api.post("/admin/superadminforgotpassword", Forgotload);
+  return response.data;
+};
+
 export const getadmins = async (page = 1, limit = 10) => {
   const res = await api.get(`/admin?page=${page}&limit=${limit}`);
   return res.data;
@@ -68,6 +73,11 @@ export const getUserDetails = async (userId) => {
 
 export const getStudentRequestlist = async (page = 1, limit = 10) => {
   const res = await api.get(`/users/detailsrequestslist?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getStudentCoursesDetails = async (userId) => {
+  const res = await api.post("/enrollments/user_courses", { userId });
   return res.data;
 };
 
@@ -215,6 +225,34 @@ export const deleteSubjects = async (data) => {
   return res.data;
 };
 
+export const getSubjectsByLaw = async (data) => {
+  const res = await api.post("/subjects/listbylaw", data);
+  return res.data;
+};
+
+export const addLectures = async (data)=>{
+  const res = await api.post("/lectures/add", data, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return res.data;
+}
+export const getLectures = async (page = 1, limit = 10) => {
+  const res = await api.get(`/lectures?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const updateLectures = async (data) => {
+  const res = await api.post("/lectures/update", data, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return res.data;
+};
+
+export const deleteLectures = async (data) => {
+  const res = await api.post("/lectures/delete", data);
+  return res.data;
+};
+
 export const addGuestLectures = async (formData) => {
   const res = await api.post("/guest-lectures/add", formData, {
     headers: { "Content-Type": "multipart/form-data" },
@@ -245,7 +283,6 @@ export const deleteGuestLectures = async (data) => {
   const res = await api.post("/guest-lectures/delete", data);
   return res.data;
 };
-
 
 export const addPlans = async (data) => {
   const res = await api.post("/plans/add", data, {
@@ -278,9 +315,161 @@ export const deletePlans = async (planId) => {
   return res.data;
 };
 
+export const addCoupon = async (data) => {
+  const res = await api.post("/coupons/add", data);
+  return res.data;
+};
+
+export const getCoupons = async (page = 1, limit = 10) => {
+  const res = await api.get(`/coupons?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getCouponById = async (couponId) => {
+  const res = await api.post("/coupons/details", { couponId });
+  return res.data;
+};
+
+export const updateCoupon = async (data) => {
+  const res = await api.post("/coupons/update", data);
+  return res.data;
+};
+
+export const deleteCoupon = async (couponId) => {
+  const res = await api.post("/coupons/delete", { couponId });
+  return res.data;
+};
 
 
+export const addNotes = async (formData) => {
+  const res = await api.post("/notes/add", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
 
+export const getNotes = async (page = 1, limit = 10, userId) => {
+  const res = await api.get(`/notes?page=${page}&limit=${limit}&userId=${userId}`);
+  return res.data;
+};
+
+export const getNotesById = async (notes_id) => {
+  const res = await api.post("/notes/details", { notes_id });
+  return res.data;
+};
+
+export const updateNotes = async (formData) => {
+  const res = await api.post("/notes/update", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const deleteNotes = async (notes_id) => {
+  const res = await api.post("/notes/delete", { notes_id });
+  return res.data;
+};
+
+export const getPrintednotesoders = async (page = 1, limit = 10) => {
+  const res = await api.get(`/notes/orders?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const updateOrderStatus = async (body) => {
+  const res = await api.post("/notes/updateorderstatus", body);
+  return res.data;
+};
+
+export const addSubjectnotes = async (formData) => {
+  const res = await api.post("/subject-notes/add", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+export const updateSubjectnotes = async (formData) => {
+  const res = await api.post("/subject-notes/update", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+export const getSubjectnotes = async (page = 1, limit = 10) => {
+  const res = await api.get(`/subject-notes?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const deleteSubjectnotes = async (data) => {
+  const res = await api.post("/subject-notes/delete", data);
+  return res.data;
+};
+
+export const addPrelims = async (formData) => {
+  const res = await api.post("/prelimes/add", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const getPrelims = async (page = 1, limit = 10) => {
+  const res = await api.get(`/prelimes?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getPrelimsById = async (prelimes_id) => {
+  const res = await api.post("/prelimes/details", { prelimes_id }, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return res.data;
+};
+
+export const updatePrelims = async (formData) => {
+  const res = await api.post("/prelimes/update", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const deletePrelims = async (data) => {
+  const res = await api.post("/prelimes/delete", data);
+  return res.data;
+};
+
+
+export const addMains = async (formData) => {
+  const res = await api.post("/mains/add", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const getMains = async (page = 1, limit = 10) => {
+  const res = await api.get(`/mains?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getMainsById = async (mains_id) => {
+  const res = await api.post("/mains/details", { mains_id }, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return res.data;
+};
+
+export const updateMains = async (formData) => {
+  const res = await api.post("/mains/update", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const deleteMains = async (data) => {
+  const res = await api.post("/mains/delete", data);
+  return res.data;
+};
 
 
 

@@ -24,7 +24,7 @@ export default function AdminForgotPassword() {
     try {
       const payload = {
         emailId: email,
-        mobileNumber: email, // ✅ SAME as login
+        mobileNumber: email,
         password: password,
       };
 

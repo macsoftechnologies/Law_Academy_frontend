@@ -160,8 +160,13 @@ const Admins = () => {
       <div className="d-flex justify-content-between mb-3">
         <h2>ADMINS LIST</h2>
         <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
+          <label style={{color:"#2b377b"}}>Records per page:</label>
           <select
+            style={{
+              border: "2px solid #872026",
+              padding: "2px",
+              cursor: "pointer",
+            }}
             value={pageLimit}
             onChange={(e) => {
               const limit = parseInt(e.target.value, 10);

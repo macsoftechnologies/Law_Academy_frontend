@@ -110,6 +110,7 @@ const handleSubmit = async (e) => {
         <div className="col-md-6 mb-3">
           <label>Category</label>
           <select
+            style={{cursor:"pointer"}}
             className="form-control"
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
@@ -128,6 +129,7 @@ const handleSubmit = async (e) => {
         <div className="col-md-6 mb-3">
           <label>Sub Category</label>
           <select
+            style={{cursor:"pointer"}}
             className="form-control"
             value={subcategoryId}
             onChange={(e) => setSubcategoryId(e.target.value)}

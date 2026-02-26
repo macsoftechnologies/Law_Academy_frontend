@@ -77,7 +77,7 @@ export default function LawDashboard() {
             <div className="law-stat-box blue">
               <p>Total Revenue</p>
               <h3>₹4,23,000</h3>
-              <p>This Month</p>
+              {/* <p>This Month</p> */}
             </div>
           </div>
 
@@ -85,7 +85,7 @@ export default function LawDashboard() {
             <div className="law-stat-box yellow">
               <p>Total Cases</p>
               <h3>213</h3>
-              <p>This Month</p>
+              {/* <p>This Month</p> */}
             </div>
           </div>
 
@@ -93,7 +93,7 @@ export default function LawDashboard() {
             <div className="law-stat-box green">
               <p>Active Lawyers</p>
               <h3>25</h3>
-              <p>Currently</p>
+              {/* <p>Currently</p> */}
             </div>
           </div>
 
@@ -101,7 +101,7 @@ export default function LawDashboard() {
             <div className="law-stat-box purple">
               <p>Available Courses</p>
               <h3>12</h3>
-              <p>Legal Learning</p>
+              {/* <p>Legal Learning</p> */}
             </div>
           </div>
         </div>

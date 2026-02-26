@@ -16,21 +16,19 @@ const SubCategoriesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Fetch categories for dropdown
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
     try {
-      const res = await getCategories(1, 1000); // fetch all
+      const res = await getCategories(1, 1000);
       setCategories(res.data || []);
     } catch (err) {
       console.error("Category fetch failed", err);
     }
   };
 
-  // Prefill edit data
   useEffect(() => {
   if (isEdit && initialData) {
     setCategoryId(
@@ -98,6 +96,7 @@ const SubCategoriesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Category</label>
           <select
+            style={{cursor:"pointer"}}
             className="form-control"
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}

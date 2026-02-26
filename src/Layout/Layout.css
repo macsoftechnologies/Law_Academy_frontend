@@ -1,36 +1,40 @@
-/* Layout container */
 .layout-container {
   display: flex;
   height: 100vh;  
   overflow: hidden; 
 }
 
-/* Sidebar */
 .sidebar {
   width: 280px;
+  min-width: 280px;
+  flex-shrink: 0;
   background-color: #1f1f1f;
   color: #fff;
   overflow-y: auto; 
 }
 
-/* Main content wrapper */
 .main-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   height: 100%; 
-  overflow: hidden; 
+  overflow: hidden;
+  min-width: 0;
 }
 
-/* Navbar fixed height */
 .main-content > .navbar {
   flex-shrink: 0; 
 }
 
-/* Page content scrollable */
 .page-content {
   flex-grow: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 20px;
   background-color: #f8f9fa;
+}
+
+.page-content .table-responsive {
+  overflow-x: auto;
+  width: 100%;
 }

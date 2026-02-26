@@ -24,6 +24,7 @@ import {
   FaGavel,
   FaTrophy,
   FaTasks,
+  FaTags,
 } from "react-icons/fa";
 
 import { NavLink, useLocation } from "react-router-dom";
@@ -35,6 +36,7 @@ const Sidebar = ({ sidebarOpen }) => {
   const [openCombo, setOpenCombo] = useState(false);
   const [openPrelims, setOpenPrelims] = useState(false);
   const [openMains, setOpenMains] = useState(false);
+  const [openNotes, setOpenNotes] = useState(false);
 
   const role = localStorage.getItem("role");
   const accessModules = JSON.parse(
@@ -43,24 +45,20 @@ const Sidebar = ({ sidebarOpen }) => {
 
   const isSuperAdmin = role === "superadmin";
 
-  /* ===== Permission checker (stable) ===== */
   const canAccess = useCallback(
     (module) => isSuperAdmin || accessModules.includes(module),
     [isSuperAdmin, accessModules]
   );
 
-  /* ===== Dropdown visibility ===== */
   const hasComboAccess = useMemo(
-    () =>
-      isSuperAdmin ||
-      canAccess("courescombo") ||
-      canAccess("npmcombo"),
+    () => isSuperAdmin || canAccess("courescombo") || canAccess("npmcombo"),
     [isSuperAdmin, canAccess]
   );
 
   const hasPrelimsAccess = useMemo(
     () =>
       isSuperAdmin ||
+      canAccess("prelims") ||
       canAccess("pyqpaper") ||
       canAccess("swmockstests") ||
       canAccess("grandtests") ||
@@ -71,35 +69,53 @@ const Sidebar = ({ sidebarOpen }) => {
   const hasMainsAccess = useMemo(
     () =>
       isSuperAdmin ||
+      canAccess("mains")   ||
       canAccess("mainsqa") ||
       canAccess("manisessaytrans") ||
       canAccess("testseries"),
     [isSuperAdmin, canAccess]
   );
 
-  /* ===== Auto open dropdowns ===== */
+  const hasNotesAccess = useMemo(
+    () =>
+      isSuperAdmin ||
+      canAccess("notes") ||
+      canAccess("subjectnotes") ||
+      canAccess("printednotesorders"),
+    [isSuperAdmin, canAccess]
+  );
+
   useEffect(() => {
     setOpenCombo(
       hasComboAccess &&
-        (pathname.includes("courescombo") ||
-          pathname.includes("npmcombo"))
+        (pathname.includes("courescombo") || pathname.includes("npmcombo"))
     );
-
     setOpenPrelims(
       hasPrelimsAccess &&
-        (pathname.includes("pyqpaper") ||
+        ( pathname.includes("prelims") ||
+          pathname.includes("pyqpaper") ||
           pathname.includes("swmockstests") ||
           pathname.includes("grandtests") ||
           pathname.includes("quizzes"))
     );
-
     setOpenMains(
       hasMainsAccess &&
-        (pathname.includes("mainsqa") ||
+        ( pathname.includes("mains") ||
+          pathname.includes("mainsqa") ||
           pathname.includes("manisessaytrans") ||
           pathname.includes("testseries"))
     );
-  }, [pathname, hasComboAccess, hasPrelimsAccess, hasMainsAccess]);
+    setOpenNotes(
+      hasNotesAccess &&
+        (pathname.includes("notes") ||
+          pathname.includes("subjectnotes") ||
+          pathname.includes("printednotesorders"))
+    );
+  }, [pathname, hasComboAccess, hasPrelimsAccess, hasMainsAccess, hasNotesAccess]);
+
+  // Active class helper for NavLinks that have child routes
+  const studentNavClass = ({ isActive }) =>
+    isActive || pathname.startsWith("/student/") ? "active" : "";
 
   return (
     <div className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
@@ -108,7 +124,6 @@ const Sidebar = ({ sidebarOpen }) => {
       </div>
 
       <ul className="sidebar-menu">
-        {/* Dashboard */}
         {(role === "admin" || isSuperAdmin) && (
           <li className="menu-item">
             <NavLink to="dashboard">
@@ -129,7 +144,7 @@ const Sidebar = ({ sidebarOpen }) => {
 
         {canAccess("students") && (
           <li className="menu-item">
-            <NavLink to="students">
+            <NavLink to="students" className={studentNavClass}>
               <FaUserGraduate className="menu-icon" />
               Students
             </NavLink>
@@ -181,20 +196,20 @@ const Sidebar = ({ sidebarOpen }) => {
           </li>
         )}
 
-        {canAccess("gestlectures") && (
-          <li className="menu-item">
-            <NavLink to="gestlectures">
-              <FaClipboardList className="menu-icon" />
-              Guest Lectures
-            </NavLink>
-          </li>
-        )}
-
         {canAccess("lectures") && (
           <li className="menu-item">
             <NavLink to="lectures">
               <FaChalkboardTeacher className="menu-icon" />
               Lectures
+            </NavLink>
+          </li>
+        )}
+
+        {canAccess("gestlectures") && (
+          <li className="menu-item">
+            <NavLink to="gestlectures">
+              <FaClipboardList className="menu-icon" />
+              Guest Lectures
             </NavLink>
           </li>
         )}
@@ -208,13 +223,60 @@ const Sidebar = ({ sidebarOpen }) => {
           </li>
         )}
 
-        {canAccess("notes") && (
+        {canAccess("coupons") && (
           <li className="menu-item">
-            <NavLink to="notes">
-              <FaFileAlt className="menu-icon" />
-              Notes
+            <NavLink to="coupons">
+              <FaTags className="menu-icon" />
+              Coupons
             </NavLink>
           </li>
+        )}
+
+        {/* ================= NOTES ================= */}
+        {hasNotesAccess && (
+          <>
+            <li className="menu-item dropdown">
+              <div
+                className="dropdown-toggle"
+                onClick={() => setOpenNotes(!openNotes)}
+              >
+                <FaFileAlt className="menu-icon toggle-space" />
+                Notes
+                <MdKeyboardArrowDown
+                  className={`arrow-icon ${openNotes ? "rotate" : ""}`}
+                />
+              </div>
+            </li>
+
+            {openNotes && (
+              <>
+                {canAccess("notes") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="notes">
+                      <MdRadioButtonUnchecked className="menu-icon" />
+                      Notes
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("subjectnotes") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="subjectnotes">
+                      <MdRadioButtonUnchecked className="menu-icon" />
+                      Subject Notes
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("printednotesorders") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="printednotesorders">
+                      <MdRadioButtonUnchecked className="menu-icon" />
+                      Printed Notes Orders
+                    </NavLink>
+                  </li>
+                )}
+              </>
+            )}
+          </>
         )}
 
         {/* ================= COMBINATION ================= */}
@@ -243,7 +305,6 @@ const Sidebar = ({ sidebarOpen }) => {
                     </NavLink>
                   </li>
                 )}
-
                 {canAccess("npmcombo") && (
                   <li className="menu-item subitem">
                     <NavLink to="npmcombo">
@@ -275,6 +336,14 @@ const Sidebar = ({ sidebarOpen }) => {
 
             {openPrelims && (
               <>
+                {canAccess("prelims") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="prelims">
+                      <MdRadioButtonUnchecked className="menu-icon" />
+                      Prelims
+                    </NavLink>
+                  </li>
+                )}
                 {canAccess("pyqpaper") && (
                   <li className="menu-item subitem">
                     <NavLink to="pyqpaper">
@@ -283,7 +352,6 @@ const Sidebar = ({ sidebarOpen }) => {
                     </NavLink>
                   </li>
                 )}
-
                 {canAccess("swmockstests") && (
                   <li className="menu-item subitem">
                     <NavLink to="swmockstests">
@@ -292,7 +360,6 @@ const Sidebar = ({ sidebarOpen }) => {
                     </NavLink>
                   </li>
                 )}
-
                 {canAccess("grandtests") && (
                   <li className="menu-item subitem">
                     <NavLink to="grandtests">
@@ -301,7 +368,6 @@ const Sidebar = ({ sidebarOpen }) => {
                     </NavLink>
                   </li>
                 )}
-
                 {canAccess("quizzes") && (
                   <li className="menu-item subitem">
                     <NavLink to="quizzes">
@@ -333,6 +399,14 @@ const Sidebar = ({ sidebarOpen }) => {
 
             {openMains && (
               <>
+                {canAccess("mains") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="mains">
+                      <MdRadioButtonUnchecked className="menu-icon" />
+                      Mains
+                    </NavLink>
+                  </li>
+                )}
                 {canAccess("mainsqa") && (
                   <li className="menu-item subitem">
                     <NavLink to="mainsqa">
@@ -341,7 +415,6 @@ const Sidebar = ({ sidebarOpen }) => {
                     </NavLink>
                   </li>
                 )}
-
                 {canAccess("manisessaytrans") && (
                   <li className="menu-item subitem">
                     <NavLink to="manisessaytrans">
@@ -350,7 +423,6 @@ const Sidebar = ({ sidebarOpen }) => {
                     </NavLink>
                   </li>
                 )}
-
                 {canAccess("testseries") && (
                   <li className="menu-item subitem">
                     <NavLink to="testseries">

@@ -19,9 +19,8 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Header with gradient background */
 .profile-header {
-  background: linear-gradient(135deg, #28a745, #fd7e14); /* green to orange */
+  background: linear-gradient(135deg, #1A3C8B, #FFF7E0);
   color: #fff;
   padding: 20px 10px;
 }

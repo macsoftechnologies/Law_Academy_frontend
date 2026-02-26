@@ -136,7 +136,13 @@ export default function Login() {
             <button
               type="button"
               className="link-btn"
-              onClick={() => navigate("/admin-forgot-password")}
+              onClick={() => {
+                if (role === "superadmin") {
+                  navigate("/superadmin-forgot-password");
+                } else {
+                  navigate("/admin-forgot-password");
+                }
+              }}
             >
               Forgot password?
             </button>

@@ -75,9 +75,9 @@ function AdminForm({ onClose, initialData, isEdit, onSubmit }) {
   // Toggle all modules
   const handleSelectAll = () => {
     if (accessModules.length === moduleOptions.length) {
-      setAccessModules([]); // deselect all
+      setAccessModules([]); 
     } else {
-      setAccessModules(moduleOptions.map((m) => m.value)); // select all
+      setAccessModules(moduleOptions.map((m) => m.value));
     }
   };
 
@@ -128,6 +128,7 @@ function AdminForm({ onClose, initialData, isEdit, onSubmit }) {
         <div className="col-md-6 mb-3">
           <label className="form-label">Role</label>
           <select
+            style={{cursor:"pointer"}}
             className="form-select"
             value={role}
             onChange={(e) => setRole(e.target.value)}
