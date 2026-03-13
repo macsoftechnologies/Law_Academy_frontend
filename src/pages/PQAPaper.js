@@ -5,42 +5,42 @@ import Table from "../components/Table";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 
-import MainsEassayTransQAForm from "../forms/MainsEassayTransQAForm";
+import PrelimsQAForm from "../forms/PrelimsQAForm";
 
 import {
   addQA,
   updateQA,
   deleteQA,
   getQAById,
-  getMains,
+  getPrelims,
 } from "../services/authService";
 
 import api from "../services/api";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
-const MainsEssayTrans = () => {
+const PQAPaper = () => {
   const [open, setOpen]               = useState(false);
   const [editOpen, setEditOpen]       = useState(false);
   const [viewOpen, setViewOpen]       = useState(false);
   const [viewLoading, setViewLoading] = useState(false);
   const [loading, setLoading]         = useState(true);
 
-  const [selectedQA, setSelectedQA]     = useState(null);
-  const [qaList, setQAList]             = useState([]);
-  const [mainsNameMap, setMainsNameMap] = useState({});
+  const [selectedQA, setSelectedQA]       = useState(null);
+  const [qaList, setQAList]               = useState([]);
+  const [prelimsNameMap, setPrelimsNameMap] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages]   = useState(1);
   const [pageLimit, setPageLimit]     = useState(10);
 
-  const mainsMapRef = useRef({});
+  const prelimsMapRef = useRef({});
 
   const loadAllQA = async (page = 1, limit = 10) => {
     setLoading(true);
     try {
       const res   = await api.post(
         `/qa/module/userId?page=${page}&limit=${limit}`,
-        { module: "mains", module_type: "MET" }
+        { module: "prelimes", module_type: "PQA" }
       );
       const json  = res.data;
       const data  = json.data       || [];
@@ -61,14 +61,14 @@ const MainsEssayTrans = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const res  = await getMains(1, 10);
+        const res  = await getPrelims(1, 10);
         const list = res.data || [];
         const map  = {};
-        list.forEach((m) => { map[m.mains_id] = m.title; });
-        mainsMapRef.current = map;
-        setMainsNameMap(map);
+        list.forEach((p) => { map[p.prelim_id] = p.title; });
+        prelimsMapRef.current = map;
+        setPrelimsNameMap(map);
       } catch (err) {
-        console.error("getMains error:", err);
+        console.error("getPrelims error:", err);
       }
       await loadAllQA(1, 10);
     };
@@ -84,9 +84,9 @@ const MainsEssayTrans = () => {
     await loadAllQA(1, limit);
   };
 
-  const getMainsTitle = (module_id) => {
+  const getPrelimsTitle = (module_id) => {
     if (!module_id) return "-";
-    return mainsMapRef.current[module_id] || mainsNameMap[module_id] || module_id;
+    return prelimsMapRef.current[module_id] || prelimsNameMap[module_id] || module_id;
   };
 
   const formatDate = (dateStr) => {
@@ -170,18 +170,18 @@ const MainsEssayTrans = () => {
   };
 
   const columns = [
-    { header: "S.No",      accessor: "serial"     },
-    { header: "Title",     accessor: "title"      },
-    { header: "Mains",     accessor: "mainsTitle" },
-    { header: "No. of Qs", accessor: "no_of_qs"   },
-    { header: "Duration",  accessor: "duration"   },
-    { header: "Actions",   accessor: "actions"    },
+    { header: "S.No",      accessor: "serial"       },
+    { header: "Title",     accessor: "title"        },
+    { header: "Prelims",   accessor: "prelimsTitle" },
+    { header: "No. of Qs", accessor: "no_of_qs"     },
+    { header: "Duration",  accessor: "duration"     },
+    { header: "Actions",   accessor: "actions"      },
   ];
 
   const tableData = qaList.map((item, index) => ({
     ...item,
-    serial:     (currentPage - 1) * pageLimit + index + 1,
-    mainsTitle: getMainsTitle(item.module_id),
+    serial:       (currentPage - 1) * pageLimit + index + 1,
+    prelimsTitle: getPrelimsTitle(item.module_id),
     actions: (
       <div className="actions d-flex">
         <button className="icon-btn view me-2" onClick={() => handleView(item, index)}><FaEye /></button>
@@ -194,7 +194,7 @@ const MainsEssayTrans = () => {
   return (
     <div>
       <div className="d-flex justify-content-between mb-3">
-        <h2>MAINS ESSAY &amp; TRANSLATION LIST</h2>
+        <h2>PRELIMS Q&amp;A LIST</h2>
         <div className="d-flex gap-2 align-items-center">
           <label style={{ color: "#2b377b" }}>Records per page:</label>
           <select
@@ -207,14 +207,14 @@ const MainsEssayTrans = () => {
             <option value={50}>50</option>
             <option value={100}>100</option>
           </select>
-          <Button text="+ Add Record" className="secondary" onClick={() => setOpen(true)} />
+          <Button text="+ Add QA" className="secondary" onClick={() => setOpen(true)} />
         </div>
       </div>
 
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-danger" role="status" />
-          <p className="mt-2 text-muted">Loading records...</p>
+          <p className="mt-2 text-muted">Loading QA records...</p>
         </div>
       ) : (
         <Table
@@ -227,18 +227,18 @@ const MainsEssayTrans = () => {
       )}
 
       {/* Add Modal */}
-      <Modal open={open} onClose={() => setOpen(false)} title="Add Essay & Translation" size="lg">
-        <MainsEassayTransQAForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
+      <Modal open={open} onClose={() => setOpen(false)} title="Add Prelims QA" size="lg">
+        <PrelimsQAForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
       </Modal>
 
       {/* Edit Modal */}
       <Modal
         open={editOpen}
         onClose={() => { setEditOpen(false); setSelectedQA(null); }}
-        title="Edit Essay & Translation"
+        title="Edit Prelims QA"
         size="lg"
       >
-        <MainsEassayTransQAForm
+        <PrelimsQAForm
           isEdit
           initialData={selectedQA}
           onClose={() => { setEditOpen(false); setSelectedQA(null); }}
@@ -250,7 +250,7 @@ const MainsEssayTrans = () => {
       <Modal
         open={viewOpen}
         onClose={() => { setViewOpen(false); setSelectedQA(null); }}
-        title="Essay & Translation Details"
+        title="Prelims QA Details"
         size="lg"
       >
         {viewLoading ? (
@@ -274,9 +274,9 @@ const MainsEssayTrans = () => {
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <b>Mains Module:</b>
+                <b>Prelims Module:</b>
                 <div className="mt-1" style={{ fontSize: "13px", color: "#555" }}>
-                  {getMainsTitle(selectedQA.module_id)}
+                  {getPrelimsTitle(selectedQA.module_id)}
                 </div>
               </div>
               <div className="col-md-6">
@@ -372,4 +372,4 @@ const MainsEssayTrans = () => {
   );
 };
 
-export default MainsEssayTrans;
+export default PQAPaper;

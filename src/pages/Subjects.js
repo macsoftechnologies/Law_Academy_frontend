@@ -122,7 +122,7 @@ const Subjects = () => {
       <img
         src={`${process.env.REACT_APP_API_BASE_URL}/${item.subject_image}`}
         alt="subject"
-        style={{ height: "50px", objectFit: "cover" }}
+        style={{ height: "50px", width: "50px", objectFit: "cover" }}
       />
     ) : "—",
     actions: (

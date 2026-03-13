@@ -35,7 +35,7 @@ const Mains = () => {
   useEffect(() => {
     const fetchSubcategories = async () => {
       try {
-        const res = await getSubCategories(1, 1000);
+        const res = await getSubCategories(1, 10);
         const map = {};
         (res.data || []).forEach((s) => { map[s.subcategory_id] = s.title; });
         setSubcategoryNameMap(map);

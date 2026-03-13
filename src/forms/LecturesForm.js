@@ -220,8 +220,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            disabled={isEdit}
-          >
+            disabled={isEdit}>
             <option value="">Select Category</option>
             {categories.map((c) => (
               <option key={c.categoryId} value={c.categoryId}>

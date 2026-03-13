@@ -95,6 +95,22 @@ function CategoriesForm({ onClose, isEdit, initialData, onSubmit }) {
 
       <div className="mb-3">
         <label>Presentation File</label>
+
+        {/* ✅ Show previous image in edit mode */}
+        {isEdit && initialData?.presentation_file && (
+          <div className="mb-2">
+            <img
+              src={`${process.env.REACT_APP_API_BASE_URL}/${initialData.presentation_file}`}
+              alt="Previous"
+              style={{
+                height: "80px",
+                borderRadius: "6px",
+                border: "1px solid #ddd",
+              }}
+            />
+          </div>
+        )}
+
         <input
           type="file"
           className="form-control"

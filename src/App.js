@@ -24,13 +24,11 @@ import NpmCombos from "./pages/NpmCombos";
 import Notes from "./pages/Notes";
 import SubjectNotes from "./pages/SubjectNotes";
 import PrintedNotesOrders from "./pages/PrintedNotesOrders";
-import PYQPaper from "./pages/PYQPaper";
 import SWMocksTests from "./pages/SWMocksTests";
 import GrandTests from "./pages/GrandTests";
 import Quizzes from "./pages/Quizzes";
 import MainsQA from "./pages/MainsQA";
 import MainsEssayTrans from "./pages/MainsEssayTrans";
-import TestSeries from "./pages/TestSeries";
 import Banners from "./pages/Banners";
 import Results from "./pages/Results";
 import StudentRequests from "./pages/StudentRequests";
@@ -39,6 +37,11 @@ import Coupons from "./pages/Coupons";
 import StudentProfile from "./pages/Studentprofile";
 import Prelims from "./pages/Prelims";
 import Mains from "./pages/Mains";
+import PQAPaper from "./pages/PQAPaper";
+import MainsTestSeries from "./pages/MainsTestSeries";
+import MainsSubjectTest from "./pages/MainsSubjectTest";
+import MainsTestsAttempts from "./pages/MainsTestsAttempts";
+import MainsResultsProfile from "./pages/MainsResultsProfile";
 
 function App() {
   return (
@@ -72,17 +75,20 @@ function App() {
           <Route path="printednotesorders" element={<PrintedNotesOrders />}/>
           <Route path="coupons" element={<Coupons />} />
           <Route path="prelims" element={<Prelims />} />
-          <Route path="pyqpaper" element={<PYQPaper />} />
+          <Route path="pqapaper" element={<PQAPaper />} />
           <Route path="swmockstests" element={<SWMocksTests />} />
           <Route path="grandtests" element={<GrandTests />} />
           <Route path="quizzes" element={<Quizzes />} />
           <Route path="mains" element={<Mains />} />
           <Route path="mainsqa" element={<MainsQA />} />
           <Route path="manisessaytrans" element={<MainsEssayTrans />} />
-          <Route path="testseries" element={<TestSeries />} />
+          <Route path="mainstestseries" element={<MainsTestSeries />} />
+          <Route path="mainssubjecttests" element={<MainsSubjectTest/>}/>
+          <Route path="mainstestsattempts" element={<MainsTestsAttempts/>}/>
           <Route path="banners" element={<Banners />} />
           <Route path="results" element={<Results />} />
           <Route path="/student/:userId" element={<StudentProfile />} />
+          <Route path="/mains-result/:attemptId" element={<MainsResultsProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>

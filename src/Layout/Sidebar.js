@@ -7,7 +7,6 @@ import React, {
 import {
   MdDashboard,
   MdKeyboardArrowDown,
-  MdRadioButtonUnchecked,
   MdCategory,
   MdMenuBook,
   MdSchool,
@@ -22,28 +21,26 @@ import {
   FaClipboardList,
   FaImages,
   FaGavel,
-  FaTrophy,
   FaTasks,
   FaTags,
 } from "react-icons/fa";
 
 import { NavLink, useLocation } from "react-router-dom";
 import "./Sidebar.css";
+import logo from '../assets/logo.jpeg';
 
 const Sidebar = ({ sidebarOpen }) => {
   const { pathname } = useLocation();
 
-  const [openCombo, setOpenCombo] = useState(false);
-  const [openPrelims, setOpenPrelims] = useState(false);
-  const [openMains, setOpenMains] = useState(false);
-  const [openNotes, setOpenNotes] = useState(false);
+  const [openCombo,           setOpenCombo]           = useState(false);
+  const [openPrelims,         setOpenPrelims]         = useState(false);
+  const [openMains,           setOpenMains]           = useState(false);
+  const [openNotes,           setOpenNotes]           = useState(false);
+  const [openMainsTestSeries, setOpenMainsTestSeries] = useState(false);
 
-  const role = localStorage.getItem("role");
-  const accessModules = JSON.parse(
-    localStorage.getItem("access_modules") || "[]"
-  );
-
-  const isSuperAdmin = role === "superadmin";
+  const role          = localStorage.getItem("role");
+  const accessModules = JSON.parse(localStorage.getItem("access_modules") || "[]");
+  const isSuperAdmin  = role === "superadmin";
 
   const canAccess = useCallback(
     (module) => isSuperAdmin || accessModules.includes(module),
@@ -59,7 +56,7 @@ const Sidebar = ({ sidebarOpen }) => {
     () =>
       isSuperAdmin ||
       canAccess("prelims") ||
-      canAccess("pyqpaper") ||
+      canAccess("pqapaper") ||
       canAccess("swmockstests") ||
       canAccess("grandtests") ||
       canAccess("quizzes"),
@@ -69,10 +66,21 @@ const Sidebar = ({ sidebarOpen }) => {
   const hasMainsAccess = useMemo(
     () =>
       isSuperAdmin ||
-      canAccess("mains")   ||
+      canAccess("mains") ||
       canAccess("mainsqa") ||
       canAccess("manisessaytrans") ||
-      canAccess("testseries"),
+      canAccess("mainstestseries") ||
+      canAccess("mainssubjecttests") ||
+      canAccess("mainstestsattempts"),
+    [isSuperAdmin, canAccess]
+  );
+
+  const hasMainsTestSeriesAccess = useMemo(
+    () =>
+      isSuperAdmin ||
+      canAccess("mainstestseries") ||
+      canAccess("mainssubjecttests") ||
+      canAccess("mainstestsattempts"),
     [isSuperAdmin, canAccess]
   );
 
@@ -92,18 +100,26 @@ const Sidebar = ({ sidebarOpen }) => {
     );
     setOpenPrelims(
       hasPrelimsAccess &&
-        ( pathname.includes("prelims") ||
-          pathname.includes("pyqpaper") ||
+        (pathname.includes("prelims") ||
+          pathname.includes("pqapaper") ||
           pathname.includes("swmockstests") ||
           pathname.includes("grandtests") ||
           pathname.includes("quizzes"))
     );
     setOpenMains(
       hasMainsAccess &&
-        ( pathname.includes("mains") ||
+        (pathname.includes("mains") ||
           pathname.includes("mainsqa") ||
           pathname.includes("manisessaytrans") ||
-          pathname.includes("testseries"))
+          pathname.includes("mainstestseries") ||
+          pathname.includes("mainssubjecttests") ||
+          pathname.includes("mainstestsattempts"))
+    );
+    setOpenMainsTestSeries(
+      hasMainsTestSeriesAccess &&
+        (pathname.includes("mainstestseries") ||
+          pathname.includes("mainssubjecttests") ||
+          pathname.includes("mainstestsattempts"))
     );
     setOpenNotes(
       hasNotesAccess &&
@@ -111,16 +127,17 @@ const Sidebar = ({ sidebarOpen }) => {
           pathname.includes("subjectnotes") ||
           pathname.includes("printednotesorders"))
     );
-  }, [pathname, hasComboAccess, hasPrelimsAccess, hasMainsAccess, hasNotesAccess]);
+  }, [pathname, hasComboAccess, hasPrelimsAccess, hasMainsAccess, hasNotesAccess, hasMainsTestSeriesAccess]);
 
-  // Active class helper for NavLinks that have child routes
   const studentNavClass = ({ isActive }) =>
     isActive || pathname.startsWith("/student/") ? "active" : "";
 
   return (
     <div className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
       <div className="sidebar-header">
-        <div className="law-brand">Rao's Law Academy</div>
+          <div className="law-brand">
+              <img src={logo} alt="Rao's Law Academy" className="law-brand-logo" />
+          </div>
       </div>
 
       <ul className="sidebar-menu">
@@ -232,6 +249,163 @@ const Sidebar = ({ sidebarOpen }) => {
           </li>
         )}
 
+        {/* ================= PRELIMS ================= */}
+        {hasPrelimsAccess && (
+          <>
+            <li className="menu-item dropdown">
+              <div
+                className="dropdown-toggle"
+                onClick={() => setOpenPrelims(!openPrelims)}
+              >
+                <FaClipboardList className="menu-icon toggle-space" />
+                Prelims
+                <MdKeyboardArrowDown
+                  className={`arrow-icon ${openPrelims ? "rotate" : ""}`}
+                />
+              </div>
+            </li>
+
+            {openPrelims && (
+              <>
+                {canAccess("prelims") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="prelims">
+                      <span className="sub-dot">→</span>
+                      Prelims
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("pqapaper") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="pqapaper">
+                      <span className="sub-dot">→</span>
+                      PQA Papers
+                    </NavLink>
+                  </li>
+                )}
+                {/* {canAccess("swmockstests") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="swmockstests">
+                      <span className="sub-dot">→</span>
+                      SW Mock Tests
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("grandtests") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="grandtests">
+                      <span className="sub-dot">→</span>
+                      Grand Tests
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("quizzes") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="quizzes">
+                      <span className="sub-dot">→</span>
+                      Quizzes
+                    </NavLink>
+                  </li>
+                )} */}
+              </>
+            )}
+          </>
+        )}
+
+        {/* ================= MAINS ================= */}
+        {hasMainsAccess && (
+          <>
+            <li className="menu-item dropdown">
+              <div
+                className="dropdown-toggle"
+                onClick={() => setOpenMains(!openMains)}
+              >
+                <MdMenuBook className="menu-icon toggle-space" />
+                Mains
+                <MdKeyboardArrowDown
+                  className={`arrow-icon ${openMains ? "rotate" : ""}`}
+                />
+              </div>
+            </li>
+
+            {openMains && (
+              <>
+                {canAccess("mains") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="mains">
+                      <span className="sub-dot">→</span>
+                      Mains
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("mainsqa") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="mainsqa">
+                      <span className="sub-dot">→</span>
+                      Mains Q & A
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("manisessaytrans") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="manisessaytrans">
+                      <span className="sub-dot">→</span>
+                      Essay & Translation
+                    </NavLink>
+                  </li>
+                )}
+
+                {/* ===== MAINS TEST SERIES SUB-DROPDOWN ===== */}
+                {hasMainsTestSeriesAccess && (
+                  <>
+                    <li className="menu-item subitem dropdown">
+                      <div
+                        className="dropdown-toggle sub-dropdown-toggle"
+                        onClick={() => setOpenMainsTestSeries(!openMainsTestSeries)}
+                      >
+                        <FaClipboardList className="menu-icon" />
+                        Mains Test Series
+                        <MdKeyboardArrowDown
+                          className={`arrow-icon ${openMainsTestSeries ? "rotate" : ""}`}
+                        />
+                      </div>
+                    </li>
+
+                    {openMainsTestSeries && (
+                      <>
+                        {canAccess("mainstestseries") && (
+                          <li className="menu-item subitem sub-subitem">
+                            <NavLink to="mainstestseries">
+                              <span className="sub-dot">→</span>
+                              Mains Test Series
+                            </NavLink>
+                          </li>
+                        )}
+                        {canAccess("mainssubjecttests") && (
+                          <li className="menu-item subitem sub-subitem">
+                            <NavLink to="mainssubjecttests">
+                              <span className="sub-dot">→</span>
+                              Mains Subject Tests
+                            </NavLink>
+                          </li>
+                        )}
+                        {canAccess("mainstestsattempts") && (
+                          <li className="menu-item subitem sub-subitem">
+                            <NavLink to="mainstestsattempts">
+                              <span className="sub-dot">→</span>
+                              Mains Tests Attempts
+                            </NavLink>
+                          </li>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </>
+        )}
+
         {/* ================= NOTES ================= */}
         {hasNotesAccess && (
           <>
@@ -253,7 +427,7 @@ const Sidebar = ({ sidebarOpen }) => {
                 {canAccess("notes") && (
                   <li className="menu-item subitem">
                     <NavLink to="notes">
-                      <MdRadioButtonUnchecked className="menu-icon" />
+                      <span className="sub-dot">→</span>
                       Notes
                     </NavLink>
                   </li>
@@ -261,7 +435,7 @@ const Sidebar = ({ sidebarOpen }) => {
                 {canAccess("subjectnotes") && (
                   <li className="menu-item subitem">
                     <NavLink to="subjectnotes">
-                      <MdRadioButtonUnchecked className="menu-icon" />
+                      <span className="sub-dot">→</span>
                       Subject Notes
                     </NavLink>
                   </li>
@@ -269,7 +443,7 @@ const Sidebar = ({ sidebarOpen }) => {
                 {canAccess("printednotesorders") && (
                   <li className="menu-item subitem">
                     <NavLink to="printednotesorders">
-                      <MdRadioButtonUnchecked className="menu-icon" />
+                      <span className="sub-dot">→</span>
                       Printed Notes Orders
                     </NavLink>
                   </li>
@@ -300,7 +474,7 @@ const Sidebar = ({ sidebarOpen }) => {
                 {canAccess("courescombo") && (
                   <li className="menu-item subitem">
                     <NavLink to="courescombo">
-                      <MdRadioButtonUnchecked className="menu-icon" />
+                      <span className="sub-dot">→</span>
                       Course Combo
                     </NavLink>
                   </li>
@@ -308,126 +482,8 @@ const Sidebar = ({ sidebarOpen }) => {
                 {canAccess("npmcombo") && (
                   <li className="menu-item subitem">
                     <NavLink to="npmcombo">
-                      <MdRadioButtonUnchecked className="menu-icon" />
+                      <span className="sub-dot">→</span>
                       Notes / Prelims / Mains
-                    </NavLink>
-                  </li>
-                )}
-              </>
-            )}
-          </>
-        )}
-
-        {/* ================= PRELIMS ================= */}
-        {hasPrelimsAccess && (
-          <>
-            <li className="menu-item dropdown">
-              <div
-                className="dropdown-toggle"
-                onClick={() => setOpenPrelims(!openPrelims)}
-              >
-                <FaClipboardList className="menu-icon toggle-space" />
-                Prelims
-                <MdKeyboardArrowDown
-                  className={`arrow-icon ${openPrelims ? "rotate" : ""}`}
-                />
-              </div>
-            </li>
-
-            {openPrelims && (
-              <>
-                {canAccess("prelims") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="prelims">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      Prelims
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("pyqpaper") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="pyqpaper">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      PYQ Papers
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("swmockstests") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="swmockstests">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      SW Mock Tests
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("grandtests") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="grandtests">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      Grand Tests
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("quizzes") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="quizzes">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      Quizzes
-                    </NavLink>
-                  </li>
-                )}
-              </>
-            )}
-          </>
-        )}
-
-        {/* ================= MAINS ================= */}
-        {hasMainsAccess && (
-          <>
-            <li className="menu-item dropdown">
-              <div
-                className="dropdown-toggle"
-                onClick={() => setOpenMains(!openMains)}
-              >
-                <MdMenuBook className="menu-icon toggle-space" />
-                Mains
-                <MdKeyboardArrowDown
-                  className={`arrow-icon ${openMains ? "rotate" : ""}`}
-                />
-              </div>
-            </li>
-
-            {openMains && (
-              <>
-                {canAccess("mains") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="mains">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      Mains
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("mainsqa") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="mainsqa">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      Mains Q & A
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("manisessaytrans") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="manisessaytrans">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      Essay & Translation
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("testseries") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="testseries">
-                      <MdRadioButtonUnchecked className="menu-icon" />
-                      Test Series
                     </NavLink>
                   </li>
                 )}
@@ -445,14 +501,7 @@ const Sidebar = ({ sidebarOpen }) => {
           </li>
         )}
 
-        {canAccess("results") && (
-          <li className="menu-item">
-            <NavLink to="results">
-              <FaTrophy className="menu-icon" />
-              Results
-            </NavLink>
-          </li>
-        )}
+
       </ul>
     </div>
   );

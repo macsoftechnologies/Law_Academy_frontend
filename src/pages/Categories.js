@@ -96,7 +96,7 @@ function Categories() {
       cancelButtonText: "Cancel",
       confirmButtonColor: "#35a542",
       cancelButtonColor: "#ff7a00",
-    }); 
+    });
 
     if (!confirm.isConfirmed) return;
 
@@ -135,21 +135,26 @@ function Categories() {
     { header: "S.No", accessor: "sno" },
     { header: "Category Name", accessor: "category_name" },
     { header: "Tag Text", accessor: "tag_text" },
-    { header: "Presentation File", accessor: "presentation_file" },
+    { header: "Image", accessor: "presentation_file" },
     { header: "Actions", accessor: "actions" },
   ];
 
   const tableData = list.map((item, index) => ({
     ...item,
     sno: (currentPage - 1) * pageLimit + index + 1,
+    // ✅ Show image in table
     presentation_file: item.presentation_file ? (
-      <a
-        href={`${process.env.REACT_APP_API_BASE_URL}/${item.presentation_file}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        View File
-      </a>
+      <img
+        src={`${process.env.REACT_APP_API_BASE_URL}/${item.presentation_file}`}
+        alt="category"
+        style={{
+          height: "45px",
+          width: "60px",
+          objectFit: "cover",
+          borderRadius: "6px",
+          border: "1px solid #ddd",
+        }}
+      />
     ) : "N/A",
     actions: (
       <div className="actions">
@@ -185,8 +190,8 @@ function Categories() {
         <h2>CATEGORIES LIST</h2>
         <div className="d-flex gap-2 align-items-center">
           <label>Records per page:</label>
-          <select 
-           style={{
+          <select
+            style={{
               border: "2px solid #872026",
               padding: "2px",
               cursor: "pointer",
@@ -218,12 +223,12 @@ function Categories() {
       />
 
       {/* Add Modal */}
-      <Modal open={open} onClose={() => setOpen(false)} title="Add Category" size="lg">
+      <Modal open={open} onClose={() => setOpen(false)} title="Add Category" size="md">
         <CategoriesForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
       </Modal>
 
       {/* Edit Modal */}
-      <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit Category" size="lg">
+      <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit Category" size="md">
         <CategoriesForm
           onClose={() => setEditOpen(false)}
           initialData={selectedItem}
@@ -238,19 +243,27 @@ function Categories() {
           <div style={{ padding: "10px" }}>
             <p><b>Category Name:</b> {selectedItem.category_name}</p>
             <p><b>Tag Text:</b> {selectedItem.tag_text}</p>
-            <p>
-              <b>Presentation File:</b>{" "}
-              {selectedItem.presentation_file ? (
-                <a
-                  href={`${process.env.REACT_APP_API_BASE_URL}/${selectedItem.presentation_file}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View File
-                </a>
-              ) : "N/A"}
-            </p>
-            <button className="btn btn-secondary mt-2" onClick={() => setViewOpen(false)}>Close</button>
+            <p><b>Image:</b></p>
+            {/* ✅ Show image in view modal */}
+            {selectedItem.presentation_file ? (
+              <img
+                src={`${process.env.REACT_APP_API_BASE_URL}/${selectedItem.presentation_file}`}
+                alt="category"
+                style={{
+                  height: "150px",
+                  width: "100%",
+                  objectFit: "contain",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
+                  marginTop: "6px",
+                }}
+              />
+            ) : (
+              <span>N/A</span>
+            )}
+            <div className="text-end mt-3">
+              <button className="btn btn-secondary" onClick={() => setViewOpen(false)}>Close</button>
+            </div>
           </div>
         )}
       </Modal>

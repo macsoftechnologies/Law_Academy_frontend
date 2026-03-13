@@ -8,8 +8,8 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
   const [aboutLecture, setAboutLecture] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
 
-  const [durationValue, setDurationValue] = useState("");
-  const [durationUnit, setDurationUnit] = useState("mins");
+  const [durationMins, setDurationMins] = useState("");
+  const [durationSecs, setDurationSecs] = useState("");
 
   const [image, setImage] = useState(null);
 
@@ -22,9 +22,11 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
       setVideoUrl(initialData.video_url || "");
 
       if (initialData.duration) {
-        const [value, unit] = initialData.duration.split(" ");
-        setDurationValue(value || "");
-        setDurationUnit(unit || "mins");
+        // Parse "45 mins 30 secs" format
+        const minsMatch = initialData.duration.match(/(\d+)\s*mins/);
+        const secsMatch = initialData.duration.match(/(\d+)\s*secs/);
+        setDurationMins(minsMatch ? minsMatch[1] : "");
+        setDurationSecs(secsMatch ? secsMatch[1] : "");
       }
     }
   }, [initialData, isEdit]);
@@ -32,12 +34,16 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!durationValue) {
+    if (!durationMins && !durationSecs) {
       alert("Duration is required");
       return;
     }
 
-    const duration = `${durationValue} ${durationUnit}`;
+    // Build "45 mins 30 secs" format
+    let durationParts = [];
+    if (durationMins) durationParts.push(`${durationMins} mins`);
+    if (durationSecs) durationParts.push(`${durationSecs} secs`);
+    const duration = durationParts.join(" ");
 
     const formData = new FormData();
     formData.append("title", title);
@@ -67,6 +73,7 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
           <label className="form-label">Title</label>
           <input
             className="form-control"
+            placeholder="Enter lecture title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -77,6 +84,7 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
           <label className="form-label">Author</label>
           <input
             className="form-control"
+            placeholder="Enter author name"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             required
@@ -84,33 +92,35 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
         </div>
 
         <div className="col-md-6 mb-2">
-          <label className="form-label">Duration</label>
+          <label className="form-label">Duration (Minutes)</label>
           <input
             type="number"
             className="form-control"
-            placeholder="30"
-            value={durationValue}
-            onChange={(e) => setDurationValue(e.target.value)}
-            required
+            placeholder="45"
+            min="0"
+            value={durationMins}
+            onChange={(e) => setDurationMins(e.target.value)}
           />
         </div>
 
         <div className="col-md-6 mb-2">
-          <label className="form-label">Unit</label>
-          <select
-            className="form-select"
-            value={durationUnit}
-            onChange={(e) => setDurationUnit(e.target.value)}
-          >
-            <option value="mins">Minutes</option>
-            <option value="secs">Seconds</option>
-          </select>
+          <label className="form-label">Duration (Seconds)</label>
+          <input
+            type="number"
+            className="form-control"
+            placeholder="30"
+            min="0"
+            max="59"
+            value={durationSecs}
+            onChange={(e) => setDurationSecs(e.target.value)}
+          />
         </div>
 
         <div className="col-md-6 mb-2">
           <label className="form-label">Video URL</label>
           <input
             className="form-control"
+            placeholder="https://www.youtube.com/watch?v=..."
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
           />
@@ -121,6 +131,7 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
           <textarea
             className="form-control"
             rows={3}
+            placeholder="Write a brief description about the class..."
             value={aboutClass}
             onChange={(e) => setAboutClass(e.target.value)}
           />
@@ -131,6 +142,7 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
           <textarea
             className="form-control"
             rows={3}
+            placeholder="Write a brief description about the lecture..."
             value={aboutLecture}
             onChange={(e) => setAboutLecture(e.target.value)}
           />
@@ -174,7 +186,6 @@ function GuestLecturesForm({ onClose, initialData, isEdit, onSubmit }) {
         </button>
       </div>
     </form>
-
   );
 }
 

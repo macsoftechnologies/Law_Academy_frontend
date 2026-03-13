@@ -7,13 +7,32 @@ import Modal from "../components/Modal";
 
 import { getPrintednotesoders, updateOrderStatus } from "../services/authService";
 
+const STATUS_FLOW = {
+  pending:          { next: "shipped",          label: "Pending",          color: "#ff9800", nextLabel: "Mark as Shipped" },
+  shipped:          { next: "out_for_delivery",  label: "Shipped",          color: "#17a2b8", nextLabel: "Mark as Out for Delivery" },
+  out_for_delivery: { next: "delivered",         label: "Out for Delivery", color: "#9c27b0", nextLabel: "Mark as Delivered" },
+  delivered:        { next: null,                label: "Delivered",        color: "#4caf50", nextLabel: null },
+  cancelled:        { next: null,                label: "Cancelled",        color: "#dc3545", nextLabel: null },
+};
+
+const getStatusStyle = (status) => ({
+  color: STATUS_FLOW[status]?.color || "#333",
+  fontWeight: "bold",
+});
+
+
 const PrintedNotesOrders = () => {
-  const [viewOpen, setViewOpen] = useState(false);
+  const [viewOpen, setViewOpen]       = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [ordersList, setOrdersList] = useState([]);
+  const [ordersList, setOrdersList]   = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [pageLimit, setPageLimit] = useState(10);
+  const [totalPages, setTotalPages]   = useState(1);
+  const [pageLimit, setPageLimit]     = useState(10);
+
+  // Status transition modal
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [statusTarget, setStatusTarget]       = useState(null);
+  // statusTarget = { order_id, currentStatus, nextStatus, nextLabel }
 
   const fetchOrders = useCallback(
     async (page = 1, limit = pageLimit) => {
@@ -21,7 +40,7 @@ const PrintedNotesOrders = () => {
         const res = await getPrintednotesoders(page, limit);
         setOrdersList(res.data || []);
         setTotalPages(res.totalPages || 1);
-      } catch (err) {
+      } catch {
         Swal.fire("Error", "Failed to fetch printed notes orders", "error");
         setOrdersList([]);
         setTotalPages(1);
@@ -39,61 +58,52 @@ const PrintedNotesOrders = () => {
     setViewOpen(true);
   };
 
-  const handleStatusUpdate = async (orderId) => {
-    const result = await Swal.fire({
-      title: "Update Status?",
-      text: "Are you sure you want to mark this order as Shipped?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Mark as Shipped",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#2b377b",
-      cancelButtonColor: "#6c757d",
+  const handleStatusClick = (item) => {
+    const flow = STATUS_FLOW[item.status];
+    if (!flow?.next) return;
+    setStatusTarget({
+      order_id:      item.order_id,
+      currentStatus: item.status,
+      nextStatus:    flow.next,
+      nextLabel:     flow.nextLabel,
     });
+    setStatusModalOpen(true);
+  };
 
-    if (!result.isConfirmed) return;
-
+  const handleStatusConfirm = async () => {
+    if (!statusTarget) return;
     try {
-      await updateOrderStatus({ order_id: orderId, status: "shipped" });
+      await updateOrderStatus({ order_id: statusTarget.order_id, status: statusTarget.nextStatus });
 
-      setOrdersList((prev) =>
-        prev.map((o) =>
-          o.order_id === orderId ? { ...o, status: "shipped" } : o
-        )
-      );
+      const update = (o) =>
+        o.order_id === statusTarget.order_id ? { ...o, status: statusTarget.nextStatus } : o;
 
-      setSelectedOrder((prev) =>
-        prev ? { ...prev, status: "shipped" } : prev
-      );
+      setOrdersList((prev) => prev.map(update));
+      setSelectedOrder((prev) => (prev ? update(prev) : prev));
+
+      setStatusModalOpen(false);
+      setStatusTarget(null);
 
       Swal.fire({
         title: "Updated!",
-        text: "Order marked as shipped",
+        text: `Order marked as ${STATUS_FLOW[statusTarget.nextStatus].label}`,
         icon: "success",
         toast: true,
         position: "top-end",
-        timer: 4000,
+        timer: 3000,
         showConfirmButton: false,
         timerProgressBar: true,
         background: "#28a745",
         color: "#ffffff",
       });
-    } catch (err) {
+    } catch {
       Swal.fire("Error", "Failed to update status", "error");
     }
   };
 
-  const getStatusStyle = (status) => {
-    if (status === "pending") return { color: "#ff9800", fontWeight: "bold" };
-    if (status === "shipped") return { color: "#17a2b8", fontWeight: "bold" };
-    if (status === "delivered") return { color: "#4caf50", fontWeight: "bold" };
-    if (status === "cancelled") return { color: "#dc3545", fontWeight: "bold" };
-    return { fontWeight: "bold" };
-  };
-
   const columns = [
     { header: "S.No",           accessor: "serial" },
-    { header: "Name",      accessor: "user_name" },
+    { header: "Name",           accessor: "user_name" },
     { header: "Notes Title",    accessor: "notes_title" },
     { header: "Mobile Number",  accessor: "mobile_number" },
     { header: "Payment Amount", accessor: "payment_amount" },
@@ -103,29 +113,38 @@ const PrintedNotesOrders = () => {
   ];
 
   const tableData = ordersList.map((item, index) => {
-    const user   = item.userId?.[0]    || {};
-    const note   = item.notes_id?.[0]  || {};
+    const user   = item.userId?.[0]   || {};
+    const note   = item.notes_id?.[0] || {};
     // const coupon = item.coupon_id?.[0] || {};
+    const flow   = STATUS_FLOW[item.status];
 
     return {
       ...item,
       serial:         (currentPage - 1) * pageLimit + index + 1,
-      user_name:      user.name                                         || "—",
-      notes_title:    note.title                                        || "—",
-      mobile_number:  user.mobile_number                                || "—",
+      user_name:      user.name          || "—",
+      notes_title:    note.title         || "—",
+      mobile_number:  user.mobile_number || "—",
       // payment_amount: coupon.offer_amount != null ? `₹${coupon.offer_amount}` : "—",
-      payment_method: item.payment_method                               || "—",
-      status_badge:
-        item.status === "pending" ? (
-          <span
-            style={{ ...getStatusStyle("pending"), cursor: "pointer" }}
-            onClick={() => handleStatusUpdate(item.order_id)}
-          >
-            pending ▶
-          </span>
-        ) : (
-          <span style={getStatusStyle(item.status)}>{item.status}</span>
-        ),
+      payment_method: item.payment_method || "—",
+
+      status_badge: flow?.next ? (
+        <span
+          style={{
+            ...getStatusStyle(item.status),
+            cursor: "pointer",
+            textDecoration: "underline dotted",
+          }}
+          title={`Click to: ${flow.nextLabel}`}
+          onClick={() => handleStatusClick(item)}
+        >
+          {flow.label} ▶
+        </span>
+      ) : (
+        <span style={getStatusStyle(item.status)}>
+          {flow?.label || item.status}
+        </span>
+      ),
+
       actions: (
         <div className="actions d-flex">
           <button
@@ -157,6 +176,7 @@ const PrintedNotesOrders = () => {
 
   return (
     <div>
+      {/* Header */}
       <div className="d-flex justify-content-between mb-3">
         <h2>PRINTED NOTES ORDERS</h2>
 
@@ -180,6 +200,7 @@ const PrintedNotesOrders = () => {
         </div>
       </div>
 
+      {/* Table */}
       <Table
         columns={columns}
         data={tableData}
@@ -199,6 +220,7 @@ const PrintedNotesOrders = () => {
           const note    = selectedOrder.notes_id?.[0]   || {};
           const address = selectedOrder.address_id?.[0] || {};
           const coupon  = selectedOrder.coupon_id?.[0]  || {};
+          const flow    = STATUS_FLOW[selectedOrder.status];
 
           return (
             <div className="container">
@@ -295,7 +317,7 @@ const PrintedNotesOrders = () => {
                   <b>Status:</b>
                   <div className="mt-1">
                     <span style={getStatusStyle(selectedOrder.status)}>
-                      {selectedOrder.status}
+                      {flow?.label || selectedOrder.status}
                     </span>
                   </div>
                 </div>
@@ -303,13 +325,17 @@ const PrintedNotesOrders = () => {
 
               <hr />
               <div className="d-flex justify-content-end gap-2">
-                {selectedOrder.status === "pending" && (
+                {/* Show advance-status button only if there's a next step */}
+                {flow?.next && (
                   <button
                     className="btn btn-primary"
                     style={{ background: "#2b377b", border: "none" }}
-                    onClick={() => handleStatusUpdate(selectedOrder.order_id)}
+                    onClick={() => {
+                      setViewOpen(false);
+                      handleStatusClick(selectedOrder);
+                    }}
                   >
-                    Mark as Shipped
+                    {flow.nextLabel}
                   </button>
                 )}
                 <button
@@ -324,6 +350,71 @@ const PrintedNotesOrders = () => {
           );
         })()}
       </Modal>
+
+      <Modal
+        open={statusModalOpen}
+        onClose={() => { setStatusModalOpen(false); setStatusTarget(null); }}
+        title="Update Order Status"
+        size="md"
+      >
+        {statusTarget && (
+          <div className="container text-center py-3">
+            {/* Step indicator */}
+            <div className="d-flex justify-content-center align-items-center gap-2 mb-4">
+              <span
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: "20px",
+                  background: STATUS_FLOW[statusTarget.currentStatus].color + "22",
+                  color: STATUS_FLOW[statusTarget.currentStatus].color,
+                  fontWeight: 700,
+                  fontSize: "14px",
+                  border: `1.5px solid ${STATUS_FLOW[statusTarget.currentStatus].color}`,
+                }}
+              >
+                {STATUS_FLOW[statusTarget.currentStatus].label}
+              </span>
+
+              <span style={{ fontSize: "20px", color: "#888" }}>→</span>
+
+              <span
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: "20px",
+                  background: STATUS_FLOW[statusTarget.nextStatus].color + "22",
+                  color: STATUS_FLOW[statusTarget.nextStatus].color,
+                  fontWeight: 700,
+                  fontSize: "14px",
+                  border: `1.5px solid ${STATUS_FLOW[statusTarget.nextStatus].color}`,
+                }}
+              >
+                {STATUS_FLOW[statusTarget.nextStatus].label}
+              </span>
+            </div>
+
+            <p style={{ color: "#555", fontSize: "15px" }}>
+              Are you sure you want to update this order's status?
+            </p>
+
+            <div className="d-flex justify-content-center gap-2 mt-3">
+              <button
+                className="btn btn-primary"
+                style={{ background: "#2b377b", border: "none", minWidth: "160px" }}
+                onClick={handleStatusConfirm}
+              >
+                {statusTarget.nextLabel}
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => { setStatusModalOpen(false); setStatusTarget(null); }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
     </div>
   );
 };

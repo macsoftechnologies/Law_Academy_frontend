@@ -167,7 +167,7 @@ function NotesForm({ onClose, initialData, isEdit, onSubmit, userId }) {
     formData.append("subcategory_id", subcategoryId);
     formData.append("about_book", JSON.stringify(aboutBook));
     formData.append("terms_conditions", termsConditions);
-    formData.append("isPrintAvail", isPrintAvail);   // sends true / false
+    formData.append("isPrintAvail", isPrintAvail);  
 
     // File fields
     if (presentationImage) formData.append("presentation_image", presentationImage);

@@ -7,7 +7,6 @@ import PlansForm from "../forms/PlansForm";
 import {
   addPlans,
   getPlans,
-  getPlansById,
   updatePlans,
   deletePlans,
 } from "../services/authService";
@@ -37,15 +36,10 @@ const Plans = () => {
     fetchPlans(currentPage, pageLimit);
   }, [currentPage, pageLimit, fetchPlans]);
 
-  const handleView = async (item) => {
-    try {
-      const res = await getPlansById(item.planId);
-      setSelectedPlan(res.data);
-      setViewOpen(true);
-    } catch {
-      Swal.fire("Error", "Failed to load plan details", "error");
-    }
-  };
+  const handleView = (item) => {
+  setSelectedPlan(item);
+  setViewOpen(true);
+};
 
   const handleEdit = (item) => {
     setSelectedPlan(item);
@@ -124,15 +118,20 @@ const Plans = () => {
 
   const columns = [
     { header: "S.No", accessor: "serial" },
+    { header: "Course Type", accessor: "course_type" },
+    { header: "Course Title", accessor: "courseTitle" },
     { header: "Original Price", accessor: "original_price" },
     { header: "Strike Price", accessor: "strike_price" },
     { header: "Duration", accessor: "duration" },
+    { header: "Handling Fee", accessor: "handling_fee" },
+    { header: "Discount", accessor: "discount_percent" },
     { header: "Actions", accessor: "actions" },
   ];
 
   const tableData = plansList.map((item, index) => ({
     ...item,
     serial: (currentPage - 1) * pageLimit + index + 1,
+    courseTitle: item.courseDetails?.title || "-",
     actions: (
       <div className="actions d-flex">
         <button className="icon-btn view me-2" onClick={() => handleView(item)}>
@@ -198,24 +197,27 @@ const Plans = () => {
         />
       </Modal>
 
-      <Modal open={viewOpen} onClose={() => setViewOpen(false)} title="Plan Details" size="lg">
-        {selectedPlan && (
-          <div className="container">
-            <div className="row mb-2">
-              <div className="col-md-6"><b>Original Price:</b> {selectedPlan.original_price}</div>
-              <div className="col-md-6"><b>Strike Price:</b> {selectedPlan.strike_price}</div>
-            </div>
-            <div className="row mb-2">
-              <div className="col-md-6"><b>Duration:</b> {selectedPlan.duration}</div>
-              <div className="col-md-6"><b>Handling Fee:</b> {selectedPlan.handling_fee}%</div>
-            </div>
-            <div className="row mb-2">
-              <div className="col-md-6"><b>Discount:</b> {selectedPlan.discount_percent}%</div>
-              <div className="col-md-6"><b>Course Type:</b> {selectedPlan.course_type}</div>
-            </div>
+     <Modal open={viewOpen} onClose={() => setViewOpen(false)} title="Plan Details" size="lg">
+      {selectedPlan && (
+        <div className="container">
+          <div className="row mb-2">
+            <div className="col-md-6"><b>Course Type:</b> {selectedPlan.course_type}</div>
+            <div className="col-md-6"><b>Course Title:</b> {selectedPlan.courseDetails?.title || "-"}</div>
           </div>
-        )}
-      </Modal>
+          <div className="row mb-2">
+            <div className="col-md-6"><b>Original Price:</b> {selectedPlan.original_price}</div>
+            <div className="col-md-6"><b>Strike Price:</b> {selectedPlan.strike_price}</div>
+          </div>
+          <div className="row mb-2">
+            <div className="col-md-6"><b>Duration:</b> {selectedPlan.duration}</div>
+            <div className="col-md-6"><b>Handling Fee:</b> {selectedPlan.handling_fee}%</div>
+          </div>
+          <div className="row mb-2">
+            <div className="col-md-6"><b>Discount:</b> {selectedPlan.discount_percent}%</div>
+          </div>
+        </div>
+      )}
+    </Modal>
     </div>
   );
 };

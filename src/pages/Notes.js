@@ -35,7 +35,7 @@ function Notes() {
   const fetchNotes = useCallback(
     async (page = 1, limit = pageLimit) => {
       try {
-        const res = await getNotes(page, limit, userId);
+        const res = await getNotes(page, limit);
         console.log("Notes API response:", res);
         setNotesList(res.data || []);
         setTotalPages(res.totalPages || 1);
@@ -44,7 +44,7 @@ function Notes() {
         Swal.fire("Error", "Failed to fetch notes", "error");
       }
     },
-    [pageLimit, userId]
+    [pageLimit]
   );
 
   useEffect(() => {
@@ -199,15 +199,11 @@ function Notes() {
     return <span className="badge bg-success">{days}d left</span>;
   };
 
-  // ─── Updated Columns ───────────────────────────────────────────────────────
   const columns = [
     { header: "S.No",         accessor: "serial" },
     { header: "Title",        accessor: "title" },
     { header: "Sub Title",    accessor: "sub_title" },
     { header: "Sub Category", accessor: "subCategoryName" },
-    { header: "Enrolled",     accessor: "enrolledBadge" },
-    { header: "Enroll Date",  accessor: "enrollDateFormatted" },
-    { header: "Expiry Date",  accessor: "expiryDateFormatted" },
     { header: "Actions",      accessor: "actions" },
   ];
 
@@ -236,26 +232,6 @@ function Notes() {
     ) : (
       <span className="badge bg-secondary">No</span>
     ),
-
-    enrolledBadge: item.isEnrolled ? (
-      <span className="badge bg-primary">Enrolled</span>
-    ) : (
-      <span className="badge bg-warning text-dark">Not Enrolled</span>
-    ),
-
-    enrollDateFormatted: (
-      <span style={{ fontSize: "13px", color: "#555" }}>
-        {item.enroll_date ? formatDate(item.enroll_date) : <span className="text-muted">—</span>}
-      </span>
-    ),
-
-    expiryDateFormatted: (
-      <span style={{ fontSize: "13px", color: "#555" }}>
-        {item.expiry_date ? formatDate(item.expiry_date) : <span className="text-muted">—</span>}
-      </span>
-    ),
-
-    remainingDuration: formatRemainingDuration(item.remaining_duration),
 
     actions: (
       <div className="actions d-flex">
@@ -409,7 +385,7 @@ function Notes() {
               </div>
             </div>
 
-            <div className="row mb-3">
+            {/* <div className="row mb-3">
               <div className="col-md-6">
                 <b>Created At:</b>
                 <div className="mt-1" style={{ fontSize: "13px", color: "#555" }}>
@@ -422,7 +398,7 @@ function Notes() {
                   {formatDate(selectedNote.updatedAt)}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="row mb-3">
               <div className="col-md-6">

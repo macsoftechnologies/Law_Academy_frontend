@@ -88,9 +88,9 @@ const Lectures = () => {
     subcategory_name: item.subcategory_id?.[0]?.title || "-",
     author: item.author || "-",
     actions: (
-      <div className="d-flex gap-2">
+      <div className="actions">
         <button
-          className="btn btn-sm btn-info"
+          className="icon-btn view"
           onClick={() => {
             setSelectedItem(item);
             setViewOpen(true);
@@ -99,7 +99,7 @@ const Lectures = () => {
           <FaEye />
         </button>
         <button
-          className="btn btn-sm btn-warning"
+          className="icon-btn edit"
           onClick={() => {
             setSelectedItem(item);
             setEditOpen(true);
@@ -108,7 +108,7 @@ const Lectures = () => {
           <FaEdit />
         </button>
         <button
-          className="btn btn-sm btn-danger"
+          className="icon-btn delete"
           onClick={() => handleDelete(item.lectureId)}
         >
           <FaTrash />

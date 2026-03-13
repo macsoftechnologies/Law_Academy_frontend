@@ -13,7 +13,7 @@ const LawForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
   const [categoryId, setCategoryId] = useState("");
   const [subcategoryId, setSubcategoryId] = useState("");
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(""); 
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 

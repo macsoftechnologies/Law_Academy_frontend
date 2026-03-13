@@ -2,35 +2,43 @@ import React, { useState, useEffect, useRef } from "react";
 import "../forms/form.css";
 
 const moduleOptions = [
-  { value: "admins", label: "Admins" },
-  { value: "students", label: "Students" },
-  { value: "studentrequests", label: "Student Requests" },
+  { value: "admins",              label: "Admins" },
+  { value: "students",            label: "Students" },
+  { value: "student_requests",    label: "Student Requests" },
 
-  { value: "categories", label: "Categories" },
-  { value: "subcategories", label: "Sub Categories" },
-  { value: "laws", label: "Laws" },
-  { value: "subjects", label: "Subjects" },
+  { value: "categories",          label: "Categories" },
+  { value: "subcategories",       label: "Sub Categories" },
+  { value: "laws",                label: "Laws" },
+  { value: "subjects",            label: "Subjects" },
+  { value: "lectures",            label: "Lectures" },
+  { value: "gestlectures",        label: "Guest Lectures" },
 
-  { value: "plans", label: "Plans" },
-  { value: "lectures", label: "Lectures" },
-  { value: "gestlectures", label: "Guest Lectures" },
+  { value: "plans",               label: "Plans" },
+  { value: "coupons",             label: "Coupons" },
 
-  { value: "courescombo", label: "Course Combos" },
-  { value: "npmcombo", label: "NPM Combos" },
+  { value: "prelims",             label: "Prelims" },
+  { value: "pqapaper",            label: "PQA Papers" },
+  { value: "swmockstests",        label: "SW Mock Tests" },
+  { value: "grandtests",          label: "Grand Tests" },
+  { value: "quizzes",             label: "Quizzes" },
 
-  { value: "notes", label: "Notes" },
-  { value: "pyqpaper", label: "PYQ Papers" },
+  { value: "mains",               label: "Mains" },
+  { value: "mainsqa",             label: "Mains Q&A" },
+  { value: "manisessaytrans",     label: "Essay & Translation" },
+  { value: "mainstestseries",     label: "Mains Test Series" },
+  { value: "mainssubjecttests",   label: "Mains Subject Tests" },
+  { value: "mainstestsattempts",  label: "Mains Tests Attempts" },
+  { value: "mainsresults",        label: "Mains Results" },
 
-  { value: "swmockstests", label: "SW Mock Tests" },
-  { value: "grandtests", label: "Grand Tests" },
-  { value: "quizzes", label: "Quizzes" },
+  { value: "notes",               label: "Notes" },
+  { value: "subjectnotes",        label: "Subject Notes" },
+  { value: "printednotesorders",  label: "Printed Notes Orders" },
 
-  { value: "mainsqa", label: "Mains Q&A" },
-  { value: "manisessaytrans", label: "Mains Essay Translation" },
+  { value: "courescombo",         label: "Course Combo" },
+  { value: "npmcombo",            label: "Notes / Prelims / Mains" },
 
-  { value: "testseries", label: "Test Series" },
-  { value: "banners", label: "Banners" },
-  { value: "results", label: "Results" },
+  { value: "banners",             label: "Banners" },
+  { value: "results",             label: "Results" },
 ];
 
 
