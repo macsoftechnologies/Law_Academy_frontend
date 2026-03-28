@@ -3,13 +3,14 @@ import Table from "../components/Table";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import Swal from "sweetalert2";
-import { addBanner, getBanners, deleteBanner } from "../services/authService";
+import { addBanner, getBanners, deleteBanner, updateBanners } from "../services/authService";
 import "../forms/form.css";
-import { FaEye, FaTrash } from "react-icons/fa";
+import { FaEye, FaTrash, FaEdit } from "react-icons/fa";
 
 const Banners = () => {
   const [open, setOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [bannersList, setBannersList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +40,11 @@ const Banners = () => {
     setViewOpen(true);
   };
 
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setEditOpen(true);
+  };
+
   const handleDelete = async (bannerId) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -48,7 +54,7 @@ const Banners = () => {
       confirmButtonText: "Yes, delete",
       cancelButtonText: "Cancel",
       confirmButtonColor: "#35a542",
-      cancelButtonColor: "#ff7a00",
+      cancelButtonColor: "#8f1e1e",
     });
 
     if (!confirm.isConfirmed) return;
@@ -95,6 +101,28 @@ const Banners = () => {
     }
   };
 
+  const handleUpdate = async (formData) => {
+    try {
+      await updateBanners(formData);
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Banner updated",
+        timer: 5000,
+        showConfirmButton: false,
+        background: "#28a745",
+        color: "#ffffff",
+      });
+      setEditOpen(false);
+      setSelectedItem(null);
+      fetchBanners(currentPage, pageLimit);
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Update banner failed", "error");
+    }
+  };
+
   /* TABLE COLUMNS */
   const columns = [
     { header: "S.No", accessor: "sno" },
@@ -138,6 +166,13 @@ const Banners = () => {
           onClick={() => handleView(item)}
         >
           <FaEye />
+        </button>
+        <button
+          className="icon-btn edit"
+          title="Edit"
+          onClick={() => handleEdit(item)}
+        >
+          <FaEdit />
         </button>
         <button
           className="icon-btn delete"
@@ -192,6 +227,18 @@ const Banners = () => {
         <BannerForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
       </Modal>
 
+      {/* EDIT MODAL */}
+      <Modal open={editOpen} onClose={() => { setEditOpen(false); setSelectedItem(null); }} title="Update Banner">
+        {selectedItem && (
+          <BannerForm
+            onClose={() => { setEditOpen(false); setSelectedItem(null); }}
+            onSubmit={handleUpdate}
+            existingData={selectedItem}
+            isEdit={true}
+          />
+        )}
+      </Modal>
+
       {/* VIEW MODAL */}
       <Modal open={viewOpen} onClose={() => setViewOpen(false)} title="View Banner">
         {selectedItem && (
@@ -232,31 +279,49 @@ const Banners = () => {
 
 /* ================= FORM ================= */
 
-function BannerForm({ onClose, onSubmit }) {
+function BannerForm({ onClose, onSubmit, existingData = null, isEdit = false }) {
   const [imageFile, setImageFile] = useState(null);
-  const [redirectLink, setRedirectLink] = useState("");
+  const [redirectLink, setRedirectLink] = useState(existingData?.redirect_link || "");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!imageFile) return;
+
+    if (!isEdit && !imageFile) return;
 
     const formData = new FormData();
-    formData.append("banner_file", imageFile);
+    if (imageFile) formData.append("banner_file", imageFile);
     formData.append("redirect_link", redirectLink);
+    if (isEdit && existingData?.bannerId) {
+      formData.append("bannerId", existingData.bannerId);
+    }
 
-    onSubmit(formData); 
+    onSubmit(formData);
   };
 
   return (
     <form className="custom-form" onSubmit={handleSubmit}>
       <div className="mb-3">
         <label className="form-label">Banner Image</label>
+
+        {isEdit && existingData?.banner_file && !imageFile && (
+          <div className="mb-2">
+            <img
+              src={`${process.env.REACT_APP_API_BASE_URL}/${existingData.banner_file}`}
+              width="200"
+              height="100"
+              style={{ borderRadius: "8px", objectFit: "cover" }}
+              alt="Current banner"
+            />
+            <p className="text-muted small mt-1">Current image — upload a new one to replace it</p>
+          </div>
+        )}
+
         <input
           type="file"
           className="form-control"
           accept="image/*"
           onChange={(e) => setImageFile(e.target.files[0])}
-          required
+          required={!isEdit} 
         />
       </div>
 
@@ -276,7 +341,7 @@ function BannerForm({ onClose, onSubmit }) {
           Cancel
         </button>
         <button type="submit" className="btn btn-success">
-          Save
+          {isEdit ? "Update" : "Save"}
         </button>
       </div>
     </form>

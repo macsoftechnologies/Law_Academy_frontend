@@ -1,121 +1,101 @@
+/* Table.css — updated with brand palette */
+
+:root {
+  --blue: #1A3C8B;
+  --gold: #C9A227;
+  --cherry: #6C1E1E;
+  --cream: #FFF7E0;
+}
+
 .table-container {
   width: 100%;
   overflow-x: auto;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  background: var(--cream);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(26,60,139,0.10);
   padding: 20px;
+}
+
+.table-info {
+  font-size: 13px;
+  color: #5a5a5a;
+  margin-bottom: 10px;
+}
+.table-info span {
+  color: var(--cherry);
+  font-weight: 600;
 }
 
 .custom-table {
   border-collapse: collapse;
-  width: 100%;    
-  table-layout: auto; 
-  min-width: 0;       
-}
-
-.custom-table th,
-.custom-table td {
-  padding: 13px;
-  text-align: left;
-  white-space: nowrap;
+  width: 100%;
+  table-layout: auto;
+  background: #fff;
+  border-radius: 10px;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .custom-table thead {
-  background-color: #f1f3f6;
-  border-bottom: 2px solid #e0e0e0;
-  font-weight: 600;
-  font-size: 14px;
+  background-color: var(--blue);
+}
+
+.custom-table thead th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  white-space: nowrap;
+  letter-spacing: 0.4px;
 }
 
 .custom-table tbody tr {
-  background-color: #fff;
-  transition: background 0.2s;
+  border-bottom: 1px solid #f0e9d6;
+  transition: background 0.15s;
 }
 
-.custom-table tbody tr:nth-child(even) {
-  background-color: #f8f9fa;
+.custom-table tbody tr:last-child { border-bottom: none; }
+
+.custom-table tbody tr:nth-child(even) { background: #fffdf5; }
+.custom-table tbody tr:hover { background: #f5edcf; }
+
+.custom-table td {
+  padding: 13px 16px;
+  font-size: 13px;
+  color: #2a2a2a;
+  white-space: nowrap;
 }
 
-.custom-table tbody tr:hover {
-  background-color: #e6f7ff;
-}
+/* Action buttons */
+.actions button { width: 30px; height: 30px; border: none; border-radius: 7px; cursor: pointer; transition: opacity 0.15s, transform 0.12s; }
+.actions button:hover { opacity: 0.82; transform: scale(1.09); }
+.actions button.view   { background: var(--blue);   color: #fff; }
+.actions button.edit   { background: var(--gold);   color: #fff; }
+.actions button.delete { background: var(--cherry); color: #fff; }
 
-.actions button {
-  margin-right: 5px;
-  padding: 5px 8px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.actions button.view {
-  background-color: #007bff;
-  color: white;
-}
-
-.actions button.edit {
-  background-color: #ffc107;
-  color: white;
-}
-
-.actions button.delete {
-  background-color: #dc3545;
-  color: white;
-}
-
-.progress-bar {
-  height: 6px;
-  width: 100%;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background-color: #007bff;
-  width: 0%;
-}
-
-.change-positive {
-  color: #28a745;
-  font-weight: 600;
-}
-
-.change-negative {
-  color: #dc3545;
-  font-weight: 600;
-}
-
-
-/*...pagination... */
-
-.pagination {
-  margin: 30px 0px;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
+/* Pagination */
+.pagination { display: flex; justify-content: center; gap: 6px; padding: 18px 0 6px; }
 
 .page-btn, .page-number {
-  padding: 8px 16px;
-  font-size: 14px;
-  background: #f3f3f3;
-  border: 2px solid #ddd;
-  border-radius: 6px;
+  padding: 7px 15px;
+  font-size: 13px;
+  border-radius: 7px;
+  border: 1.5px solid var(--gold);
+  background: #fff;
+  color: var(--blue);
   cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
 }
+.page-btn:hover, .page-number:hover { background: var(--gold); color: #fff; }
+.page-btn:disabled { opacity: 0.38; cursor: not-allowed; background: #f5f5f5; color: #aaa; border-color: #e0e0e0; }
+.page-number.active { background: var(--cherry); color: var(--cream); border-color: var(--cherry); }
 
-.page-btn:disabled {
-  /* opacity: 0.4; */
-  cursor: not-allowed;
-}
+/* Font sizes */
+.custom-table th, .custom-table td { font-size: 15px; padding: 16px 20px; }
 
-.page-number.active {
-  background: #8f1e1e;
-  color: white;
-}
+/* Action buttons */
+/* .actions button { width: 36px; height: 36px; font-size: 16px; border-radius: 9px; } */
+
+/* Pagination */
+.page-btn, .page-number { padding: 9px 20px; font-size: 15px; font-weight: 600; }

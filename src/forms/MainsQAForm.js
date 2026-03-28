@@ -8,7 +8,7 @@ function MainsQAForm({ onClose, initialData, isEdit, onSubmit }) {
   const [videoUrl, setVideoUrl]                                   = useState("");
   const [pdfUrl, setPdfUrl]                                       = useState("");
   const [durationValue, setDurationValue]                         = useState("");
-  const [durationUnit, setDurationUnit]                           = useState("Minutes");
+  const [durationUnit, setDurationUnit]                           = useState("mins");
   const [moduleId, setModuleId]                                   = useState("");
   const [presentationImage, setPresentationImage]                 = useState(null);
   const [existingPresentationImage, setExistingPresentationImage] = useState(null);
@@ -19,14 +19,14 @@ function MainsQAForm({ onClose, initialData, isEdit, onSubmit }) {
   const MAX_FILE_SIZE_MB = 1;
 
   const parseDuration = (durationStr) => {
-    if (!durationStr) return { value: "", unit: "Minutes" };
+    if (!durationStr) return { value: "", unit: "mins" };
     const str = durationStr.toString().toLowerCase().trim();
     if (str.includes("hr")) {
       const match = str.match(/(\d+)/);
       return { value: match ? match[1] : "", unit: "Hours" };
     }
     const match = str.match(/(\d+)/);
-    return { value: match ? match[1] : "", unit: "Minutes" };
+    return { value: match ? match[1] : "", unit: "mins" };
   };
 
   const buildDurationString = (value, unit) => {
@@ -237,7 +237,7 @@ function MainsQAForm({ onClose, initialData, isEdit, onSubmit }) {
               value={durationUnit}
               onChange={(e) => setDurationUnit(e.target.value)}
             >
-              <option value="Minutes">Minutes</option>
+              <option value="mins">Minutes</option>
               <option value="Hours">Hours</option>
             </select>
           </div>

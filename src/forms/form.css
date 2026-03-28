@@ -1,84 +1,331 @@
+/* ============================================================
+   Form.css  —  Brand Palette
+   --blue:   #1A3C8B  (French Blue)
+   --gold:   #C9A227  (Golden Bronze)
+   --cherry: #6C1E1E  (Black Cherry)
+   --cream:  #FFF7E0  (Cornsilk)
+   ============================================================ */
+
+:root {
+  --blue:          #1A3C8B;
+  --blue-light:    #dce7f9;
+  --gold:          #C9A227;
+  --gold-light:    #fdefc9;
+  --cherry:        #6C1E1E;
+  --cherry-light:  #f5ddd6;
+  --cream:         #FFF7E0;
+  --input-radius:  9px;
+  --input-border:  2px solid #C9A227;
+  --input-focus:   2px solid #1A3C8B;
+  --input-pad:     10px 14px;
+  --label-color:   #1A3C8B;
+  --text-main:     #1a1a1a;
+  --text-muted:    #888;
+}
+
+
+/* ============================================================
+   FORM WRAPPER
+   ============================================================ */
+.custom-form {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+
+/* ============================================================
+   LABELS
+   ============================================================ */
+.custom-form .form-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+
+/* ============================================================
+   INPUT & SELECT — default (gold border)
+   ============================================================ */
 .custom-form .form-control,
 .custom-form .form-select {
-  border-radius: 8px;
-  padding: 10px;
-  border: 2px solid #fe9e2a;
-  /* cursor: pointer; */
+  border-radius: var(--input-radius);
+  padding: var(--input-pad);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-main);
+  background: #fff;
+  border: var(--input-border);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: none;
 }
 
-.custom-form .form-label {
+.custom-form .form-control::placeholder {
+  color: #bbb;
+  font-weight: 400;
+}
+
+/* Focus → switch to blue border + soft glow */
+.custom-form .form-control:focus,
+.custom-form .form-select:focus {
+  border: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(26, 60, 139, 0.12);
+  background: #fafcff;
+}
+
+/* Hover */
+.custom-form .form-control:hover,
+.custom-form .form-select:hover {
+  border-color: var(--blue);
+}
+
+/* Disabled */
+.custom-form .form-control:disabled,
+.custom-form .form-select:disabled {
+  background: #f5f5f5;
+  color: #aaa;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Invalid */
+.custom-form .form-control.is-invalid,
+.custom-form .form-select.is-invalid {
+  border-color: var(--cherry);
+  box-shadow: 0 0 0 3px rgba(108, 30, 30, 0.10);
+}
+
+.custom-form .invalid-feedback {
+  font-size: 12px;
+  color: var(--cherry);
   font-weight: 600;
+  margin-top: 4px;
 }
 
+
+/* ============================================================
+   FORM BUTTONS (inside .custom-form)
+   ============================================================ */
 .custom-form button {
-  padding: 8px 20px;
-  border-radius: 6px;
+  padding: 9px 22px;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.12s ease,
+              box-shadow 0.18s ease, opacity 0.15s ease;
+  letter-spacing: 0.3px;
+}
+
+.custom-form button:active {
+  transform: scale(0.97);
+}
+
+/* Submit / primary button */
+.custom-form button[type="submit"],
+.custom-form .btn-submit {
+  background: #1A3C8B;
+  color: #FFF7E0;
+  box-shadow: 0 3px 10px rgba(26, 60, 139, 0.25);
+}
+.custom-form button[type="submit"]:hover,
+.custom-form .btn-submit:hover {
+  background: #C9A227;
+  color: #1A3C8B;
+  box-shadow: 0 5px 14px rgba(201, 162, 39, 0.30);
+  transform: scale(1.03);
+}
+
+/* Cancel button */
+.custom-form .btn-cancel {
+  background: transparent;
+  color: #1A3C8B;
+  border: 2px solid #1A3C8B;
+}
+.custom-form .btn-cancel:hover {
+  background: #1A3C8B;
+  color: #FFF7E0;
+  transform: scale(1.03);
 }
 
 
+/* ============================================================
+   STATUS BADGES  (pending / approved)
+   ============================================================ */
 .pending {
-  background-color: #f44336;
+  background: var(--cherry);
   color: #fff;
   border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.15s;
 }
+.pending:hover { background: #4e1515; }
 
 .approved {
-  background-color: #4caf50;
+  background: #28a745;
   color: #fff;
   border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.15s;
 }
+.approved:hover { background: #1e7e34; }
 
+
+/* ============================================================
+   ACTION BUTTONS IN TABLE ROWS
+   ============================================================ */
 .actions button {
-  margin-right: 5px;
+  margin-right: 6px;
 }
 
+
+/* ============================================================
+   MULTI-SELECT  (custom dropdown)
+   ============================================================ */
+
+/* Trigger box */
 .multi-select-input {
-  border: 2px solid #fe9e2a;
-  padding: 8px 12px;
-  border-radius: 6px;
+  border: 2px solid var(--gold);
+  padding: 9px 14px;
+  border-radius: var(--input-radius);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 40px;
-  background-color: #fff;
+  min-height: 42px;
+  background: #fff;
+  font-size: 15px;
+  color: var(--text-main);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  user-select: none;
 }
 
+.multi-select-input:hover {
+  border-color: var(--blue);
+}
+
+.multi-select-input.open {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26, 60, 139, 0.12);
+}
+
+/* Arrow icon */
+.arrow {
+  font-size: 13px;
+  color: var(--gold);
+  margin-left: 10px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.multi-select-input.open .arrow {
+  transform: rotate(180deg);
+  color: var(--blue);
+}
+
+/* Selected chips inside trigger */
+.selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  flex: 1;
+}
+
+.chip-tag {
+  background: var(--blue-light);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.chip-tag .chip-remove {
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--cherry);
+  font-weight: 700;
+}
+.chip-tag .chip-remove:hover { color: var(--cherry); opacity: 0.7; }
+
+/* Dropdown options panel */
 .multi-select-options {
-  border: 1px solid #ced4da;
-  border-radius: 6px;
+  border: 1.5px solid var(--gold);
+  border-radius: var(--input-radius);
   background: #fff;
-  max-height: 200px;
+  max-height: 210px;
   overflow-y: auto;
   position: absolute;
-  z-index: 10;
-  width: 63%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 100;
+  width: 60%;
+  box-shadow: 0 6px 20px rgba(26, 60, 139, 0.14);
   margin-top: 4px;
+  animation: dropDown 0.16s ease both;
 }
 
+@keyframes dropDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar */
+.multi-select-options::-webkit-scrollbar { width: 5px; }
+.multi-select-options::-webkit-scrollbar-track { background: #f5f5f5; }
+.multi-select-options::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+/* Each option row */
 .option-item {
   display: flex;
   align-items: center;
-  padding: 6px 12px;
+  padding: 9px 14px;
   cursor: pointer;
+  font-size: 14px;
+  color: var(--text-main);
+  transition: background 0.12s ease;
+  gap: 10px;
 }
 
 .option-item:hover {
-  background-color: #f1f1f1;
+  background: var(--gold-light);
 }
 
-.option-item input {
-  margin-right: 8px;
+.option-item.selected {
+  background: var(--blue-light);
+  color: var(--blue);
+  font-weight: 600;
 }
 
-.arrow {
-  margin-left: 10px;
-  font-size: 12px;
+/* Custom checkbox inside option */
+.option-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Select-all row */
+.option-item.select-all {
+  border-bottom: 1px solid #eef2fb;
+  font-weight: 700;
+  color: var(--blue);
+  background: #f7f9ff;
+}
+.option-item.select-all:hover {
+  background: var(--blue-light);
 }

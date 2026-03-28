@@ -1,54 +1,73 @@
 import React from "react";
+import "./Button.css";
+
+/**
+ * Button Component — Brand Palette
+ *
+ * variants : primary | secondary | gold | outline | outline-gold | outline-danger | success | danger
+ * sizes    : small | medium | large
+ *
+ * Usage examples:
+ *   <Button text="+ Add Admin"  variant="primary"   size="medium" onClick={...} />
+ *   <Button text="Edit"         variant="gold"      icon={<FaEdit />} />
+ *   <Button text="Delete"       variant="secondary" icon={<FaTrash />} />
+ *   <Button text="Cancel"       variant="outline"   onClick={...} />
+ *   <Button text="Save"         variant="success"   fullWidth />
+ *   <Button text="Submitting…"  variant="primary"   disabled />
+ */
 
 function Button({
   text,
+  children,
   onClick,
   variant = "primary",
   size = "medium",
   rounded = false,
   fullWidth = false,
-  color,
+  disabled = false,
+  icon = null,
+  iconPosition = "left",
+  type = "button",
+  className = "",
+  style = {},
 }) {
-  // Default Styles
-  const baseStyle = {
-    border: "none",
-    cursor: "pointer",
-    fontWeight: "600",
-    padding: "10px 20px",
-    borderRadius: rounded ? "25px" : "5px",
-    width: fullWidth ? "100%" : "auto",
-  };
+  const sizeClass = {
+    small:  "btn-sm",
+    medium: "btn-md",
+    large:  "btn-lg",
+  }[size] || "btn-md";
 
-  // Variant Styles
-  const variantStyles = {
-    primary: { backgroundColor: "#007bff", color: "#fff" },
-    secondary: { backgroundColor: "#6c757d", color: "#fff" },
-    success: { backgroundColor: "#28a745", color: "#fff" },
-    danger: { backgroundColor: "#dc3545", color: "#fff" },
-    outline: {
-      backgroundColor: "transparent",
-      color: "#007bff",
-      border: "2px solid #007bff",
-    },
-  };
+  const variantClass = `btn-${variant}`;
 
-  // Size Styles
-  const sizeStyles = {
-    small: { padding: "5px 12px", fontSize: "13px" },
-    medium: { padding: "10px 20px", fontSize: "15px" },
-    large: { padding: "14px 28px", fontSize: "17px" },
-  };
-
-  // Merge all styles
-  const finalStyle = {
-    ...baseStyle,
-    ...(color ? { backgroundColor: color } : variantStyles[variant]),
-    ...sizeStyles[size],
-  };
+  const classes = [
+    "btn",
+    variantClass,
+    sizeClass,
+    rounded   ? "btn-rounded" : "",
+    fullWidth ? "btn-full"    : "",
+    disabled  ? "disabled"    : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <button style={finalStyle} onClick={onClick}>
-      {text}
+    <button
+      type={type}
+      className={classes}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      style={style}
+    >
+      {icon && iconPosition === "left" && (
+        <span className="btn-icon">{icon}</span>
+      )}
+
+      {text || children}
+
+      {icon && iconPosition === "right" && (
+        <span className="btn-icon">{icon}</span>
+      )}
     </button>
   );
 }

@@ -100,6 +100,13 @@ export const getBanners = async (page = 1, limit = 10) => {
   return res.data;
 };
 
+export const updateBanners = async (formData) => {
+  const res = await api.post("/banners/update", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
 export const deleteBanner = async (data) => {
   const res = await api.post("/banners/delete", data);
   return res.data;

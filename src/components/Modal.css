@@ -1,13 +1,99 @@
+/* ============================================================
+   Modal.css  —  Brand Palette
+   --blue:   #1A3C8B  (French Blue)
+   --gold:   #C9A227  (Golden Bronze)
+   --cherry: #6C1E1E  (Black Cherry)
+   --cream:  #FFF7E0  (Cornsilk)
+   ============================================================ */
+
+/* ── Backdrop ── */
 .custom-modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
+  inset: 0;
+  background: rgba(10, 20, 60, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   z-index: 1050;
+  animation: fadeBackdrop 0.2s ease both;
 }
 
+@keyframes fadeBackdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal z-index ── */
 .modal {
   z-index: 1060;
 }
+
+/* ── Dialog animation ── */
+.modal-dialog {
+  animation: slideUp 0.24s cubic-bezier(0.4, 1.3, 0.6, 1) both;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(32px) scale(0.96); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+/* ── Modal Content Card ── */
+.modal-content {
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 56px rgba(26, 60, 139, 0.22),
+              0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Header ── */
+.modal-header {
+  background: #1A3C8B;
+  padding: 18px 24px;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFF7E0;
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+
+/* Close button override */
+.modal-header .btn-close {
+  filter: invert(1) brightness(2);
+  opacity: 0.85;
+  transition: opacity 0.15s, transform 0.15s;
+  background-size: 14px;
+}
+.modal-header .btn-close:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* ── Body ── */
+.modal-body {
+  background: #ffffff;
+  padding: 26px 26px 20px;
+}
+
+/* ── Footer (if used) ── */
+.modal-footer {
+  background: #f7f9ff;
+  border-top: 1px solid #eef2fb;
+  padding: 14px 24px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-radius: 0 0 18px 18px;
+}
+
+/* ── Size overrides ── */
+.modal-sm  { max-width: 400px; }
+.modal-lg  { max-width: 780px; }
+.modal-xl  { max-width: 1050px; }

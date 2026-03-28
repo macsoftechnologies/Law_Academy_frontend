@@ -64,7 +64,7 @@ const PQAPaper = () => {
         const res  = await getPrelims(1, 10);
         const list = res.data || [];
         const map  = {};
-        list.forEach((p) => { map[p.prelim_id] = p.title; });
+        list.forEach((p) => { map[p.prelimes_id] = p.title; });
         prelimsMapRef.current = map;
         setPrelimsNameMap(map);
       } catch (err) {
@@ -73,7 +73,7 @@ const PQAPaper = () => {
       await loadAllQA(1, 10);
     };
     init();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); 
 
   const handlePageChange = async (page) => {
     await loadAllQA(page, pageLimit);
