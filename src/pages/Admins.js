@@ -16,8 +16,10 @@ const Admins = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchAdminList = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getadmins(page, limit);
       setAdminList(res.data || []);
@@ -27,7 +29,9 @@ const Admins = () => {
       setAdminList([]);
       setTotalPages(1);
       Swal.fire("Error", "Failed to fetch admins", "error");
-    }
+    }finally {
+    setIsLoading(false);    
+  }
   }, [pageLimit]);
 
   useEffect(() => {
@@ -190,6 +194,7 @@ const Admins = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       <Modal open={open} onClose={() => setOpen(false)} title="Add Admin" size="lg">

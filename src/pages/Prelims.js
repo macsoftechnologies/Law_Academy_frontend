@@ -31,9 +31,11 @@ const Prelims = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages]   = useState(1);
   const [pageLimit, setPageLimit]     = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSubcategories = async () => {
+      setIsLoading(true);
       try {
         const res = await getSubCategories(1, 1000);
         const map = {};
@@ -43,13 +45,16 @@ const Prelims = () => {
         setSubcategoryNameMap(map);
       } catch (err) {
         setSubcategoryNameMap({});
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     };
     fetchSubcategories();
   }, []);
 
   const fetchPrelims = useCallback(
     async (page = 1, limit = pageLimit) => {
+      setIsLoading(true);
       try {
         const res = await getPrelims(page, limit);
         setPrelimList(res.data || []);
@@ -58,7 +63,9 @@ const Prelims = () => {
         Swal.fire("Error", "Failed to fetch prelims", "error");
         setPrelimList([]);
         setTotalPages(1);
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     },
     [pageLimit]
   );
@@ -217,6 +224,7 @@ const Prelims = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* ── Add Modal ── */}

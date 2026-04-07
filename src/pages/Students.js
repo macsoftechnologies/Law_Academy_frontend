@@ -11,8 +11,10 @@ function Students() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchStudents = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getUsersList(page, limit);
       let data = [];
@@ -31,7 +33,9 @@ function Students() {
       setStudentsList([]);
       setTotalPages(1);
       Swal.fire("Error", "Failed to fetch students", "error");
-    }
+    }finally {
+    setIsLoading(false);    
+  }
   }, [pageLimit]);
 
   useEffect(() => {
@@ -44,49 +48,23 @@ function Students() {
   };
 
   const columns = [
-    { header: "S.No", accessor: "s_no" },
-    { header: "Name", accessor: "name" },
-    { header: "Email", accessor: "email" },
-    { header: "Mobile", accessor: "mobile_number" },
+    { header: "S.No",          accessor: "s_no"          },
+    { header: "Name",          accessor: "name"          },
+    { header: "Email",         accessor: "email"         },
+    { header: "Mobile",        accessor: "mobile_number" },
     { header: "Referral Code", accessor: "referral_code" },
-    { header: "Referred By", accessor: "referred_by" },
+    { header: "Referred By",   accessor: "referred_by"   },
   ];
 
   const tableData = studentsList.map((student, index) => ({
     ...student,
-    s_no: (
-      <span
-        style={{ cursor: "pointer", color: "#6f42c1", fontWeight: "700" }}
-        onClick={() => handleRowClick(student)}
-      >
-        {(currentPage - 1) * pageLimit + index + 1}
-      </span>
-    ),
-    name: (
-      <span style={{ cursor: "pointer" }} onClick={() => handleRowClick(student)}>
-        {student.name}
-      </span>
-    ),
-    email: (
-      <span style={{ cursor: "pointer" }} onClick={() => handleRowClick(student)}>
-        {student.email}
-      </span>
-    ),
-    mobile_number: (
-      <span style={{ cursor: "pointer" }} onClick={() => handleRowClick(student)}>
-        {student.mobile_number}
-      </span>
-    ),
-    referral_code: (
-      <span style={{ cursor: "pointer" }} onClick={() => handleRowClick(student)}>
-        {student.referral_code}
-      </span>
-    ),
-    referred_by: (
-      <span style={{ cursor: "pointer" }} onClick={() => handleRowClick(student)}>
-        {student.referred_by}
-      </span>
-    ),
+    _rowonClick:   () => handleRowClick(student),
+    s_no:          (currentPage - 1) * pageLimit + index + 1,
+    name:          student.name          || "—",
+    email:         student.email         || "—",
+    mobile_number: student.mobile_number || "—",
+    referral_code: student.referral_code || "—",
+    referred_by:   student.referred_by   || "—",
   }));
 
   return (
@@ -117,7 +95,22 @@ function Students() {
         </div>
       </div>
 
-      <p className="text-muted" style={{ fontSize: "13px" }}>
+      <p
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          fontSize: "16px",
+          fontWeight: "600",
+          fontStyle: "italic",
+          color: "#6f42c1",
+          background: "#f0ebff",
+          border: "1px solid #c9b8f5",
+          borderRadius: "20px",
+          padding: "4px 14px",
+          marginBottom: "12px",
+        }}
+      >
         💡 Click on any row to view student details
       </p>
 
@@ -127,6 +120,8 @@ function Students() {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
+
       />
     </div>
   );

@@ -28,6 +28,7 @@ const PrintedNotesOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages]   = useState(1);
   const [pageLimit, setPageLimit]     = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Status transition modal
   const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -36,6 +37,7 @@ const PrintedNotesOrders = () => {
 
   const fetchOrders = useCallback(
     async (page = 1, limit = pageLimit) => {
+      setIsLoading(true);
       try {
         const res = await getPrintednotesoders(page, limit);
         setOrdersList(res.data || []);
@@ -44,7 +46,9 @@ const PrintedNotesOrders = () => {
         Swal.fire("Error", "Failed to fetch printed notes orders", "error");
         setOrdersList([]);
         setTotalPages(1);
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     },
     [pageLimit]
   );
@@ -207,6 +211,7 @@ const PrintedNotesOrders = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       <Modal

@@ -13,6 +13,7 @@ function StudentProfile() {
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [imageModal, setImageModal] = useState({ open: false, src: "" });
   const [courseModal, setCourseModal] = useState({ open: false, data: null });
@@ -30,6 +31,7 @@ function StudentProfile() {
     const id = userId || localStorage.getItem("userId");
     if (!id) return;
     const fetchStudent = async () => {
+      setIsLoading(true);
       try {
         const res = await getUserDetails(id);
         if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
@@ -37,7 +39,9 @@ function StudentProfile() {
         }
       } catch (error) {
         console.error("Fetch Student Error:", error);
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     };
     fetchStudent();
   }, [userId]);
@@ -46,6 +50,7 @@ function StudentProfile() {
     const id = userId || localStorage.getItem("userId");
     if (!id) return;
     const fetchCourses = async () => {
+      setIsLoading(true);
       try {
         const res = await getStudentCoursesDetails(id);
         const data = Array.isArray(res) ? res : res?.data || [];
@@ -54,7 +59,9 @@ function StudentProfile() {
       } catch (error) {
         console.error("Fetch Courses Error:", error);
         setCourses([]);
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     };
     fetchCourses();
   }, [userId]);
@@ -236,6 +243,8 @@ function StudentProfile() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
+          isLoading={isLoading}
+
         />
       </div>
 

@@ -15,9 +15,11 @@ function StudentRequests() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 🔥 Fetch requests wrapped in useCallback
   const fetchRequests = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getStudentRequestlist(page, limit);
 
@@ -35,7 +37,9 @@ function StudentRequests() {
       Swal.fire("Error", "Failed to fetch student requests", "error");
       setRequestsList([]);
       setTotalPages(1);
-    }
+    }finally {
+    setIsLoading(false);    
+  }
   }, [pageLimit]);
 
   useEffect(() => {
@@ -139,6 +143,7 @@ function StudentRequests() {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* View Modal */}

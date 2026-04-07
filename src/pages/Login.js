@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { adminlogin, superadminlogin } from "../services/authService";
 import "./Login.css";
+import logo from '../assets/Raos-law-logo-02.png';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -83,8 +84,10 @@ export default function Login() {
   return (
     <div className="law-login-page">
       <div className="law-login-box">
-        <div className="law-brand">
-          <span>E-LEARNING LAW</span>
+        <div className="sidebar-header">
+          <div className="law-login-brand">
+            <img src={logo} alt="Rao's Law Academy" className="law-brand-logo" />
+          </div>
         </div>
 
         <h4 className="law-login-title">Login to Dashboard</h4>

@@ -2,43 +2,54 @@ import React, { useState, useEffect, useCallback } from "react";
 import Table from "../components/Table";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
-import GrandTestsForm from "../forms/GrandTestsForm";
+import PrelimsSWMockTestsForm from "../forms/PrelimsSWMockTestsForm";
 import Swal from "sweetalert2";
-import { getGrandTest, getPrelims } from "../services/authService";
+import {
+  getPrelimesSubjectWiseTests,
+  getPrelims,
+  getMockTestSubject,
+} from "../services/authService";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-const GrandTests = () => {
+const PrelimsSWMockTests = () => {
   const navigate = useNavigate();
+
   const [list,         setList]         = useState([]);
-  const [totalCount,   setTotalCount]   = useState(0);
   const [open,         setOpen]         = useState(false);
   const [viewOpen,     setViewOpen]     = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentPage,  setCurrentPage]  = useState(1);
   const [totalPages,   setTotalPages]   = useState(1);
+  const [totalCount,   setTotalCount]   = useState(0);
   const [pageLimit,    setPageLimit]    = useState(10);
+  // ✅ Start true so spinner shows immediately
+  const [isLoading,    setIsLoading]    = useState(true);
+
   const [prelimsList,  setPrelimsList]  = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [subjectsList, setSubjectsList] = useState([]);
 
   useEffect(() => {
-    const loadPrelims = async () => {
-      setIsLoading(true);
+    const loadMeta = async () => {
       try {
-        const res = await getPrelims(1, 10);
-        setPrelimsList(res.data || []);
+        const [subjectsRes, prelimsRes] = await Promise.all([
+          getMockTestSubject(1, 1000),
+          getPrelims(1, 1000),
+        ]);
+        setSubjectsList(subjectsRes.data || []);
+        setPrelimsList(prelimsRes.data || []);
       } catch (err) {
-        console.error("Failed to fetch prelims", err);
+        console.error("Failed to load meta data", err);
       }
     };
-    loadPrelims();
+    loadMeta();
   }, []);
 
   const fetchData = useCallback(
     async (page = 1, limit = pageLimit) => {
-      setIsLoading(true);
+      setIsLoading(true); // ✅ Always true before fetch
       try {
-        const res = await getGrandTest(page, limit);
+        const res = await getPrelimesSubjectWiseTests(page, limit);
         let data  = [];
         let pages = 1;
         let total = 0;
@@ -60,10 +71,10 @@ const GrandTests = () => {
         setList([]);
         setTotalPages(1);
         setTotalCount(0);
-        Swal.fire("Error", "Failed to fetch grand tests", "error");
-      }finally {
-    setIsLoading(false);    
-  }
+        Swal.fire("Error", "Failed to fetch prelims subject wise mock tests", "error");
+      } finally {
+        setIsLoading(false); // ✅ Always off in finally
+      }
     },
     [pageLimit]
   );
@@ -77,6 +88,11 @@ const GrandTests = () => {
     return found?.title || id || "—";
   };
 
+  const getSubjectName = (id) => {
+    const found = subjectsList.find((s) => s.mocktest_subject_id === id);
+    return found?.title || id || "—";
+  };
+
   // Eye button — quick view modal
   const handleView = (e, item) => {
     e.stopPropagation();
@@ -84,10 +100,10 @@ const GrandTests = () => {
     setViewOpen(true);
   };
 
-  // Row click — navigate using prelimes_test_id (the actual key from API)
+  // Row click — navigate to full profile using prelimes_test_id
   const handleRowClick = (item) => {
-    localStorage.setItem("grand_test_prelimes_test_id", item.prelimes_test_id);
-    navigate(`/grandtests/${item.prelimes_test_id}`);
+    localStorage.setItem("prelims_swmt_prelimes_test_id", item.prelimes_test_id);
+    navigate(`/pswmocktests/${item.prelimes_test_id}`);
   };
 
   const handleSubmit = () => {
@@ -128,13 +144,12 @@ const GrandTests = () => {
 
   return (
     <div>
-      {/* ── Top bar ── */}
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <h2>Grand Tests</h2>
-        <Button text="+ Add Grand Test" onClick={() => setOpen(true)} />
+        <h2>Prelims Subject Wise Mock Tests</h2>
+        <Button text="+ Add Prelims SW Mock Test" onClick={() => setOpen(true)} />
       </div>
 
-      {/* ── Tip + Showing count + Records per page ── */}
+      {/* Tip + Showing count + Records per page */}
       <div
         className="d-flex justify-content-between align-items-center flex-wrap gap-2"
         style={{ marginBottom: "12px" }}
@@ -155,7 +170,7 @@ const GrandTests = () => {
             padding: "4px 14px",
           }}
         >
-          💡 Click on any row to view full grand test profile
+          💡 Click on any row to view full test profile
         </p>
 
         <div className="d-flex align-items-center gap-3 flex-wrap">
@@ -188,7 +203,7 @@ const GrandTests = () => {
         </div>
       </div>
 
-      {/* Table */}
+      {/* ✅ isLoading passed to Table */}
       <Table
         columns={columns}
         data={tableData}
@@ -199,15 +214,15 @@ const GrandTests = () => {
       />
 
       {/* Add Modal */}
-      <Modal open={open} onClose={() => setOpen(false)} title="Add Grand Test" size="lg">
-        <GrandTestsForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
+      <Modal open={open} onClose={() => setOpen(false)} title="Add Prelims Subject Wise Mock Test" size="lg">
+        <PrelimsSWMockTestsForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
       </Modal>
 
       {/* Quick View Modal */}
       <Modal
         open={viewOpen}
         onClose={() => { setViewOpen(false); setSelectedItem(null); }}
-        title="Grand Test Details"
+        title="Prelims SW Mock Test Details"
         size="lg"
       >
         {selectedItem && (
@@ -221,7 +236,8 @@ const GrandTests = () => {
                 <p><b>Duration (mins):</b>  {selectedItem.duration    || "—"}</p>
               </div>
               <div className="col-md-6">
-                <p><b>Prelims:</b> {getPrelimsName(selectedItem.prelimes_id)}</p>
+                <p><b>Prelims:</b>           {getPrelimsName(selectedItem.prelimes_id)}</p>
+                <p><b>Mock Test Subject:</b> {getSubjectName(selectedItem.mocktest_subject_id)}</p>
               </div>
             </div>
           </div>
@@ -231,4 +247,4 @@ const GrandTests = () => {
   );
 };
 
-export default GrandTests;
+export default PrelimsSWMockTests;

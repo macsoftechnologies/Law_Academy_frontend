@@ -23,12 +23,11 @@ import {
   FaGavel,
   FaTasks,
   FaTags,
-  FaFileContract,
 } from "react-icons/fa";
 
 import { NavLink, useLocation } from "react-router-dom";
 import "./Sidebar.css";
-import logo from '../assets/Raos-law-logo-02.png';
+import logo from '../assets/Raos-law-logo-03.png';
 
 const Sidebar = ({ sidebarOpen }) => {
   const { pathname } = useLocation();
@@ -38,7 +37,6 @@ const Sidebar = ({ sidebarOpen }) => {
   const [openMains,           setOpenMains]           = useState(false);
   const [openNotes,           setOpenNotes]           = useState(false);
   const [openMainsTestSeries, setOpenMainsTestSeries] = useState(false);
-  const [openSWMockTests,     setOpenSWMockTests]     = useState(false);
 
   const role          = localStorage.getItem("role");
   const accessModules = JSON.parse(localStorage.getItem("access_modules") || "[]");
@@ -95,14 +93,6 @@ const Sidebar = ({ sidebarOpen }) => {
     [isSuperAdmin, canAccess]
   );
 
-  const hasSWMockTestsAccess = useMemo(
-    () =>
-      isSuperAdmin ||
-      canAccess("pswmocktests") ||
-      canAccess("sswmocktests"),
-    [isSuperAdmin, canAccess]
-  );
-
   useEffect(() => {
     setOpenCombo(
       hasComboAccess &&
@@ -113,8 +103,6 @@ const Sidebar = ({ sidebarOpen }) => {
         (pathname.includes("prelims") ||
           pathname.includes("pqapaper") ||
           pathname.includes("swmockstests") ||
-          pathname.includes("pswmocktests") ||
-          pathname.includes("sswmocktests") ||
           pathname.includes("grandtests") ||
           pathname.includes("quizzes"))
     );
@@ -139,19 +127,7 @@ const Sidebar = ({ sidebarOpen }) => {
           pathname.includes("subjectnotes") ||
           pathname.includes("printednotesorders"))
     );
-    setOpenSWMockTests(
-      hasSWMockTestsAccess &&
-        (pathname.includes("pswmocktests") || pathname.includes("sswmocktests"))
-    );
-  }, [
-    pathname,
-    hasComboAccess,
-    hasPrelimsAccess,
-    hasMainsAccess,
-    hasNotesAccess,
-    hasMainsTestSeriesAccess,
-    hasSWMockTestsAccess,
-  ]);
+  }, [pathname, hasComboAccess, hasPrelimsAccess, hasMainsAccess, hasNotesAccess, hasMainsTestSeriesAccess]);
 
   const studentNavClass = ({ isActive }) =>
     isActive || pathname.startsWith("/student/") ? "active" : "";
@@ -307,46 +283,14 @@ const Sidebar = ({ sidebarOpen }) => {
                     </NavLink>
                   </li>
                 )}
-
-                {/* ===== SW MOCK TESTS SUB-DROPDOWN ===== */}
                 {canAccess("swmockstests") && (
-                  <>
-                    <li className="menu-item subitem dropdown">
-                      <div
-                        className="dropdown-toggle sub-dropdown-toggle"
-                        onClick={() => setOpenSWMockTests(!openSWMockTests)}
-                      >
-                        <FaClipboardList className="menu-icon" />
-                        SW Mock Tests
-                        <MdKeyboardArrowDown
-                          className={`arrow-icon ${openSWMockTests ? "rotate" : ""}`}
-                        />
-                      </div>
-                    </li>
-
-                    {openSWMockTests && (
-                      <>
-                        {(isSuperAdmin || canAccess("sswmocktests")) && (
-                          <li className="menu-item subitem sub-subitem">
-                            <NavLink to="sswmocktests">
-                              <span className="sub-dot">→</span>
-                              Subjects SW Mock Test
-                            </NavLink>
-                          </li>
-                        )}
-                        {(isSuperAdmin || canAccess("pswmocktests")) && (
-                          <li className="menu-item subitem sub-subitem">
-                            <NavLink to="pswmocktests">
-                              <span className="sub-dot">→</span>
-                              Prelims SW Mock Tests
-                            </NavLink>
-                          </li>
-                        )}
-                      </>
-                    )}
-                  </>
+                  <li className="menu-item subitem">
+                    <NavLink to="swmockstests">
+                      <span className="sub-dot">→</span>
+                      SW Mock Tests
+                    </NavLink>
+                  </li>
                 )}
-
                 {canAccess("grandtests") && (
                   <li className="menu-item subitem">
                     <NavLink to="grandtests">
@@ -557,15 +501,6 @@ const Sidebar = ({ sidebarOpen }) => {
           </li>
         )}
 
-        {/* ================= TEST TERMS AND CONDITIONS ================= */}
-        {canAccess("testtermsconditions") && (
-          <li className="menu-item">
-            <NavLink to="testtermsconditions">
-              <FaFileContract className="menu-icon" />
-              Test Terms & Conditions
-            </NavLink>
-          </li>
-        )}
 
       </ul>
     </div>

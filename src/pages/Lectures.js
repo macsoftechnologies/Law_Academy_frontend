@@ -16,16 +16,20 @@ const Lectures = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = useCallback(
     async (page = 1, limit = pageLimit) => {
+      setIsLoading(true);
       try {
         const res = await getLectures(page, limit);
         setList(res.data || []);
         setTotalPages(res.totalPages || 1);
       } catch (error) {
         Swal.fire("Error", "Failed to fetch lectures", "error");
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     },
     [pageLimit]
   );
@@ -152,6 +156,7 @@ const Lectures = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+         isLoading={isLoading}
       />
 
       {/* Add Modal */}

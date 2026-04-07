@@ -16,9 +16,11 @@ const Subjects = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = useCallback(
     async (page = 1, limit = pageLimit) => {
+      setIsLoading(true);
       try {
         const res = await getSubjects(page, limit);
         console.log("Subjects API response:", res);
@@ -46,7 +48,9 @@ const Subjects = () => {
         setList([]);
         setTotalPages(1);
         Swal.fire("Error", "Failed to fetch subjects", "error");
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     },
     [pageLimit]
   );
@@ -179,6 +183,7 @@ const Subjects = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+         isLoading={isLoading}
       />
 
       {/* Add Modal */}

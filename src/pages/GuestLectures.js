@@ -22,8 +22,10 @@ const GuestLectures = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchLectureList = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getGusestLectures(page, limit);
       setLectureList(res.data || []);
@@ -31,7 +33,9 @@ const GuestLectures = () => {
     } catch (err) {
       console.error(err);
       Swal.fire("Error", "Failed to fetch guest lectures", "error");
-    }
+    }finally {
+    setIsLoading(false);    
+  }
   }, [pageLimit]);
 
   useEffect(() => {
@@ -193,6 +197,7 @@ const GuestLectures = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
+        isLoading={isLoading}
       />
 
       <Modal open={open} onClose={() => setOpen(false)} title="Add Lecture" size="lg">

@@ -31,9 +31,11 @@ const Mains = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages]   = useState(1);
   const [pageLimit, setPageLimit]     = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSubcategories = async () => {
+      setIsLoading(true);
       try {
         const res = await getSubCategories(1, 10);
         const map = {};
@@ -41,13 +43,16 @@ const Mains = () => {
         setSubcategoryNameMap(map);
       } catch (err) {
         setSubcategoryNameMap({});
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     };
     fetchSubcategories();
   }, []);
 
   const fetchMains = useCallback(
     async (page = 1, limit = pageLimit) => {
+      setIsLoading(true);
       try {
         const res = await getMains(page, limit);
         setMainsList(res.data || []);
@@ -56,7 +61,9 @@ const Mains = () => {
         Swal.fire("Error", "Failed to fetch mains", "error");
         setMainsList([]);
         setTotalPages(1);
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     },
     [pageLimit]
   );
@@ -214,6 +221,7 @@ const Mains = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* ── Add Modal ── */}

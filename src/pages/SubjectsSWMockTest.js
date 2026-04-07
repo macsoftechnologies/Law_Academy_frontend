@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import Table from "../components/Table";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
-import SubjectNotesForm from "../forms/SubjectNotesForm";
+import SubjectsSWMockTestForm from "../forms/SubjectsSWMockTestForm";
 import Swal from "sweetalert2";
-import { getSubjectnotes, deleteSubjectnotes } from "../services/authService";
+import { getMockTestSubject, deleteMockTestSubject, getMockTestSubjectById } from "../services/authService";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
-const SubjectNotes = () => {
+const SubjectsSWMockTest = () => {
   const [list, setList] = useState([]);
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -16,13 +16,15 @@ const SubjectNotes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [viewLoading, setViewLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = useCallback(
     async (page = 1, limit = pageLimit) => {
       setIsLoading(true);
       try {
-        const res = await getSubjectnotes(page, limit);
+        const res = await getMockTestSubject(page, limit);
+        console.log("MockTestSubject API response:", res);
 
         let data = [];
         let pages = 1;
@@ -34,20 +36,13 @@ const SubjectNotes = () => {
           data = res;
         }
 
-        const mappedData = data.map((item) => ({
-          ...item,
-          // lawId is an array in API response
-          law_name: item.lawId?.[0]?.title || "—",
-          notes_name: item.notes_id?.[0]?.title || "—",
-        }));
-
-        setList(mappedData);
+        setList(data);
         setTotalPages(pages);
       } catch (err) {
         console.error(err);
         setList([]);
         setTotalPages(1);
-        Swal.fire("Error", "Failed to fetch subject notes", "error");
+        Swal.fire("Error", "Failed to fetch mock test subjects", "error");
       }finally {
     setIsLoading(false);    
   }
@@ -59,9 +54,22 @@ const SubjectNotes = () => {
     fetchData(currentPage, pageLimit);
   }, [currentPage, pageLimit, fetchData]);
 
-  const handleView = (item) => {
-    setSelectedItem(item);
+  const handleView = async (item) => {
     setViewOpen(true);
+    setSelectedItem(null);
+    setViewLoading(true);
+    try {
+      const res = await getMockTestSubjectById(item.mocktest_subject_id);
+      // API returns { data: [...], message, statusCode }
+      // data is an array — pick first item
+      const detail = Array.isArray(res.data) ? res.data[0] : res.data || res;
+      setSelectedItem(detail);
+    } catch (err) {
+      Swal.fire("Error", err.response?.data?.message || "Failed to fetch details", "error");
+      setViewOpen(false);
+    } finally {
+      setViewLoading(false);
+    }
   };
 
   const handleEdit = (item) => {
@@ -72,7 +80,7 @@ const SubjectNotes = () => {
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
-      text: "This subject note will be deleted!",
+      text: "This mock test subject will be deleted!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete",
@@ -84,12 +92,11 @@ const SubjectNotes = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      await deleteSubjectnotes({ subject_notes_id: id });
-
+      await deleteMockTestSubject({ mocktest_subject_id: id });
       Swal.fire({
         toast: true,
         icon: "success",
-        title: "Subject note deleted successfully",
+        title: "Mock test subject deleted successfully",
         position: "top-end",
         showConfirmButton: false,
         timer: 4000,
@@ -97,14 +104,9 @@ const SubjectNotes = () => {
         color: "#ffffff",
         background: "#8f1e1e",
       });
-
       fetchData(currentPage, pageLimit);
     } catch (err) {
-      Swal.fire(
-        "Error",
-        err.response?.data?.message || "Delete failed",
-        "error"
-      );
+      Swal.fire("Error", err.response?.data?.message || "Delete failed", "error");
     }
   };
 
@@ -117,21 +119,25 @@ const SubjectNotes = () => {
 
   const columns = [
     { header: "S.No", accessor: "sno" },
-    { header: "Notes", accessor: "notes_name" },
-    { header: "Law", accessor: "law_name" },
     { header: "Title", accessor: "title" },
-    { header: "PDF URL", accessor: "pdf_url" },
+    { header: "No. of Questions", accessor: "no_of_qos" },
+    { header: "Duration (mins)", accessor: "duration" },
+    { header: "Image", accessor: "presentation_image" },
     { header: "Actions", accessor: "actions" },
   ];
 
   const tableData = list.map((item, index) => ({
     ...item,
     sno: (currentPage - 1) * pageLimit + index + 1,
-    pdf_url: item.pdf_url ? (
-      <a href={item.pdf_url} target="_blank" rel="noreferrer">
-        View File
-      </a>
-    ) : "—",
+    presentation_image: item.presentation_image ? (
+      <img
+        src={`${process.env.REACT_APP_API_BASE_URL}/${item.presentation_image}`}
+        alt="mock test subject"
+        style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "4px" }}
+      />
+    ) : (
+      "—"
+    ),
     actions: (
       <div className="actions">
         <button className="icon-btn view" onClick={() => handleView(item)}>
@@ -142,7 +148,7 @@ const SubjectNotes = () => {
         </button>
         <button
           className="icon-btn delete"
-          onClick={() => handleDelete(item.subject_notes_id)}
+          onClick={() => handleDelete(item.mocktest_subject_id)}
         >
           <FaTrash />
         </button>
@@ -152,9 +158,9 @@ const SubjectNotes = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>Subject Notes</h2>
-        <div className="d-flex gap-2 align-items-center">
+      <div className="d-flex justify-content-between mb-3 flex-wrap gap-2">
+        <h2>Mock Test Subjects</h2>
+        <div className="d-flex gap-2 align-items-center flex-wrap">
           <label>Records per page:</label>
           <select
             style={{
@@ -175,10 +181,11 @@ const SubjectNotes = () => {
             <option value={50}>50</option>
             <option value={100}>100</option>
           </select>
-          <Button text="+ Add Subject Notes" onClick={() => setOpen(true)} />
+          <Button text="+ Add Mock Test Subject" onClick={() => setOpen(true)} />
         </div>
       </div>
 
+      {/* Table */}
       <Table
         columns={columns}
         data={tableData}
@@ -189,13 +196,13 @@ const SubjectNotes = () => {
       />
 
       {/* Add Modal */}
-      <Modal open={open} onClose={() => setOpen(false)} title="Add Subject Notes" size="lg">
-        <SubjectNotesForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
+      <Modal open={open} onClose={() => setOpen(false)} title="Add Mock Test Subject" size="lg">
+        <SubjectsSWMockTestForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
       </Modal>
 
       {/* Edit Modal */}
-      <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit Subject Notes" size="lg">
-        <SubjectNotesForm
+      <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit Mock Test Subject" size="lg">
+        <SubjectsSWMockTestForm
           isEdit
           initialData={selectedItem}
           onClose={() => setEditOpen(false)}
@@ -204,68 +211,68 @@ const SubjectNotes = () => {
       </Modal>
 
       {/* View Modal */}
-      <Modal open={viewOpen} onClose={() => setViewOpen(false)} title="Subject Notes Details" size="lg">
-        {selectedItem && (
+      <Modal
+        open={viewOpen}
+        onClose={() => {
+          setViewOpen(false);
+          setSelectedItem(null);
+        }}
+        title="Mock Test Subject Details"
+        size="lg"
+      >
+        {viewLoading ? (
+          <div className="text-center py-4">
+            <div className="spinner-border text-success" role="status" />
+            <p className="mt-2">Loading details...</p>
+          </div>
+        ) : selectedItem ? (
           <div className="container">
             <div className="row">
-
-              {/* Notes */}
-              <div className="col-md-6 mb-3">
-                <b>Notes:</b>
-                <p className="mt-1">{selectedItem.notes_id?.[0]?.title || "—"}</p>
-              </div>
-
-              {/* Law */}
-              <div className="col-md-6 mb-3">
-                <b>Law:</b>
-                <p className="mt-1">{selectedItem.lawId?.[0]?.title || "—"}</p>
-              </div>
-
-              {/* Title */}
-              <div className="col-md-6 mb-3">
-                <b>Title:</b>
-                <p className="mt-1">{selectedItem.title || "—"}</p>
-              </div>
-
-              {/* PDF File */}
-              <div className="col-md-6 mb-3">
-                <b>PDF File:</b>
-                <p className="mt-1">
-                  {selectedItem.pdf_url ? (
-                    <a
-                      href={selectedItem.pdf_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ color: "#872026", fontWeight: "bold" }}
-                    >
-                      View File
-                    </a>
-                  ) : "—"}
+              <div className="col-md-6">
+                <p>
+                  <b>Title:</b> {selectedItem.title || "—"}
+                </p>
+                <p>
+                  <b>No. of Questions:</b> {selectedItem.no_of_qos || "—"}
+                </p>
+                <p>
+                  <b>Duration (mins):</b> {selectedItem.duration || "—"}
+                </p>
+                <p>
+                  <b>Prelims:</b> {selectedItem.prelimes?.title || selectedItem.prelimes_id || "—"}
+                </p>
+                <p>
+                  <b>Law:</b> {selectedItem.law?.title || selectedItem.lawId || "—"}
+                </p>
+                <p>
+                  <b>Course:</b> {selectedItem.course?.title || "—"}
                 </p>
               </div>
-
-              {/* Presentation Image */}
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6">
                 <b>Presentation Image:</b>
-                <br />
                 {selectedItem.presentation_image ? (
-                  <img
-                    src={`${process.env.REACT_APP_API_BASE_URL}/${selectedItem.presentation_image}`}
-                    alt="Presentation"
-                    className="img-fluid mt-2"
-                    style={{ maxHeight: "200px", borderRadius: "8px" }}
-                  />
+                  <div className="mt-2">
+                    <img
+                      src={`${process.env.REACT_APP_API_BASE_URL}/${selectedItem.presentation_image}`}
+                      className="img-fluid"
+                      style={{
+                        maxHeight: "200px",
+                        borderRadius: "8px",
+                        border: "1px solid #ddd",
+                      }}
+                      alt="mock test subject"
+                    />
+                  </div>
                 ) : (
-                  <p>No Image</p>
+                  <p className="mt-1">No Image</p>
                 )}
               </div>
-
             </div>
           </div>
-        )}
+        ) : null}
       </Modal>
     </div>
   );
 };
 
-export default SubjectNotes;
+export default SubjectsSWMockTest;

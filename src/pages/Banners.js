@@ -16,8 +16,10 @@ const Banners = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchBanners = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getBanners(page, limit);
       const data = Array.isArray(res.data) ? res.data : res;
@@ -28,6 +30,8 @@ const Banners = () => {
       setBannersList([]);
       setTotalPages(1);
       Swal.fire("Error", "Failed to fetch banners", "error");
+    } finally {
+      setIsLoading(false);
     }
   }, [pageLimit]);
 
@@ -220,6 +224,7 @@ const Banners = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* ADD MODAL */}
@@ -228,7 +233,11 @@ const Banners = () => {
       </Modal>
 
       {/* EDIT MODAL */}
-      <Modal open={editOpen} onClose={() => { setEditOpen(false); setSelectedItem(null); }} title="Update Banner">
+      <Modal
+        open={editOpen}
+        onClose={() => { setEditOpen(false); setSelectedItem(null); }}
+        title="Update Banner"
+      >
         {selectedItem && (
           <BannerForm
             onClose={() => { setEditOpen(false); setSelectedItem(null); }}
@@ -282,6 +291,81 @@ const Banners = () => {
 function BannerForm({ onClose, onSubmit, existingData = null, isEdit = false }) {
   const [imageFile, setImageFile] = useState(null);
   const [redirectLink, setRedirectLink] = useState(existingData?.redirect_link || "");
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  // Compress image before upload to avoid 413 Request Entity Too Large
+  const compressImage = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+
+          let width = img.width;
+          let height = img.height;
+          const MAX_WIDTH = 1280;
+          const MAX_HEIGHT = 720;
+
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            },
+            "image/jpeg",
+            0.7 // 70% quality — good balance of size vs clarity
+          );
+        };
+      };
+    });
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsCompressing(true);
+    try {
+      const compressed = await compressImage(file);
+      setImageFile(compressed);
+
+      // Show preview of selected image
+      const url = URL.createObjectURL(compressed);
+      setPreviewUrl(url);
+
+      console.log(
+        `Image compressed: ${(file.size / 1024).toFixed(1)} KB → ${(compressed.size / 1024).toFixed(1)} KB`
+      );
+    } catch (err) {
+      console.error("Image compression failed:", err);
+      // Fallback: use original file if compression fails
+      setImageFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    } finally {
+      setIsCompressing(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -303,7 +387,8 @@ function BannerForm({ onClose, onSubmit, existingData = null, isEdit = false }) 
       <div className="mb-3">
         <label className="form-label">Banner Image</label>
 
-        {isEdit && existingData?.banner_file && !imageFile && (
+        {/* Show current image in edit mode before new one is chosen */}
+        {isEdit && existingData?.banner_file && !previewUrl && (
           <div className="mb-2">
             <img
               src={`${process.env.REACT_APP_API_BASE_URL}/${existingData.banner_file}`}
@@ -316,13 +401,39 @@ function BannerForm({ onClose, onSubmit, existingData = null, isEdit = false }) 
           </div>
         )}
 
+        {/* Preview of newly selected/compressed image */}
+        {previewUrl && (
+          <div className="mb-2">
+            <img
+              src={previewUrl}
+              width="200"
+              height="100"
+              style={{ borderRadius: "8px", objectFit: "cover" }}
+              alt="Preview"
+            />
+            <p className="text-muted small mt-1">New image preview (compressed)</p>
+          </div>
+        )}
+
         <input
           type="file"
           className="form-control"
           accept="image/*"
-          onChange={(e) => setImageFile(e.target.files[0])}
-          required={!isEdit} 
+          onChange={handleImageChange}
+          required={!isEdit}
         />
+
+        {/* Show compressing spinner */}
+        {isCompressing && (
+          <p className="text-muted small mt-1">
+            <span
+              className="spinner-border spinner-border-sm me-1"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Compressing image...
+          </p>
+        )}
       </div>
 
       <div className="mb-3">
@@ -340,8 +451,8 @@ function BannerForm({ onClose, onSubmit, existingData = null, isEdit = false }) 
         <button type="button" className="btn btn-secondary me-2" onClick={onClose}>
           Cancel
         </button>
-        <button type="submit" className="btn btn-success">
-          {isEdit ? "Update" : "Save"}
+        <button type="submit" className="btn btn-success" disabled={isCompressing}>
+          {isCompressing ? "Processing..." : isEdit ? "Update" : "Save"}
         </button>
       </div>
     </form>

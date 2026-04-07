@@ -24,7 +24,8 @@ import NpmCombos from "./pages/NpmCombos";
 import Notes from "./pages/Notes";
 import SubjectNotes from "./pages/SubjectNotes";
 import PrintedNotesOrders from "./pages/PrintedNotesOrders";
-import SWMocksTests from "./pages/SWMocksTests";
+import PrelimsSWMockTests from "./pages/PrelimsSWMockTests";
+import SubjectsSWMockTest from "./pages/SubjectsSWMockTest";
 import GrandTests from "./pages/GrandTests";
 import Quizzes from "./pages/Quizzes";
 import MainsQA from "./pages/MainsQA";
@@ -42,6 +43,12 @@ import MainsTestSeries from "./pages/MainsTestSeries";
 import MainsSubjectTest from "./pages/MainsSubjectTest";
 import MainsTestsAttempts from "./pages/MainsTestsAttempts";
 import MainsResultsProfile from "./pages/MainsResultsProfile";
+import TestTermsandConditions from "./pages/TestTermsandConditions";
+import QuizProfile from "./pages/QuizProfile";
+import GrandTestsProfile from "./pages/GrandTestsProfile";
+import PrelimsSMTProfile from "./pages/PrelimsSMTProfile";
+
+
 
 function App() {
   return (
@@ -76,9 +83,13 @@ function App() {
           <Route path="coupons" element={<Coupons />} />
           <Route path="prelims" element={<Prelims />} />
           <Route path="pqapaper" element={<PQAPaper />} />
-          <Route path="swmockstests" element={<SWMocksTests />} />
+          <Route path="pswmocktests" element={<PrelimsSWMockTests />} />
+          <Route path="/pswmocktests/:prelimes_test_id" element={<PrelimsSMTProfile />} />
+          <Route path="sswmocktests" element={<SubjectsSWMockTest />} />
           <Route path="grandtests" element={<GrandTests />} />
+          <Route path="/grandtests/:prelimes_test_id" element={<GrandTestsProfile />} />
           <Route path="quizzes" element={<Quizzes />} />
+          <Route path="/quiz/:prelimes_test_id" element={<QuizProfile />} />
           <Route path="mains" element={<Mains />} />
           <Route path="mainsqa" element={<MainsQA />} />
           <Route path="manisessaytrans" element={<MainsEssayTrans />} />
@@ -86,6 +97,7 @@ function App() {
           <Route path="mainssubjecttests" element={<MainsSubjectTest/>}/>
           <Route path="mainstestsattempts" element={<MainsTestsAttempts/>}/>
           <Route path="banners" element={<Banners />} />
+          <Route path="testtermsconditions" element={<TestTermsandConditions />} />
           <Route path="results" element={<Results />} />
           <Route path="/student/:userId" element={<StudentProfile />} />
           <Route path="/mains-result/:attemptId" element={<MainsResultsProfile />} />

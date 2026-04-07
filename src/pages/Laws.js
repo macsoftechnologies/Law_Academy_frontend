@@ -16,9 +16,11 @@ const Laws = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
-
+  const [isLoading, setIsLoading] = useState(false);
+  
   const fetchData = useCallback(
     async (page = 1, limit = pageLimit) => {
+      setIsLoading(true);
       try {
         const res = await getLaws(page, limit);
 
@@ -40,7 +42,9 @@ const Laws = () => {
       } catch (err) {
         console.error(err);
         Swal.fire("Error", "Failed to fetch laws", "error");
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     },
     [pageLimit]
   );
@@ -169,6 +173,7 @@ const Laws = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* Add Modal */}

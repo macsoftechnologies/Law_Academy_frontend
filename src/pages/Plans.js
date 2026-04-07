@@ -21,15 +21,19 @@ const Plans = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchPlans = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getPlans(page, limit);
       setPlansList(res.data || []);
       setTotalPages(res.totalPages || 1);
     } catch {
       Swal.fire("Error", "Failed to fetch plans", "error");
-    }
+    }finally {
+    setIsLoading(false);    
+  }
   }, [pageLimit]);
 
   useEffect(() => {
@@ -182,6 +186,7 @@ const Plans = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       <Modal open={open} onClose={() => setOpen(false)} title="Add Plan" size="lg">

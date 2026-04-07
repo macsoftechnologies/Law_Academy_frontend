@@ -25,8 +25,8 @@ const PQAPaper = () => {
   const [viewLoading, setViewLoading] = useState(false);
   const [loading, setLoading]         = useState(true);
 
-  const [selectedQA, setSelectedQA]       = useState(null);
-  const [qaList, setQAList]               = useState([]);
+  const [selectedQA, setSelectedQA]         = useState(null);
+  const [qaList, setQAList]                 = useState([]);
   const [prelimsNameMap, setPrelimsNameMap] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +73,7 @@ const PQAPaper = () => {
       await loadAllQA(1, 10);
     };
     init();
-  }, []); 
+  }, []);
 
   const handlePageChange = async (page) => {
     await loadAllQA(page, pageLimit);
@@ -211,27 +211,19 @@ const PQAPaper = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-danger" role="status" />
-          <p className="mt-2 text-muted">Loading QA records...</p>
-        </div>
-      ) : (
-        <Table
-          columns={columns}
-          data={tableData}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      )}
+      <Table
+        columns={columns}
+        data={tableData}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        isLoading={loading}
+      />
 
-      {/* Add Modal */}
       <Modal open={open} onClose={() => setOpen(false)} title="Add Prelims QA" size="lg">
         <PrelimsQAForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
       </Modal>
 
-      {/* Edit Modal */}
       <Modal
         open={editOpen}
         onClose={() => { setEditOpen(false); setSelectedQA(null); }}
@@ -246,7 +238,6 @@ const PQAPaper = () => {
         />
       </Modal>
 
-      {/* View Modal */}
       <Modal
         open={viewOpen}
         onClose={() => { setViewOpen(false); setSelectedQA(null); }}
@@ -260,7 +251,6 @@ const PQAPaper = () => {
           </div>
         ) : selectedQA ? (
           <div className="container">
-
             <div className="row mb-3">
               <div className="col-md-6">
                 <b>Title:</b>
@@ -362,7 +352,6 @@ const PQAPaper = () => {
                 Close
               </button>
             </div>
-
           </div>
         ) : (
           <p className="text-center text-muted py-4">No data available.</p>

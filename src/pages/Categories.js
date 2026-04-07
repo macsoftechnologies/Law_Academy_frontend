@@ -16,8 +16,10 @@ function Categories() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getCategories(page, limit);
       let listData = [];
@@ -42,7 +44,9 @@ function Categories() {
       console.error("Fetch error:", error);
       setList([]);
       setTotalPages(1);
-    }
+    }finally {
+    setIsLoading(false);    
+  }
   }, [pageLimit]);
 
   useEffect(() => {
@@ -220,6 +224,7 @@ function Categories() {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* Add Modal */}

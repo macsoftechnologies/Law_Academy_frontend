@@ -7,6 +7,8 @@ function CategoriesForm({ onClose, isEdit, initialData, onSubmit }) {
   const [categoryName, setCategoryName] = useState("");
   const [tagText, setTagText] = useState("");
   const [presentationFile, setPresentationFile] = useState(null);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Pre-fill form when editing
@@ -14,9 +16,87 @@ function CategoriesForm({ onClose, isEdit, initialData, onSubmit }) {
     if (isEdit && initialData) {
       setCategoryName(initialData.category_name || "");
       setTagText(initialData.tag_text || "");
-      setPresentationFile(null); // optional
+      setPresentationFile(null);
+      setPreviewUrl(null);
     }
   }, [isEdit, initialData]);
+
+  // Compress image before upload to avoid 413 Request Entity Too Large
+  const compressImage = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+
+          let width = img.width;
+          let height = img.height;
+          const MAX_WIDTH = 1280;
+          const MAX_HEIGHT = 720;
+
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              const compressedFile = new File(
+                [blob],
+                file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+                {
+                  type: "image/jpeg",
+                  lastModified: Date.now(),
+                }
+              );
+              resolve(compressedFile);
+            },
+            "image/jpeg",
+            0.7 // 70% quality
+          );
+        };
+      };
+    });
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsCompressing(true);
+    try {
+      const compressed = await compressImage(file);
+      setPresentationFile(compressed);
+
+      // Show preview
+      const url = URL.createObjectURL(compressed);
+      setPreviewUrl(url);
+
+      console.log(
+        `Compressed: ${(file.size / 1024).toFixed(1)} KB → ${(compressed.size / 1024).toFixed(1)} KB`
+      );
+    } catch (err) {
+      console.error("Compression failed:", err);
+      // Fallback to original if compression fails
+      setPresentationFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    } finally {
+      setIsCompressing(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,35 +176,69 @@ function CategoriesForm({ onClose, isEdit, initialData, onSubmit }) {
       <div className="mb-3">
         <label>Presentation File</label>
 
-        {/* ✅ Show previous image in edit mode */}
-        {isEdit && initialData?.presentation_file && (
+        {/* Show existing image in edit mode if no new image selected */}
+        {isEdit && initialData?.presentation_file && !previewUrl && (
           <div className="mb-2">
             <img
               src={`${process.env.REACT_APP_API_BASE_URL}/${initialData.presentation_file}`}
-              alt="Previous"
+              alt="Current"
               style={{
                 height: "80px",
                 borderRadius: "6px",
                 border: "1px solid #ddd",
               }}
             />
+            <p className="text-muted small mt-1">Current image — upload a new one to replace it</p>
+          </div>
+        )}
+
+        {/* Preview of newly selected compressed image */}
+        {previewUrl && (
+          <div className="mb-2">
+            <img
+              src={previewUrl}
+              alt="Preview"
+              style={{
+                height: "80px",
+                borderRadius: "6px",
+                border: "1px solid #ddd",
+              }}
+            />
+            <p className="text-muted small mt-1">New image preview (compressed)</p>
           </div>
         )}
 
         <input
           type="file"
           className="form-control"
-          onChange={(e) => setPresentationFile(e.target.files[0])}
+          accept="image/*"
+          onChange={handleFileChange}
           required={!isEdit}
         />
+
+        {/* Compressing spinner */}
+        {isCompressing && (
+          <p className="text-muted small mt-1">
+            <span
+              className="spinner-border spinner-border-sm me-1"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Compressing image...
+          </p>
+        )}
       </div>
 
       <div className="text-end">
         <button type="button" className="btn btn-secondary me-2" onClick={onClose}>
           Cancel
         </button>
-        <button type="submit" className="btn btn-success" disabled={loading}>
-          {loading ? "Saving..." : isEdit ? "Update" : "Save"}
+        <button
+          type="submit"
+          className="btn btn-success"
+          disabled={loading || isCompressing}
+        >
+          {isCompressing ? "Processing..." : loading ? "Saving..." : isEdit ? "Update" : "Save"}
         </button>
       </div>
     </form>

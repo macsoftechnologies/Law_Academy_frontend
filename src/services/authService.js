@@ -601,3 +601,112 @@ export const addMainsResults = async (data) => {
   return res.data;
 };
 
+
+export const addTestTerms = async (data) => {
+  const res = await api.post("/test-terms/add", data);
+  return res.data;
+};
+
+export const getTestTerms = async (page = 1, limit = 10) => {
+  const res = await api.get(`/test-terms?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const updateTestTerms = async (data) => {
+  const res = await api.post("/test-terms/update", data);
+  return res.data;
+};
+
+export const deleteTestTerms = async (test_term_id) => {
+  const res = await api.post("/test-terms/delete", { test_term_id });
+  return res.data;
+};
+
+export const addMockTestSubject = async (formData) => {
+  const res = await api.post("/prelimes/addmocktestsubject", formData,{
+headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const getMockTestSubject = async (page = 1, limit = 10) => {
+  const res = await api.get(`/prelimes/mocktestsubjects?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getMockTestSubjectById = async (mocktest_subject_id) => {
+  const res = await api.post("/prelimes/mocktestsubjectdetails", { mocktest_subject_id });
+  return res.data;
+};
+
+export const updateMockTestSubject = async (formData) => {
+  const res = await api.post("/prelimes/update_mock_test", formData);
+  return res.data;
+};
+
+export const deleteMockTestSubject = async (data) => {
+  const res = await api.post("/prelimes/delete_subject_mock_test", data);
+  return res.data;
+};
+
+// export const getPrelimesSubjectWiseTests = async (page = 1, limit = 10, mocktest_subject_id = "") => {
+//   const res = await api.get(
+//     `/prelimes-tests?page=${page}&limit=${limit}&test_type=SMT&mocktest_subject_id=${mocktest_subject_id}`
+//   );
+//   return res.data;
+// };
+
+export const getPrelimesSubjectWiseTests = async (page = 1, limit = 10) => {
+  const res = await api.get(`/prelimes-tests?page=${page}&limit=${limit}&test_type=SMT`);
+  return res.data;
+};
+ 
+export const addPrelimesSubjectWiseTests = async (data) => {
+  const res = await api.post("/prelimes-tests/add", data);
+  return res.data;
+};
+
+export const getQuizzes = async (page = 1, limit = 10) => {
+  const res = await api.get(
+    `/prelimes-tests?page=${page}&limit=${limit}&test_type=QZ`
+  );
+  return res.data;
+};
+ 
+export const addQuiz = async (data) => {
+  const res = await api.post("/prelimes-tests/add", data);
+  return res.data;
+};
+
+export const getGrandTest = async (page = 1, limit = 10) => {
+  const res = await api.get(`/prelimes-tests?page=${page}&limit=${limit}&test_type=GT`);
+  return res.data;
+};
+
+export const addGrandTest = async (data) => {
+  const res = await api.post("/prelimes-tests/add", data);
+  return res.data;
+};
+
+
+export const addQuestion = async (data) => {
+  const res = await api.post("/prelimes-tests/addquestion", data);
+  return res.data;
+};
+ 
+export const getQuestion = async (page = 1, limit = 10, prelimes_test_id) => {
+  const res = await api.get(
+    `/prelimes-tests/getquestionlist?page=${page}&limit=${limit}&prelimes_test_id=${prelimes_test_id}`
+  );
+  return res.data;
+};
+ 
+export const updateQuestion = async (data) => {
+  const res = await api.post("/prelimes-tests/updatequestion", data);
+  return res.data;
+};
+ 
+export const deleteQuestion = async (questionId) => {
+  const res = await api.post("/prelimes-tests/deletequestion", { questionId });
+  return res.data;
+};

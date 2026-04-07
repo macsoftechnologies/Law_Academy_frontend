@@ -16,8 +16,10 @@ const SubCategories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = useCallback(async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
     try {
       const res = await getSubCategories(page, limit);
       setList(res.data || []);
@@ -27,7 +29,9 @@ const SubCategories = () => {
       setList([]);
       setTotalPages(1);
       Swal.fire("Error", "Failed to fetch subcategories", "error");
-    }
+    }finally {
+    setIsLoading(false);    
+  }
   }, [pageLimit]);
 
   useEffect(() => {
@@ -146,6 +150,7 @@ const SubCategories = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       <Modal open={open} onClose={() => setOpen(false)} title="Add SubCategory" size="lg">

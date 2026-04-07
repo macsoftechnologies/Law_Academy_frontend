@@ -25,6 +25,7 @@ function Notes() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   const userId =
     localStorage.getItem("userId") ||
@@ -34,6 +35,7 @@ function Notes() {
 
   const fetchNotes = useCallback(
     async (page = 1, limit = pageLimit) => {
+       setIsLoading(true);
       try {
         const res = await getNotes(page, limit);
         console.log("Notes API response:", res);
@@ -42,7 +44,9 @@ function Notes() {
       } catch (err) {
         console.error(err);
         Swal.fire("Error", "Failed to fetch notes", "error");
-      }
+      }finally {
+    setIsLoading(false);    
+  }
     },
     [pageLimit]
   );
@@ -279,6 +283,7 @@ function Notes() {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
+        isLoading={isLoading}
       />
 
       {/* Add Modal */}
