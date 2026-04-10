@@ -21,7 +21,7 @@ const ProfileDropdown = () => {
         // ✅ Clear session
         localStorage.clear();
         // ✅ Redirect to admin login page
-        navigate("/admin", { replace: true });
+        navigate("/", { replace: true });
       }
     });
   };

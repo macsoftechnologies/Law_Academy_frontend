@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 
 import MainsQAForm from "../forms/MainsQAForm";
@@ -17,13 +17,14 @@ import {
 
 import api from "../services/api";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const MainsQA = () => {
   const [open, setOpen]               = useState(false);
   const [editOpen, setEditOpen]       = useState(false);
   const [viewOpen, setViewOpen]       = useState(false);
   const [viewLoading, setViewLoading] = useState(false);
-  const [loading, setLoading]         = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedQA, setSelectedQA]     = useState(null);
   const [qaList, setQAList]             = useState([]);
@@ -36,7 +37,7 @@ const MainsQA = () => {
   const mainsMapRef = useRef({});
 
   const loadAllQA = async (page = 1, limit = 10) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const res   = await api.post(
         `/qa/module/userId?page=${page}&limit=${limit}`,
@@ -54,8 +55,8 @@ const MainsQA = () => {
       setQAList([]);
       setTotalPages(1);
     } finally {
-      setLoading(false);
-    }
+    setIsLoading(false);
+  }
   };
 
   useEffect(() => {
@@ -193,38 +194,27 @@ const MainsQA = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>MAINS Q&amp;A LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label style={{ color: "#2b377b" }}>Records per page:</label>
-          <select
-            style={{ border: "2px solid #872026", padding: "2px", cursor: "pointer" }}
-            value={pageLimit}
-            onChange={(e) => handleLimitChange(parseInt(e.target.value, 10))}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add QA" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+        title="MAINS Q&A LIST"
+        count={qaList.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={(limit) => handleLimitChange(limit)}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) => loadAllQA(page, limit)}
+        buttonText="+ Add QA"
+        buttonColor="secondary"
+        onButtonClick={() => setOpen(true)}
+      />  
 
-      {loading ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-danger" role="status" />
-          <p className="mt-2 text-muted">Loading QA records...</p>
-        </div>
-      ) : (
         <Table
           columns={columns}
           data={tableData}
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
+          isLoading={isLoading}
         />
-      )}
 
       <Modal open={open} onClose={() => setOpen(false)} title="Add Mains QA" size="lg">
         <MainsQAForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />

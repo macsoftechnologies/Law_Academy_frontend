@@ -216,7 +216,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Category</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
@@ -234,7 +234,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Sub Category</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={subcategoryId}
             onChange={(e) => setSubcategoryId(e.target.value)}
@@ -253,7 +253,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Law</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={lawId}
             onChange={(e) => setLawId(e.target.value)}
@@ -272,7 +272,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         <div className="col-md-6 mb-3">
           <label>Subject</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={subjectId}
             onChange={(e) => setSubjectId(e.target.value)}

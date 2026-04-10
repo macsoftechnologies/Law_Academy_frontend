@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import AdminForgotPassword from "./pages/AdminForgotPassword";
 import SuperAdminForgotPassword from "./pages/SuperAdminForgotPassword";
 
-import Home from "./pages/Home";
+// import Home from "./pages/Home";
 
 /* Protected Pages */
 import Dashboard from "./pages/Dashboard";
@@ -56,8 +56,8 @@ function App() {
       <Routes>
 
         {/* ✅ Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/admin" element={<Login />} />
+        <Route path="/" element={<Login />} />
+        {/* <Route path="/admin" element={<Login />} /> */}
         <Route path="/admin-forgot-password" element={<AdminForgotPassword />}/>
         <Route path="/superadmin-forgot-password" element={<SuperAdminForgotPassword />} />
 

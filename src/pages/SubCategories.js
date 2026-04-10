@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import SubCategoriesForm from "../forms/SubCategoriesForm";
 import Swal from "sweetalert2";
 import { getSubCategories, deleteSubCategories } from "../services/authService";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const SubCategories = () => {
   const [list, setList] = useState([]);
@@ -117,32 +118,22 @@ const SubCategories = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>SUB CATEGORIES</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select
-            style={{
-                border: "2px solid #872026",
-                padding: "2px",
-                cursor: "pointer",
-              }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchData(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add SubCategory" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+        title="SUB CATEGORIES"
+        count={list.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={(limit) => {
+          setPageLimit(limit);
+          setCurrentPage(1);
+          fetchData(1, limit);
+        }}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) => fetchData(page, limit)}
+        buttonText="+ Add SubCategory"
+        buttonColor="orange"
+        onButtonClick={() => setOpen(true)}
+      />
 
       <Table
         columns={columns}

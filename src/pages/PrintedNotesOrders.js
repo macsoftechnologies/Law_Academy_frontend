@@ -6,6 +6,7 @@ import Table from "../components/Table";
 import Modal from "../components/Modal";
 
 import { getPrintednotesoders, updateOrderStatus } from "../services/authService";
+import CommonHeader from "../components/CommonHeader";
 
 const STATUS_FLOW = {
   pending:          { next: "shipped",          label: "Pending",          color: "#ff9800", nextLabel: "Mark as Shipped" },
@@ -181,28 +182,15 @@ const PrintedNotesOrders = () => {
   return (
     <div>
       {/* Header */}
-      <div className="d-flex justify-content-between mb-3">
-        <h2>PRINTED NOTES ORDERS</h2>
-
-        <div className="d-flex gap-2 align-items-center">
-          <label style={{ color: "#2b377b" }}>Records per page:</label>
-          <select
-            style={{ border: "2px solid #872026", padding: "2px", cursor: "pointer" }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchOrders(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
-      </div>
+      <CommonHeader
+        title="PRINTED NOTES ORDERS"
+        count={ordersList.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={setPageLimit}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) => fetchOrders(page, limit)}
+      />
 
       {/* Table */}
       <Table

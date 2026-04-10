@@ -203,7 +203,7 @@ function MainsQAForm({ onClose, initialData, isEdit, onSubmit }) {
         <div className="col-md-6 mb-3">
           <label className="form-label">Module (Mains)</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={moduleId}
             onChange={(e) => setModuleId(e.target.value)}

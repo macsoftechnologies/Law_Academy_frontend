@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 
 import Table  from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal  from "../components/Modal";
 
 import MainsSubjectTestForm from "../forms/MainsSubjectTestForm";
@@ -18,6 +18,7 @@ import {
 } from "../services/authService";
 
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const MainsSubjectTest = () => {
   const [open,        setOpen]        = useState(false);
@@ -34,9 +35,11 @@ const MainsSubjectTest = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages,  setTotalPages]  = useState(1);
   const [pageLimit,   setPageLimit]   = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadTestSeries = async () => {
+      setIsLoading(true);
       try {
         const mainsRes  = await getMains(1, 10);
         const mainsList = mainsRes.data || [];
@@ -54,7 +57,9 @@ const MainsSubjectTest = () => {
       } catch {
         setTestSeriesList([]);
         setTestSeriesMap({});
-      }
+      }finally {
+    setIsLoading(false);
+  }
     };
     loadTestSeries();
   }, []);
@@ -219,27 +224,24 @@ const MainsSubjectTest = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>MAINS SUBJECT TEST LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label style={{ color: "#2b377b" }}>Records per page:</label>
-          <select
-            style={{ border: "2px solid #872026", padding: "2px", cursor: "pointer" }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Subject Test" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+        title="MAINS SUBJECT TEST LIST"
+        count={allSubjectTests.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={(limit) => {
+          setPageLimit(limit);
+          setCurrentPage(1);
+        }}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) => {
+          setCurrentPage(page);
+          setPageLimit(limit);
+        }}
+        buttonText="+ Add Subject Test"
+        buttonColor="secondary"
+        onButtonClick={() => setOpen(true)}
+      />
 
       <Table
         columns={columns}
@@ -247,6 +249,7 @@ const MainsSubjectTest = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* ── Add Modal ── */}

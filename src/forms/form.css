@@ -195,6 +195,12 @@
    MULTI-SELECT  (custom dropdown)
    ============================================================ */
 
+.form-select {
+  appearance: auto;
+  -webkit-appearance: auto;
+  background-image: none;
+}
+
 /* Trigger box */
 .multi-select-input {
   border: 2px solid var(--gold);
@@ -263,6 +269,10 @@
 }
 .chip-tag .chip-remove:hover { color: var(--cherry); opacity: 0.7; }
 
+.multi-select-wrapper {
+  position: relative;
+  width: 100%;
+}
 /* Dropdown options panel */
 .multi-select-options {
   border: 1.5px solid var(--gold);
@@ -273,6 +283,7 @@
   position: absolute;
   z-index: 100;
   width: 60%;
+  z-index: 99999; 
   box-shadow: 0 6px 20px rgba(26, 60, 139, 0.14);
   margin-top: 4px;
   animation: dropDown 0.16s ease both;

@@ -30,6 +30,7 @@
 /* ── Dialog animation ── */
 .modal-dialog {
   animation: slideUp 0.24s cubic-bezier(0.4, 1.3, 0.6, 1) both;
+  overflow: visible !important;
 }
 
 @keyframes slideUp {
@@ -44,6 +45,7 @@
   overflow: hidden;
   box-shadow: 0 16px 56px rgba(26, 60, 139, 0.22),
               0 4px 16px rgba(0, 0, 0, 0.12);
+              overflow: visible !important;
 }
 
 /* ── Header ── */
@@ -80,6 +82,7 @@
 .modal-body {
   background: #ffffff;
   padding: 26px 26px 20px;
+  overflow: visible !important;
 }
 
 /* ── Footer (if used) ── */

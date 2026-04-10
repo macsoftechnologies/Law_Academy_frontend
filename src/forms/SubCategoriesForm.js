@@ -93,7 +93,7 @@ const SubCategoriesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
           <label>Category</label>
           <select
             style={{ cursor: "pointer" }}
-            className="form-control"
+            className="form-control form-select"
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
             disabled={isEdit}

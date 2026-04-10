@@ -204,7 +204,7 @@ function MainsForm({ onClose, initialData, isEdit, onSubmit }) {
         <div className="col-md-6 mb-3">
           <label className="form-label">Sub Category</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={subcategoryId}
             onChange={(e) => setSubcategoryId(e.target.value)}

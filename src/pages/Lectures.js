@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import LecturesForm from "../forms/LecturesForm";
 import Swal from "sweetalert2";
 import { getLectures, deleteLectures } from "../services/authService";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const Lectures = () => {
   const [list, setList] = useState([]);
@@ -123,32 +124,18 @@ const Lectures = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="mb-0">Lectures</h4>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select
-            style={{
-              border: "2px solid #872026",
-              padding: "2px",
-              cursor: "pointer",
-            }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchData(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Lecture" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+        title="LECTURES"
+        count={list.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={setPageLimit}
+        setCurrentPage={setCurrentPage}
+        onChange={fetchData}
+        buttonText="+ Add Lecture"
+        buttonColor="orange"
+        onButtonClick={() => setOpen(true)}
+      />
 
       <Table
         columns={columns}

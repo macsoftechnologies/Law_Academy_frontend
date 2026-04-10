@@ -271,7 +271,7 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
           ) : (
             <select
               style={{ cursor: "pointer" }}
-              className="form-control"
+              className="form-control form-select"
               value={notesId}
               onChange={(e) => setNotesId(e.target.value)}
             >
@@ -299,7 +299,7 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
           ) : (
             <select
               style={{ cursor: "pointer" }}
-              className="form-control"
+              className="form-control form-select"
               value={categoryId}
               onChange={handleCategoryChange}
             >
@@ -327,7 +327,7 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
           ) : (
             <select
               style={{ cursor: "pointer" }}
-              className="form-control"
+              className="form-control form-select"
               value={subcategoryId}
               onChange={handleSubcategoryChange}
               disabled={!categoryId}
@@ -356,7 +356,7 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
           ) : (
             <select
               style={{ cursor: "pointer" }}
-              className="form-control"
+              className="form-control form-select"
               value={lawId}
               onChange={(e) => setLawId(e.target.value)}
               disabled={!subcategoryId}

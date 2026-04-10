@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";                                                          
 import { adminForgotPassword } from "../services/authService";
+import { showSuccess, showError } from "../components/alertService"; 
 import "./Login.css";
+import logo from "../assets/Raos-law-logo-02.png";
 
 export default function AdminForgotPassword() {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ export default function AdminForgotPassword() {
     setLoading(true);
 
     if (!email || !password) {
-      Swal.fire("Warning", "All fields are required", "warning");
+      showError("All fields are required");
       setLoading(false);
       return;
     }
@@ -31,21 +33,19 @@ export default function AdminForgotPassword() {
       const res = await adminForgotPassword(payload);
 
       if (res.statusCode !== 200) {
-        Swal.fire("Error", res.message || "Password update failed", "error");
+        showError(res.message || "Password update failed");
         return;
       }
 
-      Swal.fire({
-        icon: "success",
-        title: "Password Updated",
-        text: "Please login with your new password",
-        timer: 1500,
-        showConfirmButton: false,
-      }).then(() => {
+      showSuccess("Password Updated. Please login with your new password");
+
+      // Delay navigation to allow toast to show properly
+      setTimeout(() => {
         navigate("/admin", { replace: true });
-      });
+      }, 1500);
+
     } catch (error) {
-      Swal.fire("Error", "Server error. Try again later.", "error");
+      showError("Server error. Try again later.");
     } finally {
       setLoading(false);
     }
@@ -54,8 +54,14 @@ export default function AdminForgotPassword() {
   return (
     <div className="law-login-page">
       <div className="law-login-box">
-        <div className="law-brand">
-          <span>E-LEARNING LAW</span>
+        <div className="sidebar-header">
+          <div className="law-login-brand">
+            <img
+              src={logo}
+              alt="Rao's Law Academy"
+              className="law-brand-logo"
+            />
+          </div>
         </div>
 
         <h4 className="law-login-title">Forgot Password</h4>
@@ -83,7 +89,7 @@ export default function AdminForgotPassword() {
             <button
               type="button"
               className="link-btn"
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate("/")}
             >
               Back to Login
             </button>

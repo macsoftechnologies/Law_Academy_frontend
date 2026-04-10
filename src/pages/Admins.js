@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
+import { showSuccess, showError, showDeleteConfirm, showDeleteSuccess } from "../components/alertService";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import AdminForm from "../forms/AdminForm";
 import { getadmins, addAdmin, updateAdmin, deleteAdmin } from "../services/authService";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const Admins = () => {
   const [open, setOpen] = useState(false);
@@ -28,7 +30,7 @@ const Admins = () => {
       console.error("Fetch admins error:", err);
       setAdminList([]);
       setTotalPages(1);
-      Swal.fire("Error", "Failed to fetch admins", "error");
+      showError("Failed to fetch admins");
     }finally {
     setIsLoading(false);    
   }
@@ -55,37 +57,15 @@ const Admins = () => {
   };
 
   const handleDelete = async (item) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This admin will be deleted permanently!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#dc3545",
-      cancelButtonColor: "#6c757d",
-    });
+    const result = await showDeleteConfirm();
 
     if (!result.isConfirmed) return;
 
-    try {
-      await deleteAdmin(item.adminId);
-      fetchAdminList(currentPage, pageLimit);
-      Swal.fire({
-        title: "Deleted!",
-        text: "Admin removed successfully",
-        icon: "success",
-        toast: true,
-        position: "top-end",
-        timer: 4000,
-        showConfirmButton: false,
-        timerProgressBar: true,
-        color: "#ffffff",
-        background: "#8f1e1e",
-      });
-    } catch (err) {
-      Swal.fire("Error", "Delete failed", "error");
-    }
+    await deleteAdmin(item.adminId);
+
+    fetchAdminList(currentPage, pageLimit);
+
+    showDeleteSuccess();
   };
 
   const handleSubmit = async (formData) => {
@@ -96,40 +76,15 @@ const Admins = () => {
         setEditOpen(false);
         setSelectedAdmin(null);
         fetchAdminList(currentPage, pageLimit);
-
-        Swal.fire({
-          title: "Updated!",
-          text: "Admin updated successfully",
-          icon: "success",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 6000,
-          timerProgressBar: true,
-          background: "#28a745",
-          color: "#ffffff",
-        });
+        showSuccess("Admin updated successfully");
         return;
       }
-
       await addAdmin(formData);
       setOpen(false);
       fetchAdminList(currentPage, pageLimit);
-
-      Swal.fire({
-        title: "Added!",
-        text: "Admin added successfully",
-        icon: "success",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 6000,
-        timerProgressBar: true,
-        background: "#28a745",
-        color: "#ffffff",
-      });
+      showSuccess("Admin added successfully");
     } catch (err) {
-      Swal.fire("Error", "Operation failed", "error");
+      showError("Operation failed");
     }
   };
 
@@ -161,33 +116,22 @@ const Admins = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>ADMINS LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label style={{color:"#2b377b"}}>Records per page:</label>
-          <select
-            style={{
-              border: "2px solid #872026",
-              padding: "2px",
-              cursor: "pointer",
-            }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchAdminList(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Admin" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
-
+     <CommonHeader
+      title="ADMINS LIST"
+      count={adminList.length}
+      totalPages={totalPages}
+      pageLimit={pageLimit}
+      setPageLimit={(limit) => {
+        setPageLimit(limit);
+        setCurrentPage(1);
+        fetchAdminList(1, limit);
+      }}
+      setCurrentPage={setCurrentPage}
+      onChange={(page, limit) => fetchAdminList(page, limit)}
+      buttonText="+ Add Admin"
+      buttonColor="orange"
+      onButtonClick={() => setOpen(true)}
+    />
       <Table
         columns={columns}
         data={tableData}

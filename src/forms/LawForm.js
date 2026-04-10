@@ -111,7 +111,7 @@ const handleSubmit = async (e) => {
           <label>Category</label>
           <select
             style={{cursor:"pointer"}}
-            className="form-control"
+            className="form-control form-select"
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
             disabled={isEdit}
@@ -130,7 +130,7 @@ const handleSubmit = async (e) => {
           <label>Sub Category</label>
           <select
             style={{cursor:"pointer"}}
-            className="form-control"
+            className="form-control form-select"
             value={subcategoryId}
             onChange={(e) => setSubcategoryId(e.target.value)}
             disabled={isEdit}

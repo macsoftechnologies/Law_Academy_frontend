@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import CategoriesForm from "../forms/CategoriesForm";
 import Swal from "sweetalert2";
 import { getCategories, getCategoriesById, deleteCategories } from "../services/authService";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 function Categories() {
   const [open, setOpen] = useState(false);
@@ -190,33 +191,22 @@ function Categories() {
   return (
     <div>
       {/* Header + Records per page */}
-      <div className="d-flex justify-content-between mb-3">
-        <h2>CATEGORIES LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select
-            style={{
-              border: "2px solid #872026",
-              padding: "2px",
-              cursor: "pointer",
-            }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchData(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Category" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
-
+        <CommonHeader
+          title="CATEGORIES LIST"
+          count={list.length}
+          totalPages={totalPages}
+          pageLimit={pageLimit}
+          setPageLimit={(limit) => {
+            setPageLimit(limit);
+            setCurrentPage(1);
+            fetchData(1, limit);
+          }}
+          setCurrentPage={setCurrentPage}
+          onChange={(page, limit) => fetchData(page, limit)}
+          buttonText="+ Add Category"
+          buttonColor="orange"
+          onButtonClick={() => setOpen(true)}
+        />
       {/* Table */}
       <Table
         columns={columns}

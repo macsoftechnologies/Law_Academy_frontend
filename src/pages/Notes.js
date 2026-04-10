@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Swal from "sweetalert2";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import NotesForm from "../forms/NotesForm";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
@@ -13,6 +13,7 @@ import {
   deleteNotes,
   getSubCategories,
 } from "../services/authService";
+import CommonHeader from "../components/CommonHeader";
 
 function Notes() {
   const [open, setOpen] = useState(false);
@@ -254,28 +255,18 @@ function Notes() {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>NOTES LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select
-            style={{ border: "2px solid #872026", padding: "2px", cursor: "pointer" }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchNotes(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Notes" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+        title="NOTES LIST"
+        count={notesList.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={setPageLimit}
+        setCurrentPage={setCurrentPage}
+        onChange={fetchNotes}
+        buttonText="+ Add Notes"
+        buttonColor="secondary"
+        onButtonClick={() => setOpen(true)}
+      />
 
       <Table
         columns={columns}

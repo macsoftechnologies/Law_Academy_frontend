@@ -99,7 +99,7 @@ export default function LearningDashboard() {
 
           <div className="law-col-md-3">
             <div className="law-stat-box green">
-              <p>Total Trainers</p>
+              <p>Total Test Series</p>
               <h3>18</h3>
               <p>Active</p>
             </div>

@@ -70,7 +70,7 @@ const GrandTestsForm = ({ onClose, onSubmit }) => {
           <label>Prelims</label>
           <select
             style={{ cursor: "pointer" }}
-            className="form-control"
+            className="form-control form-select"
             value={prelimsId}
             onChange={(e) => setPrelimsId(e.target.value)}
             required

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 
 import PrelimsQAForm from "../forms/PrelimsQAForm";
@@ -17,6 +17,7 @@ import {
 
 import api from "../services/api";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const PQAPaper = () => {
   const [open, setOpen]               = useState(false);
@@ -193,23 +194,25 @@ const PQAPaper = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>PRELIMS Q&amp;A LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label style={{ color: "#2b377b" }}>Records per page:</label>
-          <select
-            style={{ border: "2px solid #872026", padding: "2px", cursor: "pointer" }}
-            value={pageLimit}
-            onChange={(e) => handleLimitChange(parseInt(e.target.value, 10))}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add QA" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+     <CommonHeader
+        title="PRELIMS Q&A LIST"
+        count={qaList.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={(limit) => {
+          setPageLimit(limit);
+          setCurrentPage(1);
+        }}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) => {
+          setCurrentPage(page);
+          setPageLimit(limit);
+          handleLimitChange(limit);
+        }}
+        buttonText="+ Add QA"
+        buttonColor="secondary"
+        onButtonClick={() => setOpen(true)}
+      />
 
       <Table
         columns={columns}

@@ -129,7 +129,7 @@ const PrelimsSWMockTestsForm = ({ onClose, onSubmit }) => {
           <label>Prelims</label>
           <select
             style={{ cursor: "pointer" }}
-            className="form-control"
+            className="form-control form-select"
             value={prelimsId}
             onChange={(e) => setPrelimsId(e.target.value)}
             required
@@ -148,7 +148,7 @@ const PrelimsSWMockTestsForm = ({ onClose, onSubmit }) => {
           <label>Mock Test Subject</label>
           <select
             style={{ cursor: "pointer" }}
-            className="form-control"
+            className="form-control form-select"
             value={mocktestSubjectId}
             onChange={(e) => setMocktestSubjectId(e.target.value)}
             disabled={!prelimsId}

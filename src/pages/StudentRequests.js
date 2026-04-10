@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "../components/Table";
 import Modal from "../components/Modal";
-import Swal from "sweetalert2";
+import { showSuccess, showError,} from "../components/alertService";
 import { FaEye } from "react-icons/fa";
 import {
   getStudentRequestlist,
   completeStudentRequest,
 } from "../services/authService";
+import CommonHeader from "../components/CommonHeader";
 
 function StudentRequests() {
   const [requestsList, setRequestsList] = useState([]);
@@ -16,6 +17,7 @@ function StudentRequests() {
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
+  
 
   // 🔥 Fetch requests wrapped in useCallback
   const fetchRequests = useCallback(async (page = 1, limit = pageLimit) => {
@@ -34,7 +36,7 @@ function StudentRequests() {
       setRequestsList(data);
       setTotalPages(pages);
     } catch (error) {
-      Swal.fire("Error", "Failed to fetch student requests", "error");
+      showError("Failed to fetch student requests");
       setRequestsList([]);
       setTotalPages(1);
     }finally {
@@ -58,15 +60,17 @@ function StudentRequests() {
   };
 
   const handleComplete = async (detailsId) => {
-    try {
-      await completeStudentRequest(detailsId);
-      Swal.fire("Success", "Request marked as Completed", "success");
-      setViewOpen(false);
-      fetchRequests(currentPage, pageLimit);
-    } catch (error) {
-      Swal.fire("Error", "Failed to complete request", "error");
-    }
-  };
+  try {
+    await completeStudentRequest(detailsId);
+
+    showSuccess("Request marked as completed");
+
+    setViewOpen(false);
+    fetchRequests(currentPage, pageLimit);
+  } catch (error) {
+    showError("Failed to complete request");
+  }
+};
 
   const getStatusStyle = (status) => {
     if (status === "pending") return { color: "#ff9800", fontWeight: "bold" };
@@ -110,31 +114,19 @@ function StudentRequests() {
   return (
     <div>
       {/* Header + Records per page */}
-      <div className="d-flex justify-content-between mb-3">
-        <h2>STUDENT REQUESTS</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select
-            style={{
-              border: "2px solid #872026",
-              padding: "2px",
-              cursor: "pointer",
-            }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchRequests(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
-      </div>
+      <CommonHeader
+        title="STUDENT REQUESTS"
+        count={requestsList.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={(limit) => {
+          setPageLimit(limit);
+          setCurrentPage(1);
+          fetchRequests(1, limit);
+        }}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) => fetchRequests(page, limit)}
+      />
 
       {/* Table */}
       <Table
@@ -182,7 +174,7 @@ function StudentRequests() {
                     handleComplete(selectedRequest.detailsId)
                   }
                 >
-                  Complete
+                  Approved
                 </button>
               )}
             </div>

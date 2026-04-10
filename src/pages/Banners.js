@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import Swal from "sweetalert2";
 import { addBanner, getBanners, deleteBanner, updateBanners } from "../services/authService";
 import "../forms/form.css";
 import { FaEye, FaTrash, FaEdit } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const Banners = () => {
   const [open, setOpen] = useState(false);
@@ -191,32 +192,18 @@ const Banners = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3 align-items-center">
-        <h2>BANNERS</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select
-            style={{
-              border: "2px solid #872026",
-              padding: "2px",
-              cursor: "pointer",
-            }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchBanners(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Banner" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+      title="BANNERS"
+      count={bannersList.length}
+      totalPages={totalPages}
+      pageLimit={pageLimit}
+      setPageLimit={setPageLimit}
+      setCurrentPage={setCurrentPage}
+      onChange={fetchBanners}
+      buttonText="+ Add Banner"
+      buttonColor="secondary"
+      onButtonClick={() => setOpen(true)}
+    />
 
       <Table
         columns={columns}

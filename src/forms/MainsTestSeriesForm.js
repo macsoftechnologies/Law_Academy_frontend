@@ -137,7 +137,7 @@ function MainsTestSeriesForm({ onClose, initialData, isEdit, onSubmit }) {
         <div className="col-md-6 mb-3">
           <label className="form-label">Mains</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
             value={mainsId}
             onChange={(e) => setMainsId(e.target.value)}

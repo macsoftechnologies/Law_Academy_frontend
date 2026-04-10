@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import PlansForm from "../forms/PlansForm";
 import {
@@ -11,6 +11,7 @@ import {
   deletePlans,
 } from "../services/authService";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const Plans = () => {
   const [open, setOpen] = useState(false);
@@ -153,32 +154,20 @@ const Plans = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>PLANS</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select 
-           style={{
-              border: "2px solid #872026",
-              padding: "2px",
-              cursor: "pointer",
-            }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchPlans(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Plan" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+        title="PLANS"
+        count={plansList.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={setPageLimit}
+        setCurrentPage={setCurrentPage}
+        onChange={fetchPlans}
+        buttonText="+ Add Plan"
+        buttonColor="secondary"
+        onButtonClick={() => setOpen(true)}
+      />
+
+      
 
       <Table
         columns={columns}

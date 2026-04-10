@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal from "../components/Modal";
 import QuizzesForm from "../forms/QuizzesForm";
 import Swal from "sweetalert2";
 import { getQuizzes, getPrelims } from "../services/authService";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import CommonHeader from "../components/CommonHeader";
 
 const Quizzes = () => {
   const navigate = useNavigate();
@@ -124,68 +125,25 @@ const Quizzes = () => {
 
   return (
     <div>
-      {/* ── Top bar: Title + Add button ── */}
-      <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <h2>Quizzes</h2>
-        <Button text="+ Add Quiz" onClick={() => setOpen(true)} />
-      </div>
 
-      {/* ── Tip (left) | Showing count + Records per page (right) ── */}
-      <div
-        className="d-flex justify-content-between align-items-center flex-wrap gap-2"
-        style={{ marginBottom: "12px" }}
-      >
-        {/* Left — tip pill */}
-        <p
-          style={{
-            margin: 0,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "15px",
-            fontWeight: "600",
-            fontStyle: "italic",
-            color: "#6f42c1",
-            background: "#f0ebff",
-            border: "1px solid #c9b8f5",
-            borderRadius: "20px",
-            padding: "4px 14px",
-          }}
-        >
-          💡 Click on any row to view quiz details
-        </p>
-
-        {/* Right — showing count + records per page */}
-        <div className="d-flex align-items-center gap-3 flex-wrap">
-          <span style={{ fontSize: "15px" }}>
-            Showing{" "}
-            <strong style={{ color: "#ff7a00" }}>{list.length}</strong>
-            {totalCount > list.length && (
-              <> of <strong>{totalCount}</strong></>
-            )}{" "}
-            records
-          </span>
-
-          <div className="d-flex align-items-center gap-2">
-            <label style={{ marginBottom: 0 }}>Records per page:</label>
-            <select
-              style={{ border: "2px solid #872026", padding: "2px", cursor: "pointer" }}
-              value={pageLimit}
-              onChange={(e) => {
-                const limit = parseInt(e.target.value, 10);
-                setPageLimit(limit);
-                setCurrentPage(1);
-                fetchData(1, limit);
-              }}
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <CommonHeader
+        title="Quizzes"
+        count={list.length}
+        totalPages={totalPages}
+        totalCount={totalCount}
+        pageLimit={pageLimit}
+        setPageLimit={(limit) => {
+          setPageLimit(limit);
+          setCurrentPage(1);
+          fetchData(1, limit);
+        }}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) => fetchData(page, limit)}
+        buttonText="+ Add Quiz"
+        buttonColor="orange"
+        onButtonClick={() => setOpen(true)}
+        infoText="💡 Click on any row to view quiz details"
+      />
 
       <Table
         columns={columns}

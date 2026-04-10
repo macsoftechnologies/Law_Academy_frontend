@@ -3,6 +3,7 @@ import Table from "../components/Table";
 import { getUsersList } from "../services/authService";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import CommonHeader from "../components/CommonHeader";
 
 function Students() {
   const navigate = useNavigate();
@@ -69,50 +70,16 @@ function Students() {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>STUDENTS LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label>Records per page:</label>
-          <select
-            style={{
-              border: "2px solid #872026",
-              padding: "2px",
-              cursor: "pointer",
-            }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchStudents(1, limit);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
-      </div>
-
-      <p
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "6px",
-          fontSize: "16px",
-          fontWeight: "600",
-          fontStyle: "italic",
-          color: "#6f42c1",
-          background: "#f0ebff",
-          border: "1px solid #c9b8f5",
-          borderRadius: "20px",
-          padding: "4px 14px",
-          marginBottom: "12px",
-        }}
-      >
-        💡 Click on any row to view student details
-      </p>
+     <CommonHeader
+  title="STUDENTS LIST"
+  count={studentsList.length}
+  totalPages={totalPages}
+  pageLimit={pageLimit}
+  setPageLimit={setPageLimit}
+  setCurrentPage={setCurrentPage}
+  onChange={(page, limit) => fetchStudents(page, limit)}
+  infoText="💡 Click on any row to view student details"   // ✅ HERE
+/>
 
       <Table
         columns={columns}

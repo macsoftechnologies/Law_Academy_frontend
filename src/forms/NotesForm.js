@@ -256,7 +256,7 @@ function NotesForm({ onClose, initialData, isEdit, onSubmit, userId }) {
         <div className="col-md-6 mb-3">
           <label className="form-label">Sub Category</label>
           <select
-            className="form-control"
+            className="form-control form-select"
             style={{ cursor: "pointer" }}
             value={subcategoryId}
             onChange={(e) => setSubcategoryId(e.target.value)}

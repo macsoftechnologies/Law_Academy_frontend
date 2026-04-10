@@ -151,11 +151,7 @@ function AdminForm({ onClose, initialData, isEdit, onSubmit }) {
 
         {/* Password */}
         <div className="col-md-6 mb-3">
-          <label className="form-label">
-            {isEdit
-              ? "Password (leave blank to keep unchanged)"
-              : "Password"}
-          </label>
+          <label className="form-label">Password</label>
           <input
             type="password"
             className="form-control"
@@ -163,50 +159,53 @@ function AdminForm({ onClose, initialData, isEdit, onSubmit }) {
             onChange={(e) => setPassword(e.target.value)}
             placeholder={
               isEdit
-                ? "Enter new password if you want to change"
+                ? "Password is disabled in edit mode"
                 : "Enter password"
             }
             required={!isEdit}
+            disabled={isEdit}
           />
         </div>
 
         {/* Access Modules */}
-        <div className="col-md-12 mb-3" ref={dropdownRef}>
+        <div className="col-md-12 mb-3">
           <label className="form-label">Access Modules</label>
-          <div
-            className="multi-select-input"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-          >
-            {accessModules.length > 0
-              ? accessModules.join(", ")
-              : "Select Modules"}
-            <span className="arrow">{dropdownOpen ? "▲" : "▼"}</span>
-          </div>
-          {dropdownOpen && (
-            <div className="multi-select-options">
-              {/* Select All checkbox */}
-              <label className="option-item">
-                <input
-                  type="checkbox"
-                  checked={accessModules.length === moduleOptions.length}
-                  onChange={handleSelectAll}
-                />
-                <b>All</b>
-              </label>
 
-              {/* Individual module checkboxes */}
-              {moduleOptions.map((option) => (
-                <label key={option.value} className="option-item">
+          <div className="multi-select-wrapper" ref={dropdownRef}>
+            <div
+              className="multi-select-input"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              {accessModules.length > 0
+                ? accessModules.join(", ")
+                : "Select Modules"}
+              <span className="arrow">{dropdownOpen ? "▲" : "▼"}</span>
+            </div>
+
+            {dropdownOpen && (
+              <div className="multi-select-options">
+                <label className="option-item">
                   <input
                     type="checkbox"
-                    checked={accessModules.includes(option.value)}
-                    onChange={() => toggleModule(option.value)}
+                    checked={accessModules.length === moduleOptions.length}
+                    onChange={handleSelectAll}
                   />
-                  {option.label}
+                  <b>All</b>
                 </label>
-              ))}
-            </div>
-          )}
+
+                {moduleOptions.map((option) => (
+                  <label key={option.value} className="option-item">
+                    <input
+                      type="checkbox"
+                      checked={accessModules.includes(option.value)}
+                      onChange={() => toggleModule(option.value)}
+                    />
+                    {option.label}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

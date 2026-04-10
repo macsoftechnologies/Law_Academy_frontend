@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 
 import Table  from "../components/Table";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Modal  from "../components/Modal";
 
 import MainsTestSeriesForm from "../forms/MainsTestSeriesForm";
@@ -17,6 +17,7 @@ import {
 } from "../services/authService";
 
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import CommonHeader from "../components/CommonHeader";
 
 const MainsTestSeries = () => {
   const [open,        setOpen]        = useState(false);
@@ -32,10 +33,12 @@ const MainsTestSeries = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages,  setTotalPages]  = useState(1);
   const [pageLimit,   setPageLimit]   = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   /* ── fetch mains list once ── */
   useEffect(() => {
     const fetchMainsList = async () => {
+      setIsLoading(true);
       try {
         const res  = await getMains(1, 10);
         const list = res.data || [];
@@ -46,7 +49,9 @@ const MainsTestSeries = () => {
       } catch {
         setMainsList([]);
         setMainsNameMap({});
-      }
+      }finally {
+    setIsLoading(false);
+  }
     };
     fetchMainsList();
   }, []);
@@ -202,28 +207,18 @@ const MainsTestSeries = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>MAINS TEST SERIES LIST</h2>
-        <div className="d-flex gap-2 align-items-center">
-          <label style={{ color: "#2b377b" }}>Records per page:</label>
-          <select
-            style={{ border: "2px solid #872026", padding: "2px", cursor: "pointer" }}
-            value={pageLimit}
-            onChange={(e) => {
-              const limit = parseInt(e.target.value, 10);
-              setPageLimit(limit);
-              setCurrentPage(1);
-              fetchTests(1, limit, mainsList);
-            }}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <Button text="+ Add Test Series" className="secondary" onClick={() => setOpen(true)} />
-        </div>
-      </div>
+      <CommonHeader
+        title="MAINS TEST SERIES LIST"
+          count={testList.length}
+          totalPages={totalPages}
+          pageLimit={pageLimit}
+          setPageLimit={setPageLimit}
+          setCurrentPage={setCurrentPage}
+          onChange={(page, limit) => fetchTests(page, limit, mainsList)}
+          buttonText="+ Add Test Series"
+          buttonColor="secondary"
+          onButtonClick={() => setOpen(true)}
+        />
 
       <Table
         columns={columns}
@@ -231,6 +226,7 @@ const MainsTestSeries = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        isLoading={isLoading}
       />
 
       {/* ── Add Modal ── */}

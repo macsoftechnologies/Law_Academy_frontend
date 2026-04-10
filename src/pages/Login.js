@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import { adminlogin, superadminlogin } from "../services/authService";
+import { showSuccess, showError } from "../components/alertService"; 
 import "./Login.css";
-import logo from '../assets/Raos-law-logo-02.png';
+import logo from "../assets/Raos-law-logo-02.png";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function Login() {
     e.preventDefault();
 
     if (!role) {
-      Swal.fire("Error", "Please select Admin or Super Admin", "error");
+      showError("Please select Admin or Super Admin");
       return;
     }
 
@@ -49,7 +50,7 @@ export default function Login() {
       }
 
       if (!res || res.statusCode !== 200) {
-        Swal.fire("Error", res?.message || "Invalid credentials", "error");
+        showError(res?.message || "Invalid credentials");
         return;
       }
 
@@ -65,17 +66,16 @@ export default function Login() {
         localStorage.removeItem("access_modules");
       }
 
-      Swal.fire({
-        icon: "success",
-        title: "Login Successful",
-        timer: 1200,
-        showConfirmButton: false,
-      }).then(() => {
+      showSuccess("Login Successful");
+
+      // delay navigation so toast is visible
+      setTimeout(() => {
         navigate("/dashboard", { replace: true });
-      });
+      }, 1200);
+
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "Login failed", "error");
+      showError("Login failed");
     } finally {
       setLoading(false);
     }
@@ -86,7 +86,11 @@ export default function Login() {
       <div className="law-login-box">
         <div className="sidebar-header">
           <div className="law-login-brand">
-            <img src={logo} alt="Rao's Law Academy" className="law-brand-logo" />
+            <img
+              src={logo}
+              alt="Rao's Law Academy"
+              className="law-brand-logo"
+            />
           </div>
         </div>
 
