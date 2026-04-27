@@ -1,6 +1,6 @@
 import React from 'react';
 import ProfileDropdown from './ProfileDropdown';
-import "./Navbar.css";
+import './Navbar.css';
 
 const Navbar = ({ toggleSidebar }) => {
   return (

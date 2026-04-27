@@ -3,51 +3,49 @@ import Layout from "./Layout/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 /* Public Pages */
-import Login from "./pages/Login";
-import AdminForgotPassword from "./pages/AdminForgotPassword";
-import SuperAdminForgotPassword from "./pages/SuperAdminForgotPassword";
+import Login from "./pages/Auth/Login";
+import AdminForgotPassword from "./pages/Admins/AdminForgotPassword";
+import SuperAdminForgotPassword from "./pages/Admins/SuperAdminForgotPassword";
 
 // import Home from "./pages/Home";
 
 /* Protected Pages */
-import Dashboard from "./pages/Dashboard";
-import Admins from "./pages/Admins";
-import Students from "./pages/Students";
-import Categories from "./pages/Categories";
-import SubCategories from "./pages/SubCategories";
-import Laws from "./pages/Laws";
-import Subjects from "./pages/Subjects";
-import Lectures from "./pages/Lectures";
-import GuestLectures from "./pages/GuestLectures";
-import CouresCombo from "./pages/CouresCombo";
-import NpmCombos from "./pages/NpmCombos";
-import Notes from "./pages/Notes";
-import SubjectNotes from "./pages/SubjectNotes";
-import PrintedNotesOrders from "./pages/PrintedNotesOrders";
-import PrelimsSWMockTests from "./pages/PrelimsSWMockTests";
-import SubjectsSWMockTest from "./pages/SubjectsSWMockTest";
-import GrandTests from "./pages/GrandTests";
-import Quizzes from "./pages/Quizzes";
-import MainsQA from "./pages/MainsQA";
-import MainsEssayTrans from "./pages/MainsEssayTrans";
-import Banners from "./pages/Banners";
-import Results from "./pages/Results";
-import StudentRequests from "./pages/StudentRequests";
-import Plans from "./pages/Plans";
-import Coupons from "./pages/Coupons";
-import StudentProfile from "./pages/Studentprofile";
-import Prelims from "./pages/Prelims";
-import Mains from "./pages/Mains";
-import PQAPaper from "./pages/PQAPaper";
-import MainsTestSeries from "./pages/MainsTestSeries";
-import MainsSubjectTest from "./pages/MainsSubjectTest";
-import MainsTestsAttempts from "./pages/MainsTestsAttempts";
-import MainsResultsProfile from "./pages/MainsResultsProfile";
-import TestTermsandConditions from "./pages/TestTermsandConditions";
-import QuizProfile from "./pages/QuizProfile";
-import GrandTestsProfile from "./pages/GrandTestsProfile";
-import PrelimsSMTProfile from "./pages/PrelimsSMTProfile";
-
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Admins from "./pages/Admins/Admins";
+import Students from "./pages/Students/Students";
+import Categories from "./pages/Categories/Categories";
+import SubCategories from "./pages/SubCategories/SubCategories";
+import Laws from "./pages/Laws/Laws";
+import Subjects from "./pages/Subjects/Subjects";
+import Lectures from "./pages/Lectures/Lectures";
+import GuestLectures from "./pages/GuestLectures/GuestLectures";
+import CouresCombo from "./pages/Combination/CouresCombo";
+import NpmCombos from "./pages/Combination/NpmCombos";
+import Notes from "./pages/Notes/Notes";
+import SubjectNotes from "./pages/Notes/SubjectNotes";
+import PrintedNotesOrders from "./pages/Notes/PrintedNotesOrders";
+import PrelimsSWMockTests from "./pages/Prelims/PrelimsSWMockTests";
+import SubjectsSWMockTest from "./pages/Prelims/SubjectsSWMockTest";
+import GrandTests from "./pages/Prelims/GrandTests";
+import Quizzes from "./pages/Prelims/Quizzes";
+import MainsQA from "./pages/Mains/MainsQA";
+import MainsEssayTrans from "./pages/Mains/MainsEssayTrans";
+import Banners from "./pages/Banners/Banners";
+import StudentRequests from "./pages/StudentRequests/StudentRequests";
+import Plans from "./pages/Plans/Plans";
+import Coupons from "./pages/Coupons/Coupons";
+import StudentProfile from "./pages/Students/Studentprofile";
+import Mains from "./pages/Mains/Mains";
+import Prelims from "./pages/Prelims/Prelims";
+import PQAPaper from "./pages/Prelims/PQAPaper";
+import MainsTestSeries from "./pages/Mains/MainsTests/MainsTestSeries";
+import MainsSubjectTest from "./pages/Mains/MainsTests/MainsSubjectTest";
+import MainsTestsAttempts from "./pages/Mains/MainsTests/MainsTestsAttempts";
+import MainsResultsProfile from "./pages/Mains/MainsTests/MainsResultsProfile";
+import TestTermsandConditions from "./pages/TermsandConditions/TestTermsandConditions";
+import QuizProfile from "./pages/Prelims/QuizProfile";
+import GrandTestsProfile from "./pages/Prelims/GrandTestsProfile";
+import PrelimsSMTProfile from "./pages/Prelims/PrelimsSMTProfile";
 
 
 function App() {
@@ -98,7 +96,6 @@ function App() {
           <Route path="mainstestsattempts" element={<MainsTestsAttempts/>}/>
           <Route path="banners" element={<Banners />} />
           <Route path="testtermsconditions" element={<TestTermsandConditions />} />
-          <Route path="results" element={<Results />} />
           <Route path="/student/:userId" element={<StudentProfile />} />
           <Route path="/mains-result/:attemptId" element={<MainsResultsProfile />} />
         </Route>
