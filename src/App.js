@@ -42,10 +42,12 @@ import MainsTestSeries from "./pages/Mains/MainsTests/MainsTestSeries";
 import MainsSubjectTest from "./pages/Mains/MainsTests/MainsSubjectTest";
 import MainsTestsAttempts from "./pages/Mains/MainsTests/MainsTestsAttempts";
 import MainsResultsProfile from "./pages/Mains/MainsTests/MainsResultsProfile";
+import AttemptsResults from "./pages/Prelims/AttemptsResults"
 import TestTermsandConditions from "./pages/TermsandConditions/TestTermsandConditions";
 import QuizProfile from "./pages/Prelims/QuizProfile";
 import GrandTestsProfile from "./pages/Prelims/GrandTestsProfile";
 import PrelimsSMTProfile from "./pages/Prelims/PrelimsSMTProfile";
+import AttemptsResultsProfile from "./pages/Prelims/AttemptsResultsProfile";
 
 
 function App() {
@@ -85,6 +87,7 @@ function App() {
           <Route path="/pswmocktests/:prelimes_test_id" element={<PrelimsSMTProfile />} />
           <Route path="sswmocktests" element={<SubjectsSWMockTest />} />
           <Route path="grandtests" element={<GrandTests />} />
+          <Route path="attemptsresults" element={<AttemptsResults/>} />
           <Route path="/grandtests/:prelimes_test_id" element={<GrandTestsProfile />} />
           <Route path="quizzes" element={<Quizzes />} />
           <Route path="/quiz/:prelimes_test_id" element={<QuizProfile />} />
@@ -94,6 +97,7 @@ function App() {
           <Route path="mainstestseries" element={<MainsTestSeries />} />
           <Route path="mainssubjecttests" element={<MainsSubjectTest/>}/>
           <Route path="mainstestsattempts" element={<MainsTestsAttempts/>}/>
+          <Route path="/attempts/:attempt_id" element={<AttemptsResultsProfile />} />
           <Route path="banners" element={<Banners />} />
           <Route path="testtermsconditions" element={<TestTermsandConditions />} />
           <Route path="/student/:userId" element={<StudentProfile />} />

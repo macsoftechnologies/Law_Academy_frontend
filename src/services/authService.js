@@ -710,3 +710,12 @@ export const deleteQuestion = async (questionId) => {
   const res = await api.post("/prelimes-tests/deletequestion", { questionId });
   return res.data;
 };
+
+export const getAttemptsResults = async (page = 1, limit = 10, test_type = "") => {
+  let url = `/prelimes-tests/attempts?page=${page}&limit=${limit}`;
+  if (test_type) {
+    url += `&test_type=${test_type}`;
+  }
+  const res = await api.get(url);
+  return res.data;
+};

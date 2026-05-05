@@ -61,7 +61,8 @@ const Sidebar = ({ sidebarOpen }) => {
       canAccess("pqapaper") ||
       canAccess("swmockstests") ||
       canAccess("grandtests") ||
-      canAccess("quizzes"),
+      canAccess("quizzes") ||
+      canAccess("attemptsresults"),
     [isSuperAdmin, canAccess]
   );
 
@@ -110,13 +111,16 @@ const Sidebar = ({ sidebarOpen }) => {
     );
     setOpenPrelims(
       hasPrelimsAccess &&
-        (pathname.includes("prelims") ||
+        (
+          pathname.includes("prelims") ||
           pathname.includes("pqapaper") ||
           pathname.includes("swmockstests") ||
           pathname.includes("pswmocktests") ||
           pathname.includes("sswmocktests") ||
           pathname.includes("grandtests") ||
-          pathname.includes("quizzes"))
+          pathname.includes("quizzes") ||
+          pathname.includes("attemptsresults")
+        )
     );
     setOpenMains(
       hasMainsAccess &&
@@ -360,6 +364,14 @@ const Sidebar = ({ sidebarOpen }) => {
                     <NavLink to="quizzes">
                       <span className="sub-dot">→</span>
                       Quizzes
+                    </NavLink>
+                  </li>
+                )}
+                {canAccess("attemptsresults") && (
+                  <li className="menu-item subitem">
+                    <NavLink to="attemptsresults">
+                      <span className="sub-dot">→</span>
+                      Attempts Results
                     </NavLink>
                   </li>
                 )}
