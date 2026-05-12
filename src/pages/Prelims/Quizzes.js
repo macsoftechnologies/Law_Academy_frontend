@@ -127,7 +127,7 @@ const Quizzes = () => {
     <div>
 
       <CommonHeader
-        title="Quizzes"
+        title="Quizz"
         count={list.length}
         totalPages={totalPages}
         totalCount={totalCount}

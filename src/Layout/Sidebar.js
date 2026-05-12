@@ -363,7 +363,7 @@ const Sidebar = ({ sidebarOpen }) => {
                   <li className="menu-item subitem">
                     <NavLink to="quizzes">
                       <span className="sub-dot">→</span>
-                      Quizzes
+                      Quizz
                     </NavLink>
                   </li>
                 )}

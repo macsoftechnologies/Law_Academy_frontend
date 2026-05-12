@@ -9,9 +9,9 @@ import { getAttemptsResults } from "../../services/authService";
 
 const TEST_TYPE_OPTIONS = [
   { label: "All", value: "" },
-  { label: "SMT", value: "SMT" },
-  { label: "GT",  value: "GT"  },
-  { label: "QZ",  value: "QZ"  },
+  { label: "SUBJECT WISE MOCK TEST", value: "SMT" },
+  { label: "GRAND TESTS",  value: "GT"  },
+  { label: "QUIZZ",  value: "QZ"  },
 ];
 
 const AttemptsResults = () => {
@@ -51,7 +51,7 @@ const AttemptsResults = () => {
     setCurrentPage(1);
   };
 
-  // ✅ Same pattern as Quizzes.jsx — store id in localStorage + navigate with state
+  // ✅ Same pattern as QUIZZ.jsx — store id in localStorage + navigate with state
   const handleRowClick = (item) => {
     localStorage.setItem("attempt_id", item.prelimes_attempt_id);
     navigate(`/attempts/${item.prelimes_attempt_id}`, { state: { attempt: item } });
@@ -72,12 +72,18 @@ const AttemptsResults = () => {
 
   const tableData = attemptList.map((item, index) => ({
     ...item,
-    _rowonClick: () => handleRowClick(item),   // ✅ lowercase 'o' — matches Table component
+    _rowonClick: () => handleRowClick(item),   // 
     serial:        (currentPage - 1) * pageLimit + index + 1,
     studentName:   item.userId?.name      || "—",
     email:         item.userId?.email     || "—",
     testTitle:     item.testId?.title     || "—",
-    testType:      item.testId?.test_type || "—",
+    testType:      item.testId?.test_type === "SMT"
+    ? "SUBJECT WISE MOCK TEST"
+    : item.testId?.test_type === "GT"
+    ? "GRAND TESTS"
+    : item.testId?.test_type === "QZ"
+    ? "QUIZZ"
+    : "—",
     attemptNumber: item.attemptNumber     || "—",
     score:         item.result ? `${item.result.score} / ${item.result.totalQuestions}` : "—",
     percentage:    item.result ? `${item.result.percentage}%` : "—",

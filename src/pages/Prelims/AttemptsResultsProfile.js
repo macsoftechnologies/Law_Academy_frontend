@@ -82,6 +82,7 @@ function AttemptsResultsProfile() {
   return (
     <div className="container mt-3">
       {/* ── Page Header ── */}
+
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>ATTEMPT PROFILE</h2>
         <button
@@ -173,6 +174,7 @@ function AttemptsResultsProfile() {
       </div>
 
       {/* ── Result Summary ── */}
+
       {result && (
         <div className="card p-3 shadow-sm mb-4">
           <h4>Result Summary</h4>
@@ -282,7 +284,7 @@ function AttemptsResultsProfile() {
       )}
 
       {/* Questions Review */}
-      {questions.length > 0 && (
+      {submittedAt && questions.length > 0 && (
         <div className="card p-3 shadow-sm mb-4">
           <h4>Questions Review</h4>
 
@@ -329,7 +331,7 @@ function AttemptsResultsProfile() {
               else if (isCorrect)
                 statusBadge = <span className="badge bg-success">Correct</span>;
               else statusBadge = <span className="badge bg-danger">Wrong</span>;
-
+     
               return (
                 // ✅ col-md-6 = 2 per row
                 <div className="col-md-6" key={q.questionId}>
@@ -466,6 +468,7 @@ function AttemptsResultsProfile() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { FaEye } from "react-icons/fa";
 
 function StudentProfile() {
   const { userId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
 
   const [student, setStudent] = useState(null);
   const [courses, setCourses] = useState([]);
