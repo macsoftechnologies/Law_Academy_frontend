@@ -719,3 +719,47 @@ export const getAttemptsResults = async (page = 1, limit = 10, test_type = "") =
   const res = await api.get(url);
   return res.data;
 };
+
+export const getlawBySubjects = async (data) => {
+  const res = await api.post("/subjects/listbylawforuser",data);
+  return res.data;
+};
+
+
+export const addCombinations = async (formData) => {
+  const res = await api.post("/combos/create", formData,{
+headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const getCombinations = async (page = 1, limit = 10) => {
+  const res = await api.get(`/combos/list?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getCombinationsById = async (combo_id) => {
+  const res = await api.get("/combos/details", { params: { combo_id } });
+  return res.data;
+};
+
+export const updateCombinations = async (formData) => {
+  const res = await api.put("/combos/edit", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+export const deleteCombinations = async (combo_id) => {
+  const res = await api.delete("/combos/delete", { data: { combo_id } });
+  return res.data;
+};
+
+
+
+
+
+
+

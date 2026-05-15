@@ -7,6 +7,7 @@ import {
   getLaswsBySubCategory,
   getNotes,
   getCategories,
+  getlawBySubjects,
 } from "../../services/authService";
 
 const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
@@ -15,9 +16,14 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [subcategories, setSubcategories] = useState([]);
-  const [subcategoryId, setSubcategoryId] = useState("");
+  const [subcategoryId, setSubcategoryId] = useState([]);
   const [laws, setLaws] = useState([]);
   const [lawId, setLawId] = useState("");
+
+  // SUBJECT STATES
+  const [subjects, setSubjects] = useState([]);
+  const [subjectId, setSubjectId] = useState("");
+
   const [title, setTitle] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
   const [image, setImage] = useState(null);
@@ -28,6 +34,9 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
   const [categoryLabel, setCategoryLabel] = useState("");
   const [subcategoryLabel, setSubcategoryLabel] = useState("");
   const [lawLabel, setLawLabel] = useState("");
+
+  // SUBJECT LABEL
+  const [subjectLabel, setSubjectLabel] = useState("");
 
   // ── Fetch helpers ──────────────────────────────────────────────────────────
   const fetchNotes = useCallback(async () => {
@@ -68,7 +77,7 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
       setNotesId(note);
       setNotesLabel(noteObj?.title || "");
 
-      // Law — check lawId array first, then law_id
+      // Law
       const lawArr =
         Array.isArray(initialData?.lawId) && initialData.lawId.length
           ? initialData.lawId
@@ -78,19 +87,31 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
       const lId = lawArr[0]?.lawId || lawArr[0]?.law_id || "";
       const lTitle = lawArr[0]?.title || "";
+
       setLawId(lId);
       setLawLabel(lTitle);
 
-      // Category — try direct array first
+      // SUBJECT PREFILL
+      const subObj =
+        Array.isArray(initialData?.subjectId) &&
+        initialData.subjectId.length
+          ? initialData.subjectId[0]
+          : {};
+
+      setSubjectId(subObj?.subjectId || "");
+      setSubjectLabel(subObj?.title || "");
+
+      // Category
       const catArr =
-        Array.isArray(initialData?.categoryId) && initialData.categoryId.length
+        Array.isArray(initialData?.categoryId) &&
+        initialData.categoryId.length
           ? initialData.categoryId
           : [];
 
       let catId = catArr[0]?.categoryId || "";
       let catTitle = catArr[0]?.category_name || "";
 
-      // Sub Category — try direct array first
+      // Sub Category
       const subArr =
         Array.isArray(initialData?.subcategory_id) &&
         initialData.subcategory_id.length
@@ -116,13 +137,17 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
           if (!resolvedCatId && resolvedSubId && categories.length > 0) {
             for (let i = 0; i < categories.length; i++) {
               const cat = categories[i];
+
               const res = await getSubCategoriesByCategory({
                 categoryId: cat.categoryId,
               });
+
               const subList = res.data || [];
+
               const found = subList.find(
                 (s) => s.subcategory_id === resolvedSubId
               );
+
               if (found) {
                 resolvedCatId = cat.categoryId;
                 resolvedCatTitle = cat.category_name;
@@ -140,12 +165,16 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
             const subRes = await getSubCategoriesByCategory({
               categoryId: resolvedCatId,
             });
+
             const subList = subRes.data || [];
+
             setSubcategories(subList);
+
             if (!resolvedSubTitle && resolvedSubId) {
               const found = subList.find(
                 (s) => s.subcategory_id === resolvedSubId
               );
+
               resolvedSubTitle = found?.title || "";
             }
           }
@@ -158,12 +187,24 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
             const lawRes = await getLaswsBySubCategory({
               subcategory_id: resolvedSubId,
             });
+
             const lawList = lawRes.data || [];
+
             setLaws(lawList);
+
             if (!lTitle && lId) {
               const found = lawList.find((l) => l.lawId === lId);
               setLawLabel(found?.title || "");
             }
+          }
+
+          // FETCH SUBJECTS
+          if (lId) {
+            const subjectRes = await getlawBySubjects({
+              law_id: lId,
+            });
+
+            setSubjects(subjectRes.data || []);
           }
 
           setLawId(lId);
@@ -174,30 +215,67 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
       prefillDropdowns();
     }
-  }, [isEdit, initialData, categories]); // eslint-disable-line
+  }, [isEdit, initialData, categories]);
 
-  // ── Manual change handlers (ADD mode only) ────────────────────────────────
+  // ── Manual change handlers ────────────────────────────────
   const handleCategoryChange = async (e) => {
     const val = e.target.value;
+
     setCategoryId(val);
     setSubcategoryId("");
     setLawId("");
+    setSubjectId("");
+
     setSubcategories([]);
     setLaws([]);
+    setSubjects([]);
+
     if (val) {
-      const res = await getSubCategoriesByCategory({ categoryId: val });
+      const res = await getSubCategoriesByCategory({
+        categoryId: val,
+      });
+
       setSubcategories(res.data || []);
     }
   };
 
   const handleSubcategoryChange = async (e) => {
     const val = e.target.value;
+
     setSubcategoryId(val);
     setLawId("");
+    setSubjectId("");
+
     setLaws([]);
+    setSubjects([]);
+
     if (val) {
-      const res = await getLaswsBySubCategory({ subcategory_id: val });
+      const res = await getLaswsBySubCategory({
+        subcategory_id: val,
+      });
+
       setLaws(res.data || []);
+    }
+  };
+
+  // LAW CHANGE
+  const handleLawChange = async (e) => {
+    const val = e.target.value;
+
+    setLawId(val);
+    setSubjectId("");
+    setSubjects([]);
+
+    if (val) {
+      try {
+        const res = await getlawBySubjects({
+          law_id: val,
+        });
+
+        setSubjects(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch subjects", err);
+      }
     }
   };
 
@@ -209,23 +287,38 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
       Swal.fire("Validation", "Please select a Note", "warning");
       return;
     }
+
     if (!lawId) {
       Swal.fire("Validation", "Please select a Law", "warning");
       return;
     }
 
     const formData = new FormData();
+
     formData.append("notes_id", notesId);
+
     formData.append("law_id", lawId);
     formData.append("lawId", lawId);
+
+    // SUBJECT ID
+    formData.append("subjectId", subjectId);
+
     formData.append("title", title);
     formData.append("pdf_url", pdfUrl);
-    if (image) formData.append("presentation_image", image);
+
+    if (image) {
+      formData.append("presentation_image", image);
+    }
 
     try {
       setLoading(true);
+
       if (isEdit) {
-        formData.append("subject_notes_id", initialData.subject_notes_id);
+        formData.append(
+          "subject_notes_id",
+          initialData.subject_notes_id
+        );
+
         await updateSubjectnotes(formData);
       } else {
         await addSubjectnotes(formData);
@@ -234,7 +327,9 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
       Swal.fire({
         toast: true,
         icon: "success",
-        title: isEdit ? "Updated successfully" : "Added successfully",
+        title: isEdit
+          ? "Updated successfully"
+          : "Added successfully",
         position: "top-end",
         showConfirmButton: false,
         timer: 3000,
@@ -246,7 +341,11 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
       onSubmit();
       onClose();
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Save failed", "error");
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Save failed",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -260,13 +359,17 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         {/* Notes */}
         <div className="col-md-6 mb-3">
           <label>Notes</label>
+
           {isEdit ? (
             <input
               type="text"
               className="form-control"
               value={notesLabel}
               disabled
-              style={{ cursor: "not-allowed", backgroundColor: "#e9ecef" }}
+              style={{
+                cursor: "not-allowed",
+                backgroundColor: "#e9ecef",
+              }}
             />
           ) : (
             <select
@@ -276,8 +379,12 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
               onChange={(e) => setNotesId(e.target.value)}
             >
               <option value="">Select Notes</option>
+
               {notesList.map((n) => (
-                <option key={n.notes_id} value={n.notes_id}>
+                <option
+                  key={n.notes_id}
+                  value={n.notes_id}
+                >
                   {n.title}
                 </option>
               ))}
@@ -288,13 +395,17 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         {/* Category */}
         <div className="col-md-6 mb-3">
           <label>Category</label>
+
           {isEdit ? (
             <input
               type="text"
               className="form-control"
               value={categoryLabel}
               disabled
-              style={{ cursor: "not-allowed", backgroundColor: "#e9ecef" }}
+              style={{
+                cursor: "not-allowed",
+                backgroundColor: "#e9ecef",
+              }}
             />
           ) : (
             <select
@@ -304,8 +415,12 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
               onChange={handleCategoryChange}
             >
               <option value="">Select Category</option>
+
               {categories.map((c) => (
-                <option key={c.categoryId} value={c.categoryId}>
+                <option
+                  key={c.categoryId}
+                  value={c.categoryId}
+                >
                   {c.category_name}
                 </option>
               ))}
@@ -316,13 +431,17 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         {/* Sub Category */}
         <div className="col-md-6 mb-3">
           <label>Sub Category</label>
+
           {isEdit ? (
             <input
               type="text"
               className="form-control"
               value={subcategoryLabel}
               disabled
-              style={{ cursor: "not-allowed", backgroundColor: "#e9ecef" }}
+              style={{
+                cursor: "not-allowed",
+                backgroundColor: "#e9ecef",
+              }}
             />
           ) : (
             <select
@@ -333,8 +452,12 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
               disabled={!categoryId}
             >
               <option value="">Select Sub Category</option>
+
               {subcategories.map((s) => (
-                <option key={s.subcategory_id} value={s.subcategory_id}>
+                <option
+                  key={s.subcategory_id}
+                  value={s.subcategory_id}
+                >
                   {s.title}
                 </option>
               ))}
@@ -345,26 +468,71 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         {/* Law */}
         <div className="col-md-6 mb-3">
           <label>Law</label>
+
           {isEdit ? (
             <input
               type="text"
               className="form-control"
               value={lawLabel}
               disabled
-              style={{ cursor: "not-allowed", backgroundColor: "#e9ecef" }}
+              style={{
+                cursor: "not-allowed",
+                backgroundColor: "#e9ecef",
+              }}
             />
           ) : (
             <select
               style={{ cursor: "pointer" }}
               className="form-control form-select"
               value={lawId}
-              onChange={(e) => setLawId(e.target.value)}
+              onChange={handleLawChange}
               disabled={!subcategoryId}
             >
               <option value="">Select Law</option>
+
               {laws.map((l) => (
-                <option key={l.lawId} value={l.lawId}>
+                <option
+                  key={l.lawId}
+                  value={l.lawId}
+                >
                   {l.title}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+
+        {/* Subject */}
+        <div className="col-md-6 mb-3">
+          <label>Subject</label>
+
+          {isEdit ? (
+            <input
+              type="text"
+              className="form-control"
+              value={subjectLabel}
+              disabled
+              style={{
+                cursor: "not-allowed",
+                backgroundColor: "#e9ecef",
+              }}
+            />
+          ) : (
+            <select
+              style={{ cursor: "pointer" }}
+              className="form-control form-select"
+              value={subjectId}
+              onChange={(e) => setSubjectId(e.target.value)}
+              disabled={!lawId}
+            >
+              <option value="">Select Subject</option>
+
+              {subjects.map((s, index) => (
+                <option
+                  key={s.subjectId || index}
+                  value={s.subjectId}
+                >
+                  {s.title}
                 </option>
               ))}
             </select>
@@ -374,6 +542,7 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         {/* Title */}
         <div className="col-md-6 mb-3">
           <label>Title</label>
+
           <input
             type="text"
             className="form-control"
@@ -386,6 +555,7 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         {/* PDF URL */}
         <div className="col-md-6 mb-3">
           <label>PDF URL</label>
+
           <input
             type="text"
             className="form-control"
@@ -398,24 +568,29 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         {/* Presentation Image */}
         <div className="col-md-6 mb-3">
           <label>Presentation Image</label>
-          {isEdit && initialData?.presentation_image && (
-            <div className="mb-2">
-              <img
-                src={`${process.env.REACT_APP_API_BASE_URL}/${initialData.presentation_image}`}
-                alt="Previous"
-                style={{
-                  height: "80px",
-                  borderRadius: "6px",
-                  border: "1px solid #ddd",
-                }}
-              />
-            </div>
-          )}
+
+          {isEdit &&
+            initialData?.presentation_image && (
+              <div className="mb-2">
+                <img
+                  src={`${process.env.REACT_APP_API_BASE_URL}/${initialData.presentation_image}`}
+                  alt="Previous"
+                  style={{
+                    height: "80px",
+                    borderRadius: "6px",
+                    border: "1px solid #ddd",
+                  }}
+                />
+              </div>
+            )}
+
           <input
             type="file"
             className="form-control"
             accept="image/*"
-            onChange={(e) => setImage(e.target.files[0] || null)}
+            onChange={(e) =>
+              setImage(e.target.files[0] || null)
+            }
           />
         </div>
 
@@ -429,8 +604,17 @@ const SubjectNotesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         >
           Cancel
         </button>
-        <button type="submit" className="btn btn-success" disabled={loading}>
-          {loading ? "Saving..." : isEdit ? "Update" : "Save"}
+
+        <button
+          type="submit"
+          className="btn btn-success"
+          disabled={loading}
+        >
+          {loading
+            ? "Saving..."
+            : isEdit
+            ? "Update"
+            : "Save"}
         </button>
       </div>
     </form>

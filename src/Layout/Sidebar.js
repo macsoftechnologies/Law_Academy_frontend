@@ -9,7 +9,6 @@ import {
   MdKeyboardArrowDown,
   MdCategory,
   MdMenuBook,
-  MdSchool,
   MdOutlineGavel,
 } from "react-icons/md";
 
@@ -33,7 +32,6 @@ import logo from '../assets/Raos-law-logo-02.png';
 const Sidebar = ({ sidebarOpen }) => {
   const { pathname } = useLocation();
 
-  const [openCombo,           setOpenCombo]           = useState(false);
   const [openPrelims,         setOpenPrelims]         = useState(false);
   const [openMains,           setOpenMains]           = useState(false);
   const [openNotes,           setOpenNotes]           = useState(false);
@@ -105,10 +103,6 @@ const Sidebar = ({ sidebarOpen }) => {
   );
 
   useEffect(() => {
-    setOpenCombo(
-      hasComboAccess &&
-        (pathname.includes("courescombo") || pathname.includes("npmcombo"))
-    );
     setOpenPrelims(
       hasPrelimsAccess &&
         (
@@ -522,42 +516,13 @@ const Sidebar = ({ sidebarOpen }) => {
         )}
 
         {/* ================= COMBINATION ================= */}
-        {hasComboAccess && (
-          <>
-            <li className="menu-item dropdown">
-              <div
-                className="dropdown-toggle"
-                onClick={() => setOpenCombo(!openCombo)}
-              >
-                <MdSchool className="menu-icon toggle-space" />
-                Combination
-                <MdKeyboardArrowDown
-                  className={`arrow-icon ${openCombo ? "rotate" : ""}`}
-                />
-              </div>
-            </li>
-
-            {openCombo && (
-              <>
-                {canAccess("courescombo") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="courescombo">
-                      <span className="sub-dot">→</span>
-                      Course Combo
-                    </NavLink>
-                  </li>
-                )}
-                {canAccess("npmcombo") && (
-                  <li className="menu-item subitem">
-                    <NavLink to="npmcombo">
-                      <span className="sub-dot">→</span>
-                      Notes / Prelims / Mains
-                    </NavLink>
-                  </li>
-                )}
-              </>
-            )}
-          </>
+        {canAccess("combinations") && (
+          <li className="menu-item">
+            <NavLink to="combinations">
+              <FaImages className="menu-icon" />
+              Combinations
+            </NavLink>
+          </li>
         )}
 
         {canAccess("banners") && (

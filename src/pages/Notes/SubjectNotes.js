@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "../../components/Table";
-// import Button from "../components/Button";
 import Modal from "../../components/Modal";
 import SubjectNotesForm from "../../forms/Notes/SubjectNotesForm";
 import Swal from "sweetalert2";
-import { getSubjectnotes, deleteSubjectnotes } from "../../services/authService";
+import {
+  getSubjectnotes,
+  deleteSubjectnotes,
+} from "../../services/authService";
+
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import CommonHeader from "../../components/CommonHeader";
 
@@ -13,63 +16,77 @@ const SubjectNotes = () => {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
+
   const [selectedItem, setSelectedItem] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
+
   const [isLoading, setIsLoading] = useState(false);
 
+  // ───────────────── FETCH DATA ─────────────────
   const fetchData = useCallback(
-    async (page = 1, limit = pageLimit) => {
-      setIsLoading(true);
-      try {
-        const res = await getSubjectnotes(page, limit);
+  async (page = 1, limit = pageLimit) => {
+    setIsLoading(true);
 
-        let data = [];
-        let pages = 1;
+    try {
+      const res = await getSubjectnotes(page, limit);
 
-        if (res && Array.isArray(res.data)) {
-          data = res.data;
-          pages = res.totalPages || 1;
-        } else if (Array.isArray(res)) {
-          data = res;
-        }
+      let data = [];
+      let pages = 1;
 
-        const mappedData = data.map((item) => ({
-          ...item,
-          // lawId is an array in API response
-          law_name: item.lawId?.[0]?.title || "—",
-          notes_name: item.notes_id?.[0]?.title || "—",
-        }));
+      if (res && Array.isArray(res.data)) {
+        data = res.data;
+        pages = res.totalPages || 1;
+      } else if (Array.isArray(res)) {
+        data = res;
+      }
 
-        setList(mappedData);
-        setTotalPages(pages);
-      } catch (err) {
-        console.error(err);
-        setList([]);
-        setTotalPages(1);
-        Swal.fire("Error", "Failed to fetch subject notes", "error");
-      }finally {
-    setIsLoading(false);    
-  }
-    },
-    [pageLimit]
-  );
+      // PLACE HERE
+      const mappedData = data.map((item) => ({
+        ...item,
 
+        notes_name:
+          item.notes_id?.[0]?.title || "—",
+
+        subject_name:
+          item.subjectId?.[0]?.title || "—",
+
+        law_name:
+          item.lawId?.[0]?.title || "—",
+      }));
+
+      setList(mappedData);
+      setTotalPages(pages);
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  },
+  [pageLimit]
+);
+
+  // ───────────────── LOAD ─────────────────
   useEffect(() => {
     fetchData(currentPage, pageLimit);
   }, [currentPage, pageLimit, fetchData]);
 
+  // ───────────────── VIEW ─────────────────
   const handleView = (item) => {
     setSelectedItem(item);
     setViewOpen(true);
   };
 
+  // ───────────────── EDIT ─────────────────
   const handleEdit = (item) => {
     setSelectedItem(item);
     setEditOpen(true);
   };
 
+  // ───────────────── DELETE ─────────────────
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -85,7 +102,9 @@ const SubjectNotes = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      await deleteSubjectnotes({ subject_notes_id: id });
+      await deleteSubjectnotes({
+        subject_notes_id: id,
+      });
 
       Swal.fire({
         toast: true,
@@ -109,41 +128,79 @@ const SubjectNotes = () => {
     }
   };
 
+  // ───────────────── SUBMIT ─────────────────
   const handleSubmit = () => {
     fetchData(currentPage, pageLimit);
+
     setOpen(false);
     setEditOpen(false);
+
     setSelectedItem(null);
   };
 
+  // ───────────────── TABLE COLUMNS ─────────────────
   const columns = [
     { header: "S.No", accessor: "sno" },
+
     { header: "Notes", accessor: "notes_name" },
+
+    // NEW SUBJECT COLUMN
+    { header: "Subject", accessor: "subject_name" },
+
     { header: "Law", accessor: "law_name" },
+
     { header: "Title", accessor: "title" },
+
     { header: "PDF URL", accessor: "pdf_url" },
+
     { header: "Actions", accessor: "actions" },
   ];
 
+  // ───────────────── TABLE DATA ─────────────────
   const tableData = list.map((item, index) => ({
     ...item,
-    sno: (currentPage - 1) * pageLimit + index + 1,
+
+    sno:
+      (currentPage - 1) * pageLimit +
+      index +
+      1,
+
     pdf_url: item.pdf_url ? (
-      <a href={item.pdf_url} target="_blank" rel="noreferrer">
+      <a
+        href={item.pdf_url}
+        target="_blank"
+        rel="noreferrer"
+      >
         View File
       </a>
-    ) : "—",
+    ) : (
+      "—"
+    ),
+
     actions: (
       <div className="actions">
-        <button className="icon-btn view" onClick={() => handleView(item)}>
+        {/* VIEW */}
+        <button
+          className="icon-btn view"
+          onClick={() => handleView(item)}
+        >
           <FaEye />
         </button>
-        <button className="icon-btn edit" onClick={() => handleEdit(item)}>
+
+        {/* EDIT */}
+        <button
+          className="icon-btn edit"
+          onClick={() => handleEdit(item)}
+        >
           <FaEdit />
         </button>
+
+        {/* DELETE */}
         <button
           className="icon-btn delete"
-          onClick={() => handleDelete(item.subject_notes_id)}
+          onClick={() =>
+            handleDelete(item.subject_notes_id)
+          }
         >
           <FaTrash />
         </button>
@@ -153,19 +210,23 @@ const SubjectNotes = () => {
 
   return (
     <div>
+      {/* HEADER */}
       <CommonHeader
-      title="Subject Notes"
-      count={list.length}
-      totalPages={totalPages}
-      pageLimit={pageLimit}
-      setPageLimit={setPageLimit}
-      setCurrentPage={setCurrentPage}
-      onChange={(page, limit) => fetchData(page, limit)}
-      buttonText="+ Add Subject Notes"
-      buttonColor="secondary"
-      onButtonClick={() => setOpen(true)}
-    />
+        title="Subject Notes"
+        count={list.length}
+        totalPages={totalPages}
+        pageLimit={pageLimit}
+        setPageLimit={setPageLimit}
+        setCurrentPage={setCurrentPage}
+        onChange={(page, limit) =>
+          fetchData(page, limit)
+        }
+        buttonText="+ Add Subject Notes"
+        buttonColor="secondary"
+        onButtonClick={() => setOpen(true)}
+      />
 
+      {/* TABLE */}
       <Table
         columns={columns}
         data={tableData}
@@ -175,13 +236,26 @@ const SubjectNotes = () => {
         isLoading={isLoading}
       />
 
-      {/* Add Modal */}
-      <Modal open={open} onClose={() => setOpen(false)} title="Add Subject Notes" size="lg">
-        <SubjectNotesForm onClose={() => setOpen(false)} onSubmit={handleSubmit} />
+      {/* ───────────────── ADD MODAL ───────────────── */}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Add Subject Notes"
+        size="lg"
+      >
+        <SubjectNotesForm
+          onClose={() => setOpen(false)}
+          onSubmit={handleSubmit}
+        />
       </Modal>
 
-      {/* Edit Modal */}
-      <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit Subject Notes" size="lg">
+      {/* ───────────────── EDIT MODAL ───────────────── */}
+      <Modal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        title="Edit Subject Notes"
+        size="lg"
+      >
         <SubjectNotesForm
           isEdit
           initialData={selectedItem}
@@ -190,57 +264,92 @@ const SubjectNotes = () => {
         />
       </Modal>
 
-      {/* View Modal */}
-      <Modal open={viewOpen} onClose={() => setViewOpen(false)} title="Subject Notes Details" size="lg">
+      {/* ───────────────── VIEW MODAL ───────────────── */}
+      <Modal
+        open={viewOpen}
+        onClose={() => setViewOpen(false)}
+        title="Subject Notes Details"
+        size="lg"
+      >
         {selectedItem && (
           <div className="container">
             <div className="row">
 
-              {/* Notes */}
+              {/* NOTES */}
               <div className="col-md-6 mb-3">
                 <b>Notes:</b>
-                <p className="mt-1">{selectedItem.notes_id?.[0]?.title || "—"}</p>
+
+                <p className="mt-1">
+                  {selectedItem.notes_id?.[0]
+                    ?.title || "—"}
+                </p>
               </div>
 
-              {/* Law */}
+              {/* SUBJECT */}
+              <div className="col-md-6 mb-3">
+                <b>Subject:</b>
+
+                <p className="mt-1">
+                  {selectedItem.subjectId?.[0]?.title || "—"}
+                </p>
+              </div>
+
+              {/* LAW */}
               <div className="col-md-6 mb-3">
                 <b>Law:</b>
-                <p className="mt-1">{selectedItem.lawId?.[0]?.title || "—"}</p>
+
+                <p className="mt-1">
+                  {selectedItem.lawId?.[0]?.title || "—"}
+                </p>
               </div>
 
-              {/* Title */}
+              {/* TITLE */}
               <div className="col-md-6 mb-3">
                 <b>Title:</b>
-                <p className="mt-1">{selectedItem.title || "—"}</p>
+
+                <p className="mt-1">
+                  {selectedItem.title || "—"}
+                </p>
               </div>
 
-              {/* PDF File */}
+              {/* PDF FILE */}
               <div className="col-md-6 mb-3">
                 <b>PDF File:</b>
+
                 <p className="mt-1">
                   {selectedItem.pdf_url ? (
                     <a
                       href={selectedItem.pdf_url}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ color: "#872026", fontWeight: "bold" }}
+                      style={{
+                        color: "#872026",
+                        fontWeight: "bold",
+                      }}
                     >
                       View File
                     </a>
-                  ) : "—"}
+                  ) : (
+                    "—"
+                  )}
                 </p>
               </div>
 
-              {/* Presentation Image */}
+              {/* PRESENTATION IMAGE */}
               <div className="col-md-6 mb-3">
                 <b>Presentation Image:</b>
+
                 <br />
+
                 {selectedItem.presentation_image ? (
                   <img
                     src={`${process.env.REACT_APP_API_BASE_URL}/${selectedItem.presentation_image}`}
                     alt="Presentation"
                     className="img-fluid mt-2"
-                    style={{ maxHeight: "200px", borderRadius: "8px" }}
+                    style={{
+                      maxHeight: "200px",
+                      borderRadius: "8px",
+                    }}
                   />
                 ) : (
                   <p>No Image</p>

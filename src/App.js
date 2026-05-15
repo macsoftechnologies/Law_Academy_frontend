@@ -19,8 +19,7 @@ import Laws from "./pages/Laws/Laws";
 import Subjects from "./pages/Subjects/Subjects";
 import Lectures from "./pages/Lectures/Lectures";
 import GuestLectures from "./pages/GuestLectures/GuestLectures";
-import CouresCombo from "./pages/Combination/CouresCombo";
-import NpmCombos from "./pages/Combination/NpmCombos";
+import Combinations from "./pages/Combinations/Combinations";
 import Notes from "./pages/Notes/Notes";
 import SubjectNotes from "./pages/Notes/SubjectNotes";
 import PrintedNotesOrders from "./pages/Notes/PrintedNotesOrders";
@@ -48,6 +47,7 @@ import QuizProfile from "./pages/Prelims/QuizProfile";
 import GrandTestsProfile from "./pages/Prelims/GrandTestsProfile";
 import PrelimsSMTProfile from "./pages/Prelims/PrelimsSMTProfile";
 import AttemptsResultsProfile from "./pages/Prelims/AttemptsResultsProfile";
+import CombinationsProfile from "./pages/Combinations/CombinationsProfile";
 
 
 function App() {
@@ -75,8 +75,8 @@ function App() {
           <Route path="plans" element={<Plans />}/>
           <Route path="lectures" element={<Lectures />} />
           <Route path="gestlectures" element={<GuestLectures />} />
-          <Route path="courescombo" element={<CouresCombo />} />
-          <Route path="npmcombo" element={<NpmCombos />} />
+          <Route path="combinations" element={<Combinations />} />
+          <Route path="/combination/:combo_id" element={<CombinationsProfile />} />
           <Route path="notes" element={<Notes />} />
           <Route path="subjectnotes" element={<SubjectNotes />} />
           <Route path="printednotesorders" element={<PrintedNotesOrders />}/>

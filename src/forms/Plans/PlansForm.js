@@ -8,6 +8,7 @@ import {
   getMains,
   getNotes,
   getPrelims,
+  getCombinations,
 } from "../../services/authService";
 
 function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
@@ -77,14 +78,23 @@ function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
     setCourseList([]);
     try {
       let res;
-      if (type === "mains") res = await getMains(1, 1000);
-      else if (type === "notes") res = await getNotes(1, 1000);
-      else if (type === "prelimes") res = await getPrelims(1, 1000);
-      const normalized = (res?.data || []).map((item) => ({
-      id: item.notes_id || item.mains_id || item.prelimes_id,
-      title: item.title,
-    }));
-    setCourseList(normalized);
+      if (type === "mains") res = await getMains(1, 10);
+      else if (type === "notes") res = await getNotes(1, 10);
+      else if (type === "prelimes") res = await getPrelims(1, 10);
+      else if (type === "combination") res = await getCombinations(1, 10);
+
+      const rawData = res?.data || [];
+
+      const normalized = rawData.map((item) => ({
+        id:
+          item.combo_id ||
+          item.notes_id ||
+          item.mains_id ||
+          item.prelimes_id,
+        title: item.title,
+      }));
+
+      setCourseList(normalized);
     } catch (err) {
       console.error("Failed to fetch course list", err);
     }
@@ -155,7 +165,7 @@ function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
               }
             }
           }
-        } else if (["mains", "notes", "prelimes"].includes(type)) {
+        } else if (["mains", "notes", "prelimes", "combination"].includes(type)) {
           await fetchCourseList(type);
         }
       };
@@ -180,7 +190,7 @@ function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
 
     if (type === "full-course" || type === "subject-wise") {
       fetchCategories().then((cats) => setCategories(cats));
-    } else if (["mains", "notes", "prelimes"].includes(type)) {
+    } else if (["mains", "notes", "prelimes", "combination"].includes(type)) {
       fetchCourseList(type);
     }
   };
@@ -373,10 +383,11 @@ function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
       );
     }
 
-    if (["mains", "notes", "prelimes"].includes(courseType)) {
+    if (["mains", "notes", "prelimes", "combination"].includes(courseType)) {
       const label =
         courseType === "mains" ? "Mains" :
-        courseType === "notes" ? "Notes" : "Prelimes";
+        courseType === "notes" ? "Notes" :
+        courseType === "combination" ? "Combination" : "Prelimes";
 
       return (
         <div className="col-md-6 mb-3">
@@ -490,6 +501,7 @@ function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
             <option value="mains">Mains</option>
             <option value="notes">Notes</option>
             <option value="prelimes">Prelimes</option>
+            <option value="combination">Combination</option>
           </select>
         </div>
 
