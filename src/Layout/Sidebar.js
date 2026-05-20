@@ -328,7 +328,7 @@ const Sidebar = ({ sidebarOpen }) => {
                           <li className="menu-item subitem sub-subitem">
                             <NavLink to="sswmocktests">
                               <span className="sub-dot">→</span>
-                              Subjects SW Mock Test
+                              Subjects
                             </NavLink>
                           </li>
                         )}
@@ -336,7 +336,7 @@ const Sidebar = ({ sidebarOpen }) => {
                           <li className="menu-item subitem sub-subitem">
                             <NavLink to="pswmocktests">
                               <span className="sub-dot">→</span>
-                              Prelims SW Mock Tests
+                              S-W Mock Tests
                             </NavLink>
                           </li>
                         )}

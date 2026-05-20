@@ -201,7 +201,7 @@ function MainsQAForm({ onClose, initialData, isEdit, onSubmit }) {
         </div>
 
         <div className="col-md-6 mb-3">
-          <label className="form-label">Module (Mains)</label>
+          <label className="form-label">Module (Mains)<span style={{ color: "red" }}>*</span></label>
           <select
             className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}

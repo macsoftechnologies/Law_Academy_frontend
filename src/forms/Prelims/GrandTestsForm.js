@@ -67,7 +67,7 @@ const GrandTestsForm = ({ onClose, onSubmit }) => {
 
         {/* Prelims Dropdown */}
         <div className="col-md-6 mb-3">
-          <label>Prelims</label>
+          <label>Prelims<span style={{ color: "red" }}>*</span></label>
           <select
             style={{ cursor: "pointer" }}
             className="form-control form-select"
@@ -137,7 +137,7 @@ const GrandTestsForm = ({ onClose, onSubmit }) => {
 
         {/* Test Type — fixed, read-only */}
         <div className="col-md-6 mb-3">
-          <label>Test Type</label>
+          <label>Test Type<span style={{ color: "red" }}>*</span></label>
           <input
             type="text"
             className="form-control"

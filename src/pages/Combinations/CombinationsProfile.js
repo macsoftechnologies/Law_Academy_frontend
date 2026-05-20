@@ -334,9 +334,9 @@ function CombinationProfile() {
                                   <p className="mb-0 fw-semibold" style={{ fontSize: "12px", lineHeight: "1.3" }}>
                                     {note.title}
                                   </p>
-                                  <span className={`badge ${note.isLocked ? "bg-danger" : "bg-success"}`} style={{ fontSize: "10px" }}>
+                                  {/* <span className={`badge ${note.isLocked ? "bg-danger" : "bg-success"}`} style={{ fontSize: "10px" }}>
                                     {note.isLocked ? "🔒 Locked" : "🔓 Free"}
-                                  </span>
+                                  </span> */}
                                 </div>
                                 {note.pdf_url && (
                                   <a

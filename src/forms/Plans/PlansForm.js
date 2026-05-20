@@ -416,6 +416,27 @@ function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
       <div className="row">
 
         <div className="col-md-6 mb-3">
+          <label className="form-label">Course Type <span style={{ color: "red" }}>*</span></label>
+          <select
+            className="form-select"
+            value={courseType}
+            onChange={handleCourseTypeChange}
+            disabled={isEdit}
+            required
+          >
+            <option value="">Select course type</option>
+            <option value="full-course">Full-Course</option>
+            <option value="subject-wise">Subject-wise</option>
+            <option value="mains">Mains</option>
+            <option value="notes">Notes</option>
+            <option value="prelimes">Prelimes</option>
+            <option value="combination">Combination</option>
+          </select>
+        </div>
+
+        {renderCourseFields()}
+
+        <div className="col-md-6 mb-3">
           <label className="form-label">Original Price</label>
           <input
             type="number"
@@ -485,28 +506,6 @@ function PlansForm({ onClose, initialData, isEdit, onSubmit }) {
             onChange={(e) => setDiscountPercent(e.target.value)}
           />
         </div>
-
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Course Type</label>
-          <select
-            className="form-select"
-            value={courseType}
-            onChange={handleCourseTypeChange}
-            disabled={isEdit}
-            required
-          >
-            <option value="">Select course type</option>
-            <option value="full-course">Full-Course</option>
-            <option value="subject-wise">Subject-wise</option>
-            <option value="mains">Mains</option>
-            <option value="notes">Notes</option>
-            <option value="prelimes">Prelimes</option>
-            <option value="combination">Combination</option>
-          </select>
-        </div>
-
-        {renderCourseFields()}
-
       </div>
 
       <div className="text-end mt-3">

@@ -169,7 +169,7 @@ const SubjectsSWMockTestForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
         {/* Prelims */}
         <div className="col-md-6 mb-3">
-          <label>Prelims</label>
+          <label>Prelims<span style={{ color: "red" }}>*</span></label>
           {isEdit ? (
             <input
               type="text"
@@ -197,7 +197,7 @@ const SubjectsSWMockTestForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
         {/* Law */}
         <div className="col-md-6 mb-3">
-          <label>Law</label>
+          <label>Law<span style={{ color: "red" }}>*</span></label>
           {isEdit ? (
             <input
               type="text"

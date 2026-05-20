@@ -108,7 +108,7 @@ const handleSubmit = async (e) => {
       <div className="row">
         {/* CATEGORY */}
         <div className="col-md-6 mb-3">
-          <label>Category</label>
+          <label>Category<span style={{ color: "red" }}>*</span></label>
           <select
             style={{cursor:"pointer"}}
             className="form-control form-select"
@@ -127,7 +127,7 @@ const handleSubmit = async (e) => {
 
         {/* SUB CATEGORY */}
         <div className="col-md-6 mb-3">
-          <label>Sub Category</label>
+          <label>Sub Category<span style={{ color: "red" }}>*</span></label>
           <select
             style={{cursor:"pointer"}}
             className="form-control form-select"

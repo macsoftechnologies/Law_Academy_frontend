@@ -214,7 +214,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
       <div className="row">
         {/* Category */}
         <div className="col-md-6 mb-3">
-          <label>Category</label>
+          <label>Category<span style={{ color: "red" }}>*</span></label>
           <select
             className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
@@ -232,7 +232,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
         {/* Subcategory */}
         <div className="col-md-6 mb-3">
-          <label>Sub Category</label>
+          <label>Sub Category<span style={{ color: "red" }}>*</span></label>
           <select
             className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
@@ -251,7 +251,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
         {/* Law */}
         <div className="col-md-6 mb-3">
-          <label>Law</label>
+          <label>Law<span style={{ color: "red" }}>*</span></label>
           <select
             className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}
@@ -270,7 +270,7 @@ const LecturesForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
         {/* Subject */}
         <div className="col-md-6 mb-3">
-          <label>Subject</label>
+          <label>Subject<span style={{ color: "red" }}>*</span></label>
           <select
             className="form-control form-select"
             style={{ cursor: isEdit ? "not-allowed" : "pointer" }}

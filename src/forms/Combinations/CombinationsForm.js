@@ -488,7 +488,10 @@ const CombinationsForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
         {/* Category */}
         <div className="col-md-6 mb-3">
-          <label>Category</label>
+          <label>
+            Category <span style={{ color: "red" }}>*</span>
+          </label>
+
           {isEdit ? (
             <input
               type="text"
@@ -516,7 +519,10 @@ const CombinationsForm = ({ onClose, isEdit, initialData, onSubmit }) => {
 
         {/* Sub Category */}
         <div className="col-md-6 mb-3">
-          <label>Sub Category</label>
+          <label>
+            Sub Category <span style={{ color: "red" }}>*</span>
+          </label>
+
           {isEdit ? (
             <input
               type="text"

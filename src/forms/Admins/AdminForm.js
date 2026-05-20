@@ -134,7 +134,7 @@ function AdminForm({ onClose, initialData, isEdit, onSubmit }) {
 
         {/* Role */}
         <div className="col-md-6 mb-3">
-          <label className="form-label">Role</label>
+          <label className="form-label">Role <span style={{ color: "red" }}>*</span></label>
           <select
             style={{cursor:"pointer"}}
             className="form-select"

@@ -132,7 +132,7 @@ const SubjectForm = ({ onClose, isEdit, initialData, onSubmit }) => {
     <form className="custom-form" onSubmit={handleSubmit}>
       <div className="row">
         <div className="col-md-6 mb-3">
-          <label>Category</label>
+          <label>Category<span style={{ color: "red" }}>*</span></label>
           <select
             style={{cursor:"pointer"}}
             className="form-control form-select"
@@ -150,7 +150,7 @@ const SubjectForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         </div>
 
         <div className="col-md-6 mb-3">
-          <label>Sub Category</label>
+          <label>Sub Category<span style={{ color: "red" }}>*</span></label>
           <select
             style={{cursor:"pointer"}}
             className="form-control form-select"
@@ -168,7 +168,7 @@ const SubjectForm = ({ onClose, isEdit, initialData, onSubmit }) => {
         </div>
 
         <div className="col-md-6 mb-3">
-          <label>Law</label>
+          <label>Law<span style={{ color: "red" }}>*</span></label>
           <select
             style={{cursor:"pointer"}}
             className="form-control form-select"
