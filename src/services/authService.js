@@ -757,7 +757,10 @@ export const deleteCombinations = async (combo_id) => {
   return res.data;
 };
 
-
+export const sendnotifications = async (data) => {
+  const res = await api.post("/notifications/create-admin",data);
+  return res.data;
+};
 
 
 

@@ -145,8 +145,8 @@ const CombinationsForm = ({ onClose, isEdit, initialData, onSubmit }) => {
     const fetchPrelimsAndMains = async () => {
       try {
         const [prelRes, mainRes] = await Promise.all([
-          getPrelims(1, 1000),
-          getMains(1, 1000),
+          getPrelims(1, 10),
+          getMains(1, 10),
         ]);
         setRelimsList(prelRes.data || []);
         setMainsList(mainRes.data || []);
@@ -160,7 +160,7 @@ const CombinationsForm = ({ onClose, isEdit, initialData, onSubmit }) => {
   // ── Fetch categories ───────────────────────────────────────────────────────
   const fetchCategories = useCallback(async () => {
     try {
-      const res = await getCategories(1, 1000);
+      const res = await getCategories(1, 10);
       setCategories(res.data || []);
     } catch (err) {
       console.error("Failed to fetch categories", err);

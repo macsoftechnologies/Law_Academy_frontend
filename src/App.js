@@ -48,6 +48,7 @@ import GrandTestsProfile from "./pages/Prelims/GrandTestsProfile";
 import PrelimsSMTProfile from "./pages/Prelims/PrelimsSMTProfile";
 import AttemptsResultsProfile from "./pages/Prelims/AttemptsResultsProfile";
 import CombinationsProfile from "./pages/Combinations/CombinationsProfile";
+import Notifications from "./pages/Notifications/Notifications";
 
 
 function App() {
@@ -100,6 +101,7 @@ function App() {
           <Route path="/attempts/:attempt_id" element={<AttemptsResultsProfile />} />
           <Route path="banners" element={<Banners />} />
           <Route path="testtermsconditions" element={<TestTermsandConditions />} />
+          <Route path="notifications" element={<Notifications />} />
           <Route path="/student/:userId" element={<StudentProfile />} />
           <Route path="/mains-result/:attemptId" element={<MainsResultsProfile />} />
         </Route>

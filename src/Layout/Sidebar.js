@@ -544,6 +544,15 @@ const Sidebar = ({ sidebarOpen }) => {
           </li>
         )}
 
+        {/* ================= Notifications ================= */}
+        {canAccess("notifications") && (
+          <li className="menu-item">
+            <NavLink to="notifications">
+              <FaFileContract className="menu-icon" />
+              Notifications
+            </NavLink>
+          </li>
+        )}
       </ul>
     </div>
   );
