@@ -54,7 +54,7 @@ import HelpCentre from "./pages/HelpCentre/HelpCentre";
 
 function App() {
   return (
-    <BrowserRouter basename="/admin">
+    <BrowserRouter>
       <Routes>
 
         {/* ✅ Public Routes */}
