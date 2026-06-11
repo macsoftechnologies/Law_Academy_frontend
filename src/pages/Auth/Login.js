@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import Swal from "sweetalert2";
 import { adminlogin, superadminlogin } from "../../services/authService";
-import { showSuccess, showError } from "../../components/alertService"; 
-import './Login.css';
+import { showSuccess, showError } from "../../components/alertService";
+import Button from "../../components/Button";
+import "./Login.css";
 import logo from "../../assets/Raos-law-logo-02.png";
 
 export default function Login() {
@@ -35,18 +35,16 @@ export default function Login() {
       let res;
 
       if (role === "admin") {
-        const data = {
+        res = await adminlogin({
           emailId: email,
           mobileNumber: email,
           password: pwd,
-        };
-        res = await adminlogin(data);
+        });
       } else if (role === "superadmin") {
-        const data = {
+        res = await superadminlogin({
           emailId: email,
           password: pwd,
-        };
-        res = await superadminlogin(data);
+        });
       }
 
       if (!res || res.statusCode !== 200) {
@@ -54,25 +52,27 @@ export default function Login() {
         return;
       }
 
+      // ── Common ──────────────────────────────────────────────
       localStorage.setItem("token", res.token);
       localStorage.setItem("role", role);
 
+      // ── Role-specific ────────────────────────────────────────
       if (role === "admin") {
+        localStorage.setItem("adminId", res.data?.adminId || "");
         localStorage.setItem(
           "access_modules",
           JSON.stringify(res.data?.access_modules || [])
         );
-      } else {
+      } else if (role === "superadmin") {
+        localStorage.setItem("adminId", res.data?.superadmin_id || "");
         localStorage.removeItem("access_modules");
       }
 
       showSuccess("Login Successful");
 
-      // delay navigation so toast is visible
       setTimeout(() => {
         navigate("/dashboard", { replace: true });
       }, 1200);
-
     } catch (error) {
       console.error(error);
       showError("Login failed");
@@ -155,9 +155,14 @@ export default function Login() {
             </button>
           </div>
 
-          <button className="law-login-btn" type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "LOGIN"}
-          </button>
+          <Button
+            type="submit"
+            text={loading ? "Logging in..." : "LOGIN"}
+            variant="primary"
+            size="large"
+            fullWidth
+            disabled={loading}
+          />
         </form>
       </div>
     </div>

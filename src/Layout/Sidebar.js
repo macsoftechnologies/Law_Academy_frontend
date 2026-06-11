@@ -553,6 +553,16 @@ const Sidebar = ({ sidebarOpen }) => {
             </NavLink>
           </li>
         )}
+
+      {/* ================= Helpcentre ================= */}
+        {canAccess("helpcentre") && (
+          <li className="menu-item">
+            <NavLink to="helpcentre">
+              <FaFileContract className="menu-icon" />
+              Help Centre
+            </NavLink>
+          </li>
+        )}
       </ul>
     </div>
   );

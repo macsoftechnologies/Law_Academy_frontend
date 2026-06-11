@@ -8,52 +8,95 @@
   height: 40px;
   border-radius: 50%;
   cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  object-fit: cover;
 }
 
-/* Dropdown menu styling */
 .dropdown-menu {
-  min-width: 280px;
-  border-radius: 10px;
+  min-width: 220px;
+  border-radius: 12px;
   padding: 0;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .profile-header {
-  background: linear-gradient(135deg, #1A3C8B, #FFF7E0);
-  color: #fff;
-  padding: 20px 10px;
+  background: #1a2744;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .profile-header .profile-img {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  margin-bottom: 10px;
-  border: 2px solid #fff;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  object-fit: cover;
 }
 
 .profile-name {
   margin: 0;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
 }
 
 .profile-email {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.profile-updated {
-  font-size: 0.75rem;
-  opacity: 0.8;
+.profile-role-badge {
+  font-size: 10px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
 }
 
-/* Dropdown items */
+.profile-menu-body {
+  padding: 6px;
+  background: #fff;
+}
+
+.dropdown-divider {
+  height: 0.5px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 4px 0;
+}
+
 .dropdown-item {
-  padding: 10px 20px;
-  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  font-size: 13px;
+  border-radius: 8px;
+  color: #444;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
 }
 
 .dropdown-item:hover {
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
+}
+
+.dropdown-item.logout {
+  color: #c0392b;
+}
+
+.dropdown-item.logout:hover {
+  background-color: #fff0f0;
+}
+
+.dropdown-item i {
+  font-size: 16px;
 }

@@ -1,10 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { SuperAdminandAdminLogout } from "../services/authService";
 import "./ProfileDropdown.css";
 
 const ProfileDropdown = () => {
   const navigate = useNavigate();
+  const role = localStorage.getItem("role");
 
   const handleLogout = () => {
     Swal.fire({
@@ -16,12 +18,16 @@ const ProfileDropdown = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, logout!",
       cancelButtonText: "Cancel",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // ✅ Clear session
-        localStorage.clear();
-        // ✅ Redirect to admin login page
-        navigate("/", { replace: true });
+        try {
+          await SuperAdminandAdminLogout();
+        } catch (err) {
+          console.warn("Logout API error:", err);
+        } finally {
+          localStorage.clear();
+          navigate("/", { replace: true });
+        }
       }
     });
   };
@@ -37,27 +43,22 @@ const ProfileDropdown = () => {
 
       <ul className="dropdown-menu dropdown-menu-end">
         <li className="profile-header text-center">
-          <img
-            src="/law-02.jpg"
-            className="profile-img"
-            alt="Profile"
-          />
-          {/* <h6 className="profile-name">Jane</h6>
-          <p className="profile-email">jane@jane.com</p>
-          <small className="profile-updated">
-            Last updated 3 mins ago
-          </small> */}
+          <img src="/law-02.jpg" className="profile-img" alt="Profile" />
+          <p className="profile-name">
+            {role === "superadmin" ? "Super Admin" : "Admin"}
+          </p>
+          <span className="profile-role-badge">{role}</span>
         </li>
 
-        {/* <li><a className="dropdown-item" href="#">Profile</a></li> */}
-        <li>
-          <button
-            className="dropdown-item"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </li>
+        <div className="profile-menu-body">
+          <div className="dropdown-divider" />
+          <li>
+            <button className="dropdown-item logout" onClick={handleLogout}>
+              <i className="ti ti-logout" aria-hidden="true"></i>
+              Logout
+            </button>
+          </li>
+        </div>
       </ul>
     </div>
   );

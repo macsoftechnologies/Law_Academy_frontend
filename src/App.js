@@ -49,11 +49,12 @@ import PrelimsSMTProfile from "./pages/Prelims/PrelimsSMTProfile";
 import AttemptsResultsProfile from "./pages/Prelims/AttemptsResultsProfile";
 import CombinationsProfile from "./pages/Combinations/CombinationsProfile";
 import Notifications from "./pages/Notifications/Notifications";
+import HelpCentre from "./pages/HelpCentre/HelpCentre";
 
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/admin">
       <Routes>
 
         {/* ✅ Public Routes */}
@@ -104,6 +105,7 @@ function App() {
           <Route path="notifications" element={<Notifications />} />
           <Route path="/student/:userId" element={<StudentProfile />} />
           <Route path="/mains-result/:attemptId" element={<MainsResultsProfile />} />
+          <Route path="/helpcentre" element={<HelpCentre />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -31,6 +31,18 @@ export const superadminForgotPassword = async (Forgotload) => {
   return response.data;
 };
 
+
+export const SuperAdminandAdminLogout = async () => {
+  const token = localStorage.getItem("token");
+  const response = await api.post("/admin/logout", {}, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 export const getadmins = async (page = 1, limit = 10) => {
   const res = await api.get(`/admin?page=${page}&limit=${limit}`);
   return res.data;
@@ -763,6 +775,60 @@ export const sendnotifications = async (data) => {
 };
 
 
+// ─── Help Centre / Tickets ───────────────────────────────────────────────────
 
+// export const getTickets = async (page = 1, limit = 10, status = "") => {
+//   const params = new URLSearchParams({ page, limit });
+//   if (status) params.append("status", status);
+//   const res = await api.get(`/tickets/admin/list?${params.toString()}`);
+//   return res.data;
+// };
+
+export const getTickets = async (page = 1, limit = 10, status = "") => {
+  const token = localStorage.getItem("token");
+  const params = new URLSearchParams({ page, limit });
+  if (status) params.append("status", status);
+  const res = await api.get(`/tickets/admin/list?${params.toString()}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const getTicketDetails = async (ticketId) => {
+  const res = await api.get(`/tickets/admin/details/${ticketId}`);
+  return res.data;
+};
+
+export const addAdminMessage = async (data) => {
+  const res = await api.post("/tickets/admin/add-message", data);
+  return res.data;
+};
+
+export const updateTicketStatus = async (data) => {
+  const res = await api.post("/tickets/admin/update-status", data);
+  return res.data;
+};
+
+export const assignTicket = async (data) => {
+  const res = await api.post("/tickets/admin/assign", data);
+  return res.data;
+};
+
+export const markAdminMessagesRead = async (data) => {
+  const res = await api.post("/tickets/admin/mark-read", data);
+  return res.data;
+};
+
+export const updateCallStatus = async (data) => {
+  const res = await api.post("/tickets/admin/update-call-status", data);
+  return res.data;
+};
+
+export const deleteAdminMessage = async (ticketId, messageId) => {
+  const res = await api.delete(`/tickets/admin/${ticketId}/message/${messageId}`);
+  return res.data;
+};
 
 
