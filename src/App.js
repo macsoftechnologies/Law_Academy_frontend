@@ -50,6 +50,7 @@ import AttemptsResultsProfile from "./pages/Prelims/AttemptsResultsProfile";
 import CombinationsProfile from "./pages/Combinations/CombinationsProfile";
 import Notifications from "./pages/Notifications/Notifications";
 import HelpCentre from "./pages/HelpCentre/HelpCentre";
+import Orders from "./pages/Orders/Orders";
 
 
 function App() {
@@ -106,6 +107,7 @@ function App() {
           <Route path="/student/:userId" element={<StudentProfile />} />
           <Route path="/mains-result/:attemptId" element={<MainsResultsProfile />} />
           <Route path="/helpcentre" element={<HelpCentre />} />
+          <Route path="orders" element={<Orders />} />
         </Route>
       </Routes>
     </BrowserRouter>

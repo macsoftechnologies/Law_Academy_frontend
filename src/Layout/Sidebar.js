@@ -544,6 +544,16 @@ const Sidebar = ({ sidebarOpen }) => {
           </li>
         )}
 
+        {/* ================= Orders ================= */}
+        {canAccess("orders") && (
+          <li className="menu-item">
+            <NavLink to="orders">
+              <FaClipboardList className="menu-icon" />
+              Orders
+            </NavLink>
+          </li>
+        )}
+
         {/* ================= Notifications ================= */}
         {canAccess("notifications") && (
           <li className="menu-item">
